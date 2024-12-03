@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>حجز الوحدات السكنية</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      direction: rtl;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      background-color: #fff;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    header img {
+      height: 60px;
+    }
+
+    h1 {
+      margin: 20px 0;
+      color: #333;
+    }
+
+    .info {
+      background-color: #fff;
+      padding: 15px;
+      margin: 20px auto;
+      max-width: 90%;
+      text-align: center;
+      font-size: 16px;
+      color: #555;
+      border-radius: 8px;
+      box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .info strong {
+      color: #333;
+    }
+
+    table {
+      margin: 20px auto;
+      border-collapse: collapse;
+      width: 90%;
+      background: #fff;
+      box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    table, th, td {
+      border: 1px solid #ccc;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #f4f4f4;
+      font-weight: bold;
+    }
+
+    td {
+      font-size: 14px;
+    }
+
+    .btn {
+      background-color: #28a745;
+      color: white;
+      padding: 8px 15px;
+      border: none;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: #218838;
+    }
+
+    .btn:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+
+    footer {
+      margin: 20px 0;
+      color: #777;
+      font-size: 14px;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 700px;
+      max-height: 80vh;
+      overflow-y: auto;
+      text-align: center;
+      box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .modal-content form {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .modal-content input, .modal-content select {
+      flex: 1 1 calc(48% - 10px);
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .modal-content button {
+      flex: 1 1 100%;
+      margin-top: 10px;
+      padding: 10px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background-color 0.3s ease;
+    }
+
+    .modal-content button:hover {
+      background-color: #0056b3;
+    }
+
+    /* نافذة النتيجة */
+    .result-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1100;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .result-modal .result-content {
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+      width: 80%;
+      max-width: 500px;
+      box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .result-modal .result-content button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    .result-modal .result-content button:hover {
+      background-color: #218838;
+    }
+
+
+    .models {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin: 20px auto;
+    }
+
+    .models img {
+      width: 200px;
+      height: auto;
+      border-radius: 5px;
+      box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    .installment-btn {
+      margin: 20px auto;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background-color 0.3s ease;
+    }
+
+    .installment-btn:hover {
+      background-color: #0056b3;
+    }
+
+    .video-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.video-btn {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.video-btn:hover {
+  background-color: #0056b3;
+}
+
+.modal video {
+  max-width: 100%;
+  height: auto;
+}
+
+  </style>
+</head>
+<body>
+  <!-- الشعار -->
+  <header>
+    <img src="https://media.licdn.com/dms/image/v2/C4D0BAQED93e7d7lWkQ/company-logo_200_200/company-logo_200_200/0/1630490580332?e=2147483647&v=beta&t=hCmFNUBkdnBTYQZvWm7qHm89w_zro06Rr-b2Eup0Ec8" alt="لوجو الشركة">
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiNel1DsK7PJmkRJp6xLUH8WAbZ6d0L1PVnw&s" alt="لوجو المشروع">
+  </header>
+
+  
+
+  <!-- رسالة معلومات -->
+  <div class="info">
+    <strong>عزيزي المستفيد:</strong> حجز الوحدة لا يعني أنه حجز نهائي. يتوجب عليك دفع رسوم قدرها <strong>805 ريال</strong>
+    على حسابك في تطبيق سكني بعد استلام رسالة الحجز.
+  </div>
+
+  <!-- صور نماذج العمائر -->
+  <div class="models">
+    <img src="https://jed-s3.bluvalt.com/sakani-prod-media-assets/uploads/published_medium/file/61ed161c593f7b5bda72d7a0/high_DM-Render__8_.jpg" alt="نموذج العمارة 1">
+    <img src="https://ruh-s3.bluvalt.com/api-nhc.sa/s3fs-public/2023-07/%D8%AF%D8%B1%D8%A9%20%D8%A7%D9%84%D9%85%D8%AF%D9%8A%D9%86%D8%A9%201%2001.jpg" alt="نموذج العمارة 2">
+    <img src="https://jed-s3.bluvalt.com/sakani-prod-media-assets/uploads/published_medium/file/61ed161b593f7b5bda72d79c/high_DM-Render__7_.jpg" alt="نموذج العمارة 3">
+  </div>
+<!-- أزرار الفيديو -->
+<div class="video-buttons">
+  <button class="video-btn" onclick="openVideoModal('video1.mp4')">فيديو 1</button>
+  <button class="video-btn" onclick="openVideoModal('video2.mp4')">فيديو 2</button>
+  <button class="video-btn" onclick="openVideoModal('video3.mp4')">فيديو 3</button>
+  <button class="video-btn" onclick="openVideoModal('video4.mp4')">فيديو 4</button>
+</div>
+
+<!-- نافذة عرض الفيديو -->
+<div id="video-modal" class="modal">
+  <div class="modal-content">
+    <button class="modal-close-btn" onclick="closeVideoModal()">×</button>
+    <video id="video-player" controls style="width: 100%; height: auto;">
+      <source id="video-source" src="" type="video/mp4">
+      متصفحك لا يدعم تشغيل الفيديو.
+    </video>
+  </div>
+</div>
+
+   <!-- زر حساب القسط -->
+   <button class="installment-btn" onclick="openInstallmentModal()">حساب القسط الشهري</button>
+
+   <!-- نافذة حساب القسط -->
+   <div id="installment-modal" class="modal">
+    <div class="modal-content">
+      <button class="modal-close-btn" onclick="closeInstallmentModal()">×</button>
+      <h2>حساب القسط الشهري</h2>
+      <form id="installment-form">
+        <input id="salary" type="number" placeholder="الراتب الشهري">
+        <input id="loanAmount" type="number" placeholder=" مبلغ الوحدة قبل الدعم">
+        <input id="durationMonths" type="number" placeholder="مدة التمويل (بالأشهر)">
+        <input id="interestRate" type="number" placeholder="نسبة البنك (٪)">
+        <input id="commitment1" type="number" placeholder="التزام 1">
+        <input id="commitmentMonths1" type="number" placeholder="مدة التزام 1 (بالأشهر)">
+        <input id="commitment2" type="number" placeholder="التزام 2">
+        <input id="commitmentMonths2" type="number" placeholder="مدة التزام 2 (بالأشهر)">
+        <input id="commitment3" type="number" placeholder="التزام 3">
+        <input id="commitmentMonths3" type="number" placeholder="مدة التزام 3 (بالأشهر)">
+        <input id="commitment4" type="number" placeholder="التزام 4">
+        <input id="commitmentMonths4" type="number" placeholder="مدة التزام 4 (بالأشهر)">
+        
+        <button type="button" onclick="calculateInstallment()">حساب القسط</button>
+      </form>
+    </div>
+  </div>
+  
+  <!-- نافذة النتيجة -->
+  <div id="result-modal" class="result-modal">
+    <div class="result-content">
+      <h3>نتيجة الحساب</h3>
+      <p id="result-message">...</p>
+      <button onclick="closeResultModal()">إغلاق</button>
+    </div>
+  </div>
+  
+
+   <div id="result-modal" class="result-modal">
+    <div class="result-content">
+      <h3>نتيجة الحساب</h3>
+      <p id="result-message">...</p>
+      <button onclick="closeResultModal()">إغلاق</button>
+    </div>
+  </div>
+
+   <h1>الوحدات السكنية المتاحة</h1>
+  <!-- جدول الوحدات -->
+  <table id="units-table">
+    <thead>
+      <tr>
+        <th>رقم الوحدة</th>
+        <th>رقم الدور</th>
+        <th>القيمة السوقية</th>
+        <th>القيمة قبل الدعم</th>
+        <th>المساحة</th>
+        <th>رابط المخطط</th>
+        <th>إجراء</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- سيتم تعبئة الجدول ديناميكيًا -->
+    </tbody>
+  </table>
+
+  <!-- نافذة إدخال بيانات الحجز -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <h2>حجز الوحدة</h2>
+      <input id="userId" type="text" placeholder="رقم الهوية">
+      <input id="phone" type="text" placeholder="رقم الجوال">
+      <button id="confirmBooking">احجز الآن</button>
+      <button onclick="closeModal()">إلغاء</button>
+    </div>
+  </div>
+
+  <script>
+// دالة فتح نافذة الفيديو
+function openVideoModal(videoFileName) {
+  const videoPlayer = document.getElementById("video-player");
+  const videoSource = document.getElementById("video-source");
+
+  // تحديث مصدر الفيديو
+  videoSource.src = videoFileName;
+
+  // إعادة تحميل الفيديو
+  videoPlayer.load();
+
+  // إظهار النافذة المنبثقة
+  document.getElementById("video-modal").style.display = "flex";
+}
+
+// دالة إغلاق نافذة الفيديو
+function closeVideoModal() {
+  const videoPlayer = document.getElementById("video-player");
+
+  // إيقاف الفيديو عند إغلاق النافذة
+  videoPlayer.pause();
+
+  // إخفاء النافذة المنبثقة
+  document.getElementById("video-modal").style.display = "none";
+}
+
+    
+ // دالة فتح نافذة الحساب
+ function openInstallmentModal() {
+    document.getElementById("installment-modal").style.display = "flex";
+  }
+
+  // دالة إغلاق نافذة الحساب
+  function closeInstallmentModal() {
+    document.getElementById("installment-modal").style.display = "none";
+  }
+
+  // دالة فتح نافذة النتيجة
+function openResultModal(message) {
+  const modal = document.getElementById("result-modal");
+  const resultMessage = document.getElementById("result-message");
+
+  // تنسيق النتيجة
+  resultMessage.innerHTML = `
+    <div style="text-align: right; font-size: 16px; line-height: 1.8;">
+      <strong style="font-size: 18px; color: #333;">النتائج:</strong><br>
+      <hr style="margin: 10px 0;">
+      <strong>القسط + الالتزامات المرحلة الأولى:</strong> <span style="color: #007bff;">${message.firstPhaseInstallment.toFixed(2)} ريال</span><br>
+      <strong>مدة المرحلة الأولى:</strong> <span style="color: #007bff;">${message.firstPhaseDuration} شهر</span><br>
+      <strong>نسبة الاستقطاع في المرحلة الأولى:</strong> <span style="color: #ff6347;">${message.firstPhaseCommitmentPercentage}%</span><br>
+      <hr style="margin: 10px 0;">
+      <strong>القسط في المرحلة الثانية:</strong> <span style="color: #28a745;">${message.secondPhaseInstallment.toFixed(2)} ريال</span><br>
+      <strong>مدة المرحلة الثانية:</strong> <span style="color: #28a745;">${message.secondPhaseDuration} شهر</span><br>
+      <strong>نسبة الاستقطاع في المرحلة الثانية:</strong> <span style="color: #ff6347;">${message.secondPhaseCommitmentPercentage}%</span><br>
+      <hr style="margin: 10px 0;">
+      <strong>مبلغ الوحدة بعد الخصم:</strong> <span style="color: #ffc107;">${message.unitAmount.toFixed(2)} ريال</span><br>
+      <strong>تم خصم:</strong> <span style="color: #dc3545;">${message.discount} ريال</span><br>
+      <hr style="margin: 10px 0;">
+      <strong>إجمالي الفوائد:</strong> <span style="color: #17a2b8;">${message.totalInterest.toFixed(2)} ريال</span><br>
+      <strong>إجمالي مبلغ الوحدة بعد إضافة الفوائد:</strong> <span style="color: #6c757d;">${message.totalUnitWithInterest.toFixed(2)} ريال</span><br>
+      <hr style="margin: 10px 0;">
+      <strong style="color: ${message.requiredDownPayment > 0 ? '#dc3545' : '#28a745'};">
+        ${message.financingMessage}
+      </strong>
+    </div>
+  `;
+
+  modal.style.display = "flex";
+}
+
+
+
+  // دالة إغلاق نافذة النتيجة
+  function closeResultModal() {
+    document.getElementById("result-modal").style.display = "none";
+  }
+
+function calculateInstallment() {
+  const salary = parseFloat(document.getElementById("salary").value) || 0;
+  let unitAmount = parseFloat(document.getElementById("loanAmount").value) || 0;
+  const durationMonths = parseFloat(document.getElementById("durationMonths").value) || 0;
+  const interestRate = parseFloat(document.getElementById("interestRate").value) || 0;
+
+  const commitments = [
+    { amount: parseFloat(document.getElementById("commitment1").value) || 0, months: parseInt(document.getElementById("commitmentMonths1").value) || 0 },
+    { amount: parseFloat(document.getElementById("commitment2").value) || 0, months: parseInt(document.getElementById("commitmentMonths2").value) || 0 },
+    { amount: parseFloat(document.getElementById("commitment3").value) || 0, months: parseInt(document.getElementById("commitmentMonths3").value) || 0 },
+    { amount: parseFloat(document.getElementById("commitment4").value) || 0, months: parseInt(document.getElementById("commitmentMonths4").value) || 0 },
+  ];
+
+  // تطبيق الخصم بناءً على الراتب
+  const discount = salary < 10000 ? 150000 : 100000;
+  unitAmount -= discount;
+
+  // حساب الفائدة الإجمالية
+  const totalInterest = unitAmount * (interestRate / 100) * (durationMonths / 12);
+
+  // حساب الفائدة الشهرية
+  const monthlyInterest = totalInterest / durationMonths;
+
+  // المرحلة الأولى (قسط + الالتزامات الحالية)
+  const maxCommitmentMonths = Math.max(...commitments.map(c => c.months));
+  const totalCommitments = commitments.reduce((sum, c) => sum + c.amount, 0);
+
+  const firstPhaseDuration = maxCommitmentMonths;
+  const firstPhaseInstallment = monthlyInterest + totalCommitments;
+  const firstPhaseCommitmentPercentage = ((firstPhaseInstallment / salary) * 100).toFixed(2);
+
+  let requiredDownPayment = 0; // الدفعة المقدمة إذا لزم الأمر
+  let financingMessage = "";
+
+  if (firstPhaseCommitmentPercentage > 65) {
+    // إذا تجاوزت نسبة الاستقطاع 65%، نحسب الدفعة المطلوبة
+    requiredDownPayment = ((firstPhaseInstallment - salary * 0.65) * firstPhaseDuration);
+    financingMessage = `لا يمكن تمويلك إلا في حال وفرت دفعة قدرها ${requiredDownPayment.toFixed(2)} ريال وذلك لأن التزاماتك تعدت نسبة 65%.`;
+  } else {
+    financingMessage = "التمويل ممكن بناءً على المعلومات المدخلة.";
+  }
+
+  // المرحلة الثانية
+  const remainingDuration = durationMonths - maxCommitmentMonths;
+  const remainingLoan = unitAmount;
+  const secondPhaseInstallment = (remainingLoan + totalInterest) / remainingDuration;
+  const secondPhaseCommitmentPercentage = ((secondPhaseInstallment / salary) * 100).toFixed(2);
+
+  // إجمالي مبلغ الوحدة بعد الفوائد
+  const totalUnitWithInterest = unitAmount + totalInterest;
+
+  // عرض النتيجة
+  openResultModal({
+    firstPhaseInstallment: firstPhaseInstallment,
+    firstPhaseDuration: firstPhaseDuration,
+    firstPhaseCommitmentPercentage: firstPhaseCommitmentPercentage,
+    secondPhaseInstallment: secondPhaseInstallment,
+    secondPhaseDuration: remainingDuration,
+    secondPhaseCommitmentPercentage: secondPhaseCommitmentPercentage,
+    unitAmount: unitAmount,
+    discount: discount,
+    totalInterest: totalInterest,
+    totalUnitWithInterest: totalUnitWithInterest,
+    financingMessage: financingMessage,
+    requiredDownPayment: requiredDownPayment,
+  });
+}
+
+
+
+
+
+function openInstallmentModal() {
+      document.getElementById("installment-modal").style.display = "flex";
+    }
+
+    function closeInstallmentModal() {
+      document.getElementById("installment-modal").style.display = "none";
+    }
+
+    const apiUrl = "https://script.google.com/macros/s/AKfycbxKxVCedeb8P_HHvxdrlCroIyxzcH3n9Mmzcb15mi2l7mrQ_uKWEfjfxNHnHI4XYCKK/exec";
+    let selectedUnitNumber = null; // لتخزين رقم الوحدة المحددة
+
+    async function fetchData() {
+      try {
+        const response = await fetch(apiUrl);
+        const data = await response.json();
+
+        if (Array.isArray(data)) {
+          const tableBody = document.querySelector("#units-table tbody");
+          tableBody.innerHTML = ""; 
+
+          data.forEach(unit => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+              <td>${unit.unitNumber}</td>
+              <td>${unit.floorNumber}</td>
+              <td>${unit.marketPrice}</td>
+              <td>${unit.discountedPrice}</td>
+              <td>${unit.size}</td>
+              <td><a href="${unit.planLink}" target="_blank">عرض المخطط</a></td>
+              <td><button class="btn" onclick="openModal('${unit.unitNumber}')">حجز</button></td>
+            `;
+            tableBody.appendChild(row);
+          });
+        } else if (data.error) {
+          alert(data.error);
+        }
+      } catch (error) {
+        console.error("حدث خطأ أثناء جلب البيانات:", error);
+        alert("حدث خطأ أثناء جلب البيانات. يرجى المحاولة لاحقًا.");
+      }
+    }
+        // دالة لحجز الوحدة
+    async function reserveUnit() {
+      const userId = document.getElementById("userId").value;
+      const phone = document.getElementById("phone").value;
+
+      if (!userId || !phone) {
+        alert("يجب إدخال رقم الهوية ورقم الجوال لإتمام الحجز.");
+        return;
+      }
+
+      try {
+        const response = await fetch(apiUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          body: new URLSearchParams({
+            unitNumber: selectedUnitNumber,
+            userId: userId,
+            phone: phone
+          })
+        });
+
+        const result = await response.json();
+
+        if (result.error) {
+          alert(result.error);
+        } else {
+          alert(result.success);
+          closeModal();
+          fetchData(); // تحديث الجدول بعد الحجز
+        }
+      } catch (error) {
+        console.error("حدث خطأ أثناء الحجز:", error);
+        alert("حدث خطأ أثناء الحجز. يرجى المحاولة لاحقًا.");
+      }
+    }
+
+    // إضافة الحدث على زر "احجز الآن"
+    document.getElementById("confirmBooking").addEventListener("click", reserveUnit);
+
+    function openModal(unitNumber) {
+      selectedUnitNumber = unitNumber;
+      document.getElementById("modal").style.display = "flex";
+    }
+
+    function closeModal() {
+      document.getElementById("modal").style.display = "none";
+    }
+
+    document.getElementById("confirmBooking").addEventListener("click", reserveUnit);
+
+    fetchData();
+  </script>
+  <footer>
+    © 2024 - نظام حجز الوحدات السكنية
+  </footer>
+</body>
+</html>
