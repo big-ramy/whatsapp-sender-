@@ -24,6 +24,22 @@
             align-items: center;
         }
 
+        header .nav {
+            display: flex;
+            gap: 20px;
+        }
+
+        header .nav a {
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+        }
+
+        header .nav a:hover {
+            background-color: #094bba;
+            border-radius: 5px;
+        }
+
         .hero {
             background: url('hero-image.jpg') no-repeat center center/cover;
             height: 400px;
@@ -163,7 +179,20 @@
 </head>
 <body>
     <header>
-        <h1>برنامج إرسال رسائل</h1>
+        <h1 id="header-title">برنامج إرسال رسائل</h1>
+        <div class="nav">
+            <a href="#home" id="home-link">الصفحة الرئيسية</a>
+            <a href="#about" id="about-link">عن الشركة</a>
+            <a href="#contact" id="contact-link">التواصل</a>
+            <div class="dropdown">
+                <button class="btn">المنتجات</button>
+                <div class="dropdown-content">
+                    <a href="#">الباقة الأساسية</a>
+                    <a href="#">الباقة المتقدمة</a>
+                    <a href="#">الباقة الاحترافية</a>
+                </div>
+            </div>
+        </div>
         <div>
             <button class="lang-btn" onclick="switchLanguage('ar')">العربية</button>
             <button class="lang-btn" onclick="switchLanguage('en')">English</button>
@@ -260,6 +289,7 @@
     <script>
         function switchLanguage(language) {
             if (language === 'en') {
+                document.getElementById('header-title').textContent = 'Message Sending Program';
                 document.getElementById('hero-title').textContent = 'The Best Tool to Send Messages Easily!';
                 document.getElementById('hero-description').textContent = 'Try our program now and achieve efficiency in sending messages.';
                 document.getElementById('how-to-use-title').textContent = 'How to Use the Program';
@@ -271,7 +301,11 @@
                 document.getElementById('step3-description').textContent = 'Press send and enjoy the ease and speed.';
                 document.getElementById('choose-package-title').textContent = 'Choose Your Package';
                 document.getElementById('support-title').textContent = 'Support and Inquiries';
+                document.getElementById('home-link').textContent = 'Home';
+                document.getElementById('about-link').textContent = 'About the Company';
+                document.getElementById('contact-link').textContent = 'Contact';
             } else {
+                document.getElementById('header-title').textContent = 'برنامج إرسال رسائل';
                 document.getElementById('hero-title').textContent = 'أفضل أداة لإرسال الرسائل بسهولة!';
                 document.getElementById('hero-description').textContent = 'جرّب برنامجنا الآن وحقق الكفاءة في إرسال الرسائل.';
                 document.getElementById('how-to-use-title').textContent = 'كيفية استخدام البرنامج';
@@ -283,6 +317,9 @@
                 document.getElementById('step3-description').textContent = 'اضغط على زر الإرسال واستمتع بالسهولة والسرعة.';
                 document.getElementById('choose-package-title').textContent = 'اختر الباقة المناسبة';
                 document.getElementById('support-title').textContent = 'الدعم والاستفسارات';
+                document.getElementById('home-link').textContent = 'الصفحة الرئيسية';
+                document.getElementById('about-link').textContent = 'عن الشركة';
+                document.getElementById('contact-link').textContent = 'التواصل';
             }
         }
 
