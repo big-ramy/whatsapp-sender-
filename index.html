@@ -213,6 +213,37 @@
         .whatsapp-share a:hover {
             background-color: #128C7E;
         }
+        /* تطبيق التنسيق الأساسي هنا ... */
+
+/* إضافة تنسيق متجاوب للأجهزة الصغيرة */
+@media only screen and (max-width: 768px) {
+    header .nav {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .hero {
+        height: 300px;
+        padding: 10px;
+    }
+
+    .hero h1 {
+        font-size: 2.5rem;
+    }
+
+    .hero p {
+        font-size: 1rem;
+    }
+
+    .btn {
+        padding: 8px 16px;
+    }
+
+    .cards {
+        flex-direction: column;
+    }
+}
+
     </style>
 </head>
 <body>
@@ -302,9 +333,77 @@
         </div>
 
         <!-- WhatsApp Share Section -->
-        <div class="whatsapp-share">
-            <a href="https://wa.me/?text=هل ترغب في استخدام برنامج إرسال الرسائل؟ قم بزيارة الرابط الآن: https://your-website-link.com" target="_blank" id="whatsapp-share">مشاركة عبر واتساب</a>
-        </div>
+<!-- زر المشاركة عبر WhatsApp -->
+<button id="whatsapp-share">مشاركة عبر واتساب</button>
+
+<p id="share-count">عدد المشاركات: 0</p>
+
+<!-- نموذج إدخال الإيميل -->
+<div id="email-popup" style="display: none;">
+    <label for="email">أدخل بريدك الإلكتروني:</label>
+    <input type="email" id="email" required>
+    <button onclick="submitEmail()">إرسال</button>
+</div>
+
+<script>
+// تخزين الأرقام في LocalStorage
+document.getElementById('whatsapp-share').addEventListener('click', function() {
+    const numbers = ["+1234567890", "+9876543210"];  // هذه هي الأرقام التي سيتم إرسال الرابط إليها
+
+    // استرجاع الأرقام المخزنة في LocalStorage
+    let sharedNumbers = JSON.parse(localStorage.getItem('sharedNumbers')) || [];
+
+    // إضافة الأرقام الجديدة إلى الأرقام المخزنة
+    sharedNumbers.push(...numbers);
+
+    // تخزين الأرقام في LocalStorage
+    localStorage.setItem('sharedNumbers', JSON.stringify(sharedNumbers));
+
+    // تحديث العداد في الصفحة
+    document.getElementById('share-count').textContent = 'عدد المشاركات: ' + sharedNumbers.length;
+
+    // التحقق من عدد المشاركات
+    if (sharedNumbers.length >= 10) {
+        showEmailPopup();
+    }
+});
+
+// إظهار نافذة إدخال الإيميل
+function showEmailPopup() {
+    document.getElementById('email-popup').style.display = 'block';
+}
+
+// إرسال البريد الإلكتروني والرقم التسلسلي
+function submitEmail() {
+    const email = document.getElementById('email').value;
+    if (email) {
+        const serialNumber = generateSerialNumber();
+        const messageCount = 30; // عدد الرسائل
+        saveDataToGoogleSheets(email, serialNumber, messageCount);
+    }
+}
+
+// توليد الرقم التسلسلي
+function generateSerialNumber() {
+    return 'SN' + Math.floor(Math.random() * 1000000);  // توليد رقم تسلسلي عشوائي
+}
+
+// إرسال البيانات إلى Google Sheets
+function saveDataToGoogleSheets(email, serialNumber, messageCount) {
+    const url = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec?email=' + encodeURIComponent(email) + '&serialNumber=' + encodeURIComponent(serialNumber) + '&messageCount=' + encodeURIComponent(messageCount);
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            alert('تم إرسال البيانات بنجاح!');
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+</script>
+
+
+        
     </div>
 
     <footer>
