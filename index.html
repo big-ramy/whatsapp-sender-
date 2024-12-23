@@ -193,6 +193,26 @@
         .dropdown:hover .dropdown-content {
             display: block;
         }
+
+        /* Styling for WhatsApp sharing */
+        .whatsapp-share {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .whatsapp-share a {
+            background-color: #25D366;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            margin: 5px;
+        }
+
+        .whatsapp-share a:hover {
+            background-color: #128C7E;
+        }
     </style>
 </head>
 <body>
@@ -217,11 +237,11 @@
         </div>
     </header>
 
-<div class="hero">
-    <!-- Overlay Layer -->
-    <div class="overlay"></div>
-    <h1 id="hero-title">أفضل أداة لإرسال الرسائل بسهولة!</h1>
-    <p id="hero-description">جرّب برنامجنا الآن وحقق الكفاءة في إرسال الرسائل.</p>
+    <div class="hero">
+        <!-- Overlay Layer -->
+        <div class="overlay"></div>
+        <h1 id="hero-title">أفضل أداة لإرسال الرسائل بسهولة!</h1>
+        <p id="hero-description">جرّب برنامجنا الآن وحقق الكفاءة في إرسال الرسائل.</p>
         <button class="btn" onclick="window.location.href='https://drive.google.com/uc?export=download&id=1DHsRewPhv9MCABUEF5m_SwRRJAXZJdFi'">تحميل البرنامج</button>
     </div>
 
@@ -280,31 +300,16 @@
                 <button class="btn" type="submit">إرسال</button>
             </form>
         </div>
+
+        <!-- WhatsApp Share Section -->
+        <div class="whatsapp-share">
+            <a href="https://wa.me/?text=هل ترغب في استخدام برنامج إرسال الرسائل؟ قم بزيارة الرابط الآن: https://your-website-link.com" target="_blank" id="whatsapp-share">مشاركة عبر واتساب</a>
+        </div>
     </div>
 
     <footer>
         <p>جميع الحقوق محفوظة © برنامج إرسال رسائل</p>
     </footer>
-
-    <!-- Payment Modal -->
-    <div id="payment-modal" class="modal">
-        <div class="modal-content">
-            <h3>اختر وسيلة الدفع</h3>
-            <div>
-                <img src="stcpay.png" alt="STC Pay" onclick="openQRModal('stcpay')">
-                <img src="alrajhi.png" alt="الراجحي" onclick="openQRModal('alrajhi')">
-                <img src="paypal.png" alt="باي بال" onclick="openQRModal('paypal')">
-            </div>
-        </div>
-    </div>
-
-    <!-- QR Code Modal -->
-    <div id="qr-modal" class="modal">
-        <div class="modal-content">
-            <h3>مسح الكود</h3>
-            <img id="qr-image" src="" alt="QR Code">
-        </div>
-    </div>
 
     <script>
         function switchLanguage(language) {
@@ -343,29 +348,7 @@
             }
         }
 
-        function openPaymentModal(messages, price) {
-            document.getElementById('payment-modal').style.display = 'flex';
-        }
-
-        function openQRModal(paymentMethod) {
-            let qrCode = '';
-            if (paymentMethod === 'stcpay') {
-                qrCode = 'stcpay-qr.png';
-            } else if (paymentMethod === 'alrajhi') {
-                qrCode = 'alrajhi-qr.png';
-            } else if (paymentMethod === 'paypal') {
-                qrCode = 'paypal-qr.png';
-            }
-            document.getElementById('qr-image').src = qrCode;
-            document.getElementById('qr-modal').style.display = 'flex';
-        }
-
-        window.onclick = function(event) {
-            if (event.target == document.getElementById('payment-modal') || event.target == document.getElementById('qr-modal')) {
-                document.getElementById('payment-modal').style.display = 'none';
-                document.getElementById('qr-modal').style.display = 'none';
-            }
-        };
+        // You can use analytics or other tools to track the number of shares.
     </script>
 </body>
 </html>
