@@ -213,7 +213,25 @@
         .whatsapp-share a:hover {
             background-color: #128C7E;
         }
-        /* تطبيق التنسيق الأساسي هنا ... */
+        /* نافذة إدخال البريد الإلكتروني */
+        .email-popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .email-popup .popup-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
 
 /* إضافة تنسيق متجاوب للأجهزة الصغيرة */
 @media only screen and (max-width: 768px) {
@@ -338,71 +356,65 @@
 
 <p id="share-count">عدد المشاركات: 0</p>
 
-<!-- نموذج إدخال الإيميل -->
-<div id="email-popup" style="display: none;">
-    <label for="email">أدخل بريدك الإلكتروني:</label>
-    <input type="email" id="email" required>
-    <button onclick="submitEmail()">إرسال</button>
-</div>
+    <!-- نافذة إدخال البريد الإلكتروني -->
+    <div id="email-popup" class="email-popup">
+        <div class="popup-content">
+            <h3>أدخل بريدك الإلكتروني</h3>
+            <input type="email" id="email" required />
+            <button onclick="submitEmail()">إرسال</button>
+        </div>
+    </div>
 
 <script>
-// تخزين الأرقام في LocalStorage
-document.getElementById('whatsapp-share').addEventListener('click', function() {
-    const numbers = ["+1234567890", "+9876543210"];  // هذه هي الأرقام التي سيتم إرسال الرابط إليها
+        // تخزين الأرقام في LocalStorage
+        document.getElementById('whatsapp-share').addEventListener('click', function() {
+            const numbers = []; // هذه الأرقام هي مثال لما سيتم مشاركته
 
-    // استرجاع الأرقام المخزنة في LocalStorage
-    let sharedNumbers = JSON.parse(localStorage.getItem('sharedNumbers')) || [];
+            let sharedNumbers = JSON.parse(localStorage.getItem('sharedNumbers')) || [];
 
-    // إضافة الأرقام الجديدة إلى الأرقام المخزنة
-    sharedNumbers.push(...numbers);
+            sharedNumbers.push(...numbers);
+            localStorage.setItem('sharedNumbers', JSON.stringify(sharedNumbers));
 
-    // تخزين الأرقام في LocalStorage
-    localStorage.setItem('sharedNumbers', JSON.stringify(sharedNumbers));
+            // تحديث العداد
+            document.getElementById('share-count').textContent = 'عدد المشاركات: ' + sharedNumbers.length;
 
-    // تحديث العداد في الصفحة
-    document.getElementById('share-count').textContent = 'عدد المشاركات: ' + sharedNumbers.length;
-
-    // التحقق من عدد المشاركات
-    if (sharedNumbers.length >= 10) {
-        showEmailPopup();
-    }
-});
-
-// إظهار نافذة إدخال الإيميل
-function showEmailPopup() {
-    document.getElementById('email-popup').style.display = 'block';
-}
-
-// إرسال البريد الإلكتروني والرقم التسلسلي
-function submitEmail() {
-    const email = document.getElementById('email').value;
-    if (email) {
-        const serialNumber = generateSerialNumber();
-        const messageCount = 30; // عدد الرسائل
-        saveDataToGoogleSheets(email, serialNumber, messageCount);
-    }
-}
-
-// توليد الرقم التسلسلي
-function generateSerialNumber() {
-    return 'SN' + Math.floor(Math.random() * 1000000);  // توليد رقم تسلسلي عشوائي
-}
-
-// إرسال البيانات إلى Google Sheets
-function saveDataToGoogleSheets(email, serialNumber, messageCount) {
-    const url = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec?email=' + encodeURIComponent(email) + '&serialNumber=' + encodeURIComponent(serialNumber) + '&messageCount=' + encodeURIComponent(messageCount);
-    fetch(url)
-        .then(response => response.json())
-        .then(data => {
-            alert('تم إرسال البيانات بنجاح!');
-        })
-        .catch(error => {
-            console.error('Error:', error);
+            // التحقق من عدد المشاركات
+            if (sharedNumbers.length >= 10) {
+                showEmailPopup();
+            }
         });
-}
-</script>
 
+        function showEmailPopup() {
+            document.getElementById('email-popup').style.display = 'flex';
+        }
 
+        // إرسال البريد الإلكتروني والرقم التسلسلي إلى Google Sheets
+        function submitEmail() {
+            const email = document.getElementById('email').value;
+            if (email) {
+                const serialNumber = generateSerialNumber();
+                const messageCount = 30;  // عدد الرسائل
+                saveDataToGoogleSheets(email, serialNumber, messageCount);
+            }
+        }
+
+        function generateSerialNumber() {
+            return 'SN' + Math.floor(Math.random() * 1000000); // توليد رقم تسلسلي عشوائي
+        }
+
+        // إرسال البيانات إلى Google Sheets
+        function saveDataToGoogleSheets(email, serialNumber, messageCount) {
+            const url = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec?email=' + encodeURIComponent(email) + '&serialNumber=' + encodeURIComponent(serialNumber) + '&messageCount=' + encodeURIComponent(messageCount);
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    alert('تم إرسال البيانات بنجاح!');
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+    </script>
         
     </div>
 
