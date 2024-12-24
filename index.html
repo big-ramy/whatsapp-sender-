@@ -396,7 +396,7 @@
                 let count = 0;
                 
                 // البحث عن الرابط في الرسائل
-                const linkPattern = /https:\/\/https://big-ramy.github.io/whatsapp-sender-/; // اكتب رابطك الخاص هنا
+                const linkPattern = /https:\/\/big-ramy.github.io/whatsapp-sender-; // اكتب رابطك الخاص هنا
                 
                 messages.forEach(message => {
                     if (linkPattern.test(message.text)) {
@@ -457,7 +457,7 @@
         // عند الضغط على الزر
         document.getElementById('whatsapp-share').addEventListener('click', function() {
             // رابط المشاركة عبر WhatsApp
-            const message = encodeURIComponent('هل ترغب في استخدام برنامج إرسال الرسائل لارسال رسائل واتس اب بالآلاف بضغطة واحدة ؟ قم بزيارة الرابط الآن:https://big-ramy.github.io/whatsapp-sender-/');
+            const message = encodeURIComponent('هل ترغب في استخدام برنامج إرسال الرسائل لارسال رسائل واتس اب بالآلاف بضغطة واحدة ؟ قم بزيارة الرابط الآن:https://big-ramy.github.io/whatsapp-sender-');
             const whatsappURL = `https://wa.me/?text=${message}`;
             
             // فتح WhatsApp Web في نافذة جديدة
