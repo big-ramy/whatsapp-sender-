@@ -454,15 +454,19 @@
                 });
         }
 
-        // عند الضغط على الزر
-        document.getElementById('whatsapp-share').addEventListener('click', function() {
-            // رابط المشاركة عبر WhatsApp
-            const message = encodeURIComponent('هل ترغب في استخدام برنامج إرسال الرسائل لارسال رسائل واتس اب بالآلاف بضغطة واحدة ؟ قم بزيارة الرابط الآن:https://big-ramy.github.io/whatsapp-sender-');
-            const whatsappURL = `https://wa.me/?text=${message}`;
-            
-            // فتح WhatsApp Web في نافذة جديدة
-            window.open(whatsappURL, '_blank');
-        });  
+document.getElementById('whatsapp-share').addEventListener('click', function() {
+    // رابط المشاركة عبر WhatsApp
+    const message = encodeURIComponent('هل ترغب في استخدام برنامج إرسال الرسائل؟ قم بزيارة الرابط الآن: https://big-ramy.github.io/whatsapp-sender-/');
+    const whatsappURL = `https://wa.me/?text=${message}`;
+    
+    // فتح WhatsApp Web في نافذة جديدة
+    window.open(whatsappURL, '_blank');
+
+    // الانتظار قليلاً قبل بدء عملية التحقق من المشاركة
+    setTimeout(() => {
+        checkMessagesForLink();
+    }, 5000);  // الانتظار لمدة 5 ثوانٍ (يمكنك تعديل هذه الفترة)
+}); 
         
     </script>
 </body>
