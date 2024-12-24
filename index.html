@@ -362,6 +362,8 @@
     </footer> 
     <script>
         function switchLanguage(language) {
+    // تغيير قيمة lang في HTML لتحديد اللغة
+    document.documentElement.lang = language;
             if (language === 'en') {
                 document.getElementById('header-title').textContent = 'Message Sending Program';
                 document.getElementById('hero-title').textContent = 'The Best Tool to Send Messages Easily!';
@@ -433,18 +435,21 @@
         }
 
         // دالة لتسجيل الإيميل في Google Sheets
-        function submitEmail() {
-            const email = document.getElementById('email').value;
-            if (validateEmail(email)) {
-                const serialNumber = generateSerialNumber();
-                const messageCount = 30;  // عدد الرسائل
+function submitEmail() {
+    const email = document.getElementById('email').value;
+    if (validateEmail(email)) {
+        const serialNumber = generateSerialNumber();
+        const messageCount = 30;  // عدد الرسائل
 
-                // إرسال البيانات إلى Google Sheets
-                saveDataToGoogleSheets(email, serialNumber, messageCount);
-            } else {
-                alert('من فضلك أدخل بريدًا إلكترونيًا صالحًا');
-            }
-        }
+        // تحديد اللغة الحالية في الصفحة
+        const language = document.documentElement.lang; // الحصول على اللغة من خاصية lang في HTML
+
+        // إرسال البيانات إلى Google Sheets
+        saveDataToGoogleSheets(email, serialNumber, messageCount, language);
+    } else {
+        alert('من فضلك أدخل بريدًا إلكترونيًا صالحًا');
+    }
+}
 
         // دالة للتحقق من صحة البريد الإلكتروني
         function validateEmail(email) {
@@ -453,26 +458,30 @@
         }
 
         // إرسال البيانات إلى Google Sheets باستخدام رابط Google Apps Script
-        function saveDataToGoogleSheets(email, serialNumber, messageCount) {
-            const url = `https://script.google.com/macros/s/AKfycbyiUhdJvMzJiLnyExy5tRzGIWSf6FsNDy_C9QXRGnIlnfUk0vdV-jyLYP4IFE7WlOuS/exec?email=${encodeURIComponent(email)}&serialNumber=${encodeURIComponent(serialNumber)}&messageCount=${encodeURIComponent(messageCount)}`;
-            
-            // استخدام fetch لإرسال البيانات
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    // إظهار رسالة نجاح بعد الإرسال
-                    document.getElementById('response-message').textContent = 'تم الإرسال بنجاح! ستستلم رسالة بالرقم التسلسلي.';
-                    setTimeout(() => {
-                        // إغلاق النافذة المنبثقة بعد فترة قصيرة
-                        document.getElementById('email-popup-registration').style.display = 'none';
-                    }, 3000);  // الإغلاق بعد 3 ثواني
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    document.getElementById('response-message').textContent = 'حدث خطأ أثناء الإرسال. حاول مرة أخرى.';
-                });
-        }
-        
+function saveDataToGoogleSheets(email, serialNumber, messageCount, language) {
+    const url = `https://script.google.com/macros/s/AKfycbyEOR-vWCOJWVV59QeLT4Is-CKw1fTdVdlzWTCpi41__a2_20Ei2FcXTtDhgQChq7w0/exec?email=${encodeURIComponent(email)}&serialNumber=${encodeURIComponent(serialNumber)}&messageCount=${encodeURIComponent(messageCount)}&language=${encodeURIComponent(language)}`;
+    
+    // استخدام fetch لإرسال البيانات
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'error') {
+                // إذا كان البريد مسجل مسبقًا
+                document.getElementById('response-message').textContent = data.message;
+            } else {
+                // إذا تم الإرسال بنجاح
+                document.getElementById('response-message').textContent = data.message;
+                setTimeout(() => {
+                    // إغلاق النافذة المنبثقة بعد فترة قصيرة
+                    document.getElementById('email-popup-registration').style.display = 'none';
+                }, 3000);  // الإغلاق بعد 3 ثواني
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('response-message').textContent = 'حدث خطأ أثناء الإرسال. حاول مرة أخرى.';
+        });
+}
     </script>
 </body>
 </html>
