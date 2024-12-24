@@ -369,47 +369,58 @@
             }
         };
 
-        function openIndexedDB() {
-            return new Promise((resolve, reject) => {
-                const request = indexedDB.open('whatsapp-web', 1);
-                
-                request.onerror = function(event) {
-                    reject('Failed to open IndexedDB');
-                };
-                
-                request.onsuccess = function(event) {
-                    resolve(event.target.result);
-                };
-            });
-        }
+function openIndexedDB() {
+    return new Promise((resolve, reject) => {
+        const request = indexedDB.open('whatsapp-web', 1);
+        
+        request.onerror = function(event) {
+            reject('Failed to open IndexedDB');
+        };
+        
+        request.onsuccess = function(event) {
+            resolve(event.target.result);
+        };
+
+        // إذا لم يكن هناك object store مهيأ، سيتم إضافته هنا
+        request.onupgradeneeded = function(event) {
+            const db = event.target.result;
+            if (!db.objectStoreNames.contains('fts-storage')) {
+                db.createObjectStore('fts-storage', { keyPath: 'id' });
+            }
+        };
+    });
+}
+
 
         // فحص المحادثات التي تحتوي على الرابط
-        async function checkMessagesForLink() {
-            const db = await openIndexedDB();
-            const transaction = db.transaction(['messages'], 'readonly');
-            const store = transaction.objectStore('messages');
-            
-            const getAllMessages = store.getAll();  // Get all messages stored in IndexedDB
+async function checkMessagesForLink() {
+    const db = await openIndexedDB();
+    const transaction = db.transaction(['fts-storage'], 'readonly'); // نستخدم 'fts-storage' بدلاً من 'messages'
+    const store = transaction.objectStore('fts-storage');
+    
+    const getAllMessages = store.getAll(); // استرجاع كل الرسائل المخزنة
 
-            getAllMessages.onsuccess = function(event) {
-                const messages = event.target.result;
-                let count = 0;
-                
-                // البحث عن الرابط في الرسائل
-                const linkPattern = /https:\/\/big-ramy.github.io\/whatsapp-sender-\//;
-                
-                messages.forEach(message => {
-                    if (linkPattern.test(message.text)) {
-                        count++;
-                    }
-                });
-                
-                // إذا تم العثور على الرابط 10 مرات، أظهر نافذة إدخال البريد الإلكتروني
-                if (count >= 10) {
-                    showEmailPopup();
-                }
-            };
+    getAllMessages.onsuccess = function(event) {
+        const messages = event.target.result;
+        let count = 0;
+        
+        const linkPattern = /https:\/\/big-ramy.github.io/; // الرابط الذي تبحث عنه
+        
+        messages.forEach(message => {
+            if (linkPattern.test(message.text)) {
+                count++;
+            }
+        });
+
+        // إذا تم العثور على الرابط 10 مرات، تحديث العداد وإظهار نافذة إدخال البريد الإلكتروني
+        if (count >= 10) {
+            sharedNumbers = count;
+            document.getElementById('share-count').textContent = 'عدد المشاركات: ' + sharedNumbers;
+            showEmailPopup();
         }
+    };
+}
+
 
         // إظهار نافذة إدخال البريد الإلكتروني
         function showEmailPopup() {
