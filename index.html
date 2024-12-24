@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>برنامج إرسال رسائل</title>
+    <title>واتساب سيندر 1.2 | WhatsApp Sender 1.2</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -22,6 +22,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
         }
 
         header .nav {
@@ -58,15 +59,8 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5); /* لون غامق مع شفافية */
+            background-color: rgba(0, 0, 0, 0.5);
             z-index: 1;
-        }
-        
-        .hero h1,
-        .hero p,
-        .hero button {
-            position: relative;
-            z-index: 2; /* وضع المحتوى فوق الأوفرلاي */
         }
         
         .hero h1 {
@@ -136,6 +130,19 @@
             background-color: #094bba;
         }
 
+        .whatsapp-btn {
+            background-color: #25D366;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-top: 10px;
+        }
+
+        .whatsapp-btn:hover {
+            background-color: #128C7E;
+        }
+
         footer {
             background-color: #0d6efd;
             color: white;
@@ -151,68 +158,6 @@
             cursor: pointer;
         }
 
-        /* Popup styles */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-        }
-
-        .modal-content img {
-            width: 100px;
-            height: 100px;
-        }
-
-        .dropdown {
-            position: relative;
-            display: inline-block;
-        }
-
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #f1f1f1;
-            min-width: 160px;
-            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-            z-index: 1;
-        }
-
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
-
-        /* Styling for WhatsApp sharing */
-        .whatsapp-share {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-        }
-
-        .whatsapp-share a {
-            background-color: #25D366;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            text-decoration: none;
-            margin: 5px;
-        }
-
-        .whatsapp-share a:hover {
-            background-color: #128C7E;
-        }
         /* نافذة إدخال البريد الإلكتروني */
         .email-popup {
             display: none;
@@ -233,40 +178,47 @@
             text-align: center;
         }
 
-/* إضافة تنسيق متجاوب للأجهزة الصغيرة */
-@media only screen and (max-width: 768px) {
-    header .nav {
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    .hero {
-        height: 300px;
-        padding: 10px;
-    }
+        .email-popup input {
+            padding: 10px;
+            margin: 10px 0;
+            width: 100%;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
 
-    .hero h1 {
-        font-size: 2.5rem;
-    }
+        /* إضافة تنسيق متجاوب للأجهزة الصغيرة */
+        @media only screen and (max-width: 768px) {
+            header .nav {
+                flex-direction: column;
+                align-items: center;
+            }
 
-    .hero p {
-        font-size: 1rem;
-    }
+            .hero {
+                height: 300px;
+                padding: 10px;
+            }
 
-    .btn {
-        padding: 8px 16px;
-    }
+            .hero h1 {
+                font-size: 2.5rem;
+            }
 
-    .cards {
-        flex-direction: column;
-    }
-}
+            .hero p {
+                font-size: 1rem;
+            }
 
+            .btn {
+                padding: 8px 16px;
+            }
+
+            .cards {
+                flex-direction: column;
+            }
+        }
     </style>
 </head>
 <body>
     <header>
-        <h1 id="header-title">برنامج إرسال رسائل</h1>
+        <h1 id="header-title">برنامج إرسال رسائل | WhatsApp Sender 1.2</h1>
         <div class="nav">
             <a href="#home" id="home-link">الصفحة الرئيسية</a>
             <a href="#about" id="about-link">عن الشركة</a>
@@ -291,7 +243,7 @@
         <div class="overlay"></div>
         <h1 id="hero-title">أفضل أداة لإرسال الرسائل بسهولة!</h1>
         <p id="hero-description">جرّب برنامجنا الآن وحقق الكفاءة في إرسال الرسائل.</p>
-        <button class="btn" onclick="window.location.href='https://drive.google.com/uc?export=download&id=1DHsRewPhv9MCABUEF5m_SwRRJAXZJdFi'">تحميل البرنامج</button>
+        <button class="btn" id="whatsapp-share">مشاركة عبر واتساب | WhatsApp Sender 1.2</button>
     </div>
 
     <div class="container">
@@ -351,115 +303,86 @@
         </div>
 
         <!-- WhatsApp Share Section -->
-<!-- زر المشاركة عبر WhatsApp -->
-<button id="whatsapp-share">مشاركة عبر واتساب</button>
+        <button id="whatsapp-share">مشاركة عبر واتساب</button>
+        <p id="share-count">عدد المشاركات: 0</p>
 
-<p id="share-count">عدد المشاركات: 0</p>
-
-    <!-- نافذة إدخال البريد الإلكتروني -->
-    <div id="email-popup" class="email-popup">
-        <div class="popup-content">
-            <h3>أدخل بريدك الإلكتروني</h3>
-            <input type="email" id="email" required />
-            <button onclick="submitEmail()">إرسال</button>
+        <!-- نافذة إدخال البريد الإلكتروني -->
+        <div id="email-popup" class="email-popup">
+            <div class="popup-content">
+                <h3>أدخل بريدك الإلكتروني</h3>
+                <input type="email" id="email" required />
+                <button onclick="submitEmail()">إرسال</button>
+                <button onclick="closePopup()">إغلاق</button>
+            </div>
         </div>
-    </div>
 
-<script>
-        // تخزين الأرقام في LocalStorage
-        document.getElementById('whatsapp-share').addEventListener('click', function() {
-            const numbers = []; // هذه الأرقام هي مثال لما سيتم مشاركته
-
-            let sharedNumbers = JSON.parse(localStorage.getItem('sharedNumbers')) || [];
-
-            sharedNumbers.push(...numbers);
-            localStorage.setItem('sharedNumbers', JSON.stringify(sharedNumbers));
-
-            // تحديث العداد
-            document.getElementById('share-count').textContent = 'عدد المشاركات: ' + sharedNumbers.length;
-
-            // التحقق من عدد المشاركات
-            if (sharedNumbers.length >= 10) {
-                showEmailPopup();
-            }
-        });
-
-        function showEmailPopup() {
-            document.getElementById('email-popup').style.display = 'flex';
-        }
-
-        // إرسال البريد الإلكتروني والرقم التسلسلي إلى Google Sheets
-        function submitEmail() {
-            const email = document.getElementById('email').value;
-            if (email) {
-                const serialNumber = generateSerialNumber();
-                const messageCount = 30;  // عدد الرسائل
-                saveDataToGoogleSheets(email, serialNumber, messageCount);
-            }
-        }
-
-        function generateSerialNumber() {
-            return 'SN' + Math.floor(Math.random() * 1000000); // توليد رقم تسلسلي عشوائي
-        }
-
-        // إرسال البيانات إلى Google Sheets
-        function saveDataToGoogleSheets(email, serialNumber, messageCount) {
-            const url = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec?email=' + encodeURIComponent(email) + '&serialNumber=' + encodeURIComponent(serialNumber) + '&messageCount=' + encodeURIComponent(messageCount);
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    alert('تم إرسال البيانات بنجاح!');
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-        }
-    </script>
-        
     </div>
 
     <footer>
         <p>جميع الحقوق محفوظة © برنامج إرسال رسائل</p>
     </footer>
 
-    <script>
-        function switchLanguage(language) {
-            if (language === 'en') {
-                document.getElementById('header-title').textContent = 'Message Sending Program';
-                document.getElementById('hero-title').textContent = 'The Best Tool to Send Messages Easily!';
-                document.getElementById('hero-description').textContent = 'Try our program now and achieve efficiency in sending messages.';
-                document.getElementById('how-to-use-title').textContent = 'How to Use the Program';
-                document.getElementById('step1-title').textContent = 'Upload the Numbers File';
-                document.getElementById('step1-description').textContent = 'Upload an Excel file containing your contacts.';
-                document.getElementById('step2-title').textContent = 'Write the Message';
-                document.getElementById('step2-description').textContent = 'Enter the text message you want to send to your contacts.';
-                document.getElementById('step3-title').textContent = 'Start Sending';
-                document.getElementById('step3-description').textContent = 'Press send and enjoy the ease and speed.';
-                document.getElementById('choose-package-title').textContent = 'Choose Your Package';
-                document.getElementById('support-title').textContent = 'Support and Inquiries';
-                document.getElementById('home-link').textContent = 'Home';
-                document.getElementById('about-link').textContent = 'About the Company';
-                document.getElementById('contact-link').textContent = 'Contact';
-            } else {
-                document.getElementById('header-title').textContent = 'برنامج إرسال رسائل';
-                document.getElementById('hero-title').textContent = 'أفضل أداة لإرسال الرسائل بسهولة!';
-                document.getElementById('hero-description').textContent = 'جرّب برنامجنا الآن وحقق الكفاءة في إرسال الرسائل.';
-                document.getElementById('how-to-use-title').textContent = 'كيفية استخدام البرنامج';
-                document.getElementById('step1-title').textContent = 'تحميل ملف الأرقام';
-                document.getElementById('step1-description').textContent = 'قم بتحميل ملف Excel يحتوي على جهات الاتصال الخاصة بك.';
-                document.getElementById('step2-title').textContent = 'كتابة الرسالة';
-                document.getElementById('step2-description').textContent = 'أدخل الرسالة النصية التي ترغب في إرسالها إلى جهات الاتصال.';
-                document.getElementById('step3-title').textContent = 'بدء الإرسال';
-                document.getElementById('step3-description').textContent = 'اضغط على زر الإرسال واستمتع بالسهولة والسرعة.';
-                document.getElementById('choose-package-title').textContent = 'اختر الباقة المناسبة';
-                document.getElementById('support-title').textContent = 'الدعم والاستفسارات';
-                document.getElementById('home-link').textContent = 'الصفحة الرئيسية';
-                document.getElementById('about-link').textContent = 'عن الشركة';
-                document.getElementById('contact-link').textContent = 'التواصل';
-            }
-        }
+<script>
+// تخزين الأرقام في LocalStorage
+document.getElementById('whatsapp-share').addEventListener('click', function() {
+    const numbers = ["+1234567890", "+9876543210"]; // هذه الأرقام هي مثال لما سيتم مشاركته
+    let sharedNumbers = JSON.parse(localStorage.getItem('sharedNumbers')) || [];
 
-        // You can use analytics or other tools to track the number of shares.
-    </script>
+    sharedNumbers.push(...numbers);
+    localStorage.setItem('sharedNumbers', JSON.stringify(sharedNumbers));
+
+    // تحديث العداد
+    document.getElementById('share-count').textContent = sharedNumbers.length;
+
+    // التحقق من عدد المشاركات
+    if (sharedNumbers.length >= 10) {
+        showEmailPopup();
+    }
+
+    // فتح WhatsApp ويب أو تطبيق WhatsApp
+    const whatsappLink = `https://wa.me/?text=رابط المشاركة هنا`; 
+    window.open(whatsappLink, "_blank");
+});
+
+// إظهار نافذة إدخال الإيميل
+function showEmailPopup() {
+    document.getElementById('email-popup').style.display = 'flex';
+}
+
+// إغلاق نافذة الإدخال
+function closePopup() {
+    document.getElementById('email-popup').style.display = 'none';
+}
+
+// إرسال البريد الإلكتروني والرقم التسلسلي إلى Google Sheets
+function submitEmail() {
+    const email = document.getElementById('email').value;
+    if (email) {
+        const serialNumber = generateSerialNumber();
+        const messageCount = 30; // عدد الرسائل
+        saveDataToGoogleSheets(email, serialNumber, messageCount);
+        closePopup();
+    }
+}
+
+// توليد الرقم التسلسلي
+function generateSerialNumber() {
+    return 'SN' + Math.floor(Math.random() * 1000000); // توليد رقم تسلسلي عشوائي
+}
+
+// إرسال البيانات إلى Google Sheets
+function saveDataToGoogleSheets(email, serialNumber, messageCount) {
+    const url = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec?email=' + encodeURIComponent(email) + '&serialNumber=' + encodeURIComponent(serialNumber) + '&messageCount=' + encodeURIComponent(messageCount);
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            alert('تم إرسال البيانات بنجاح!');
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+</script>
+
 </body>
-</html>  
+</html>
