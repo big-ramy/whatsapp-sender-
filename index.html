@@ -425,9 +425,19 @@
 
         
     // إظهار نافذة التسجيل عند تحميل الصفحة
-        window.onload = function() {
-            document.getElementById('email-popup-registration').style.display = 'flex';
-        };
+window.onload = function() {
+    setTimeout(function() {
+        document.getElementById('email-popup-registration').style.display = 'flex';
+    }, 3000);  // تأخير 3 ثواني
+
+    // تحديد اللغة بناءً على لغة المتصفح
+    const userLang = navigator.language || navigator.userLanguage; 
+    if (userLang.includes('ar')) {
+        switchLanguage('ar'); // إذا كانت اللغة العربية
+    } else {
+        switchLanguage('en'); // إذا كانت اللغة الإنجليزية أو لغة أخرى
+    }
+};
 
         // توليد رقم تسلسلي عشوائي
         function generateSerialNumber() {
