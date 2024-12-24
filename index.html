@@ -363,52 +363,68 @@
     <script>
 // دالة التبديل بين اللغات
 function switchLanguage(language) {
-    // التأكد من وجود العناصر قبل محاولة تغيير المحتوى
-    const headerTitle = document.getElementById('header-title');
-    const heroTitle = document.getElementById('hero-title');
-    const heroDescription = document.getElementById('hero-description');
-    const howToUseTitle = document.getElementById('how-to-use-title');
-    const step1Title = document.getElementById('step1-title');
-    const step1Description = document.getElementById('step1-description');
-    const step2Title = document.getElementById('step2-title');
-    const step2Description = document.getElementById('step2-description');
-    const step3Title = document.getElementById('step3-title');
-    const step3Description = document.getElementById('step3-description');
-    const choosePackageTitle = document.getElementById('choose-package-title');
-    const supportTitle = document.getElementById('support-title');
-
-    // تأكد من أن العناصر موجودة
-    if (headerTitle && heroTitle && heroDescription && howToUseTitle) {
-        if (language === 'en') {
-            headerTitle.textContent = 'Message Sending Program';
-            heroTitle.textContent = 'The Best Tool to Send Messages Easily!';
-            heroDescription.textContent = 'Try our program now and achieve efficiency in sending messages.';
-            howToUseTitle.textContent = 'How to Use the Program';
-            step1Title.textContent = 'Upload the Numbers File';
-            step1Description.textContent = 'Upload an Excel file containing your contacts.';
-            step2Title.textContent = 'Write the Message';
-            step2Description.textContent = 'Enter the text message you want to send to your contacts.';
-            step3Title.textContent = 'Start Sending';
-            step3Description.textContent = 'Press send and enjoy the ease and speed.';
-            choosePackageTitle.textContent = 'Choose Your Package';
-            supportTitle.textContent = 'Support and Inquiries';
-        } else {
-            headerTitle.textContent = 'برنامج إرسال رسائل';
-            heroTitle.textContent = 'أفضل أداة لإرسال الرسائل بسهولة!';
-            heroDescription.textContent = 'جرّب برنامجنا الآن وحقق الكفاءة في إرسال الرسائل.';
-            howToUseTitle.textContent = 'كيفية استخدام البرنامج';
-            step1Title.textContent = 'تحميل ملف الأرقام';
-            step1Description.textContent = 'قم بتحميل ملف Excel يحتوي على جهات الاتصال الخاصة بك.';
-            step2Title.textContent = 'كتابة الرسالة';
-            step2Description.textContent = 'أدخل الرسالة النصية التي ترغب في إرسالها إلى جهات الاتصال.';
-            step3Title.textContent = 'بدء الإرسال';
-            step3Description.textContent = 'اضغط على زر الإرسال واستمتع بالسهولة والسرعة.';
-            choosePackageTitle.textContent = 'اختر الباقة المناسبة';
-            supportTitle.textContent = 'الدعم والاستفسارات';
+        document.documentElement.lang = language; // تحديث lang في HTML
+    const translations = {
+        "ar": {
+            "header-title": "برنامج إرسال رسائل",
+            "home-link": "الصفحة الرئيسية",
+            "about-link": "عن الشركة",
+            "contact-link": "التواصل",
+            "hero-title": "أفضل أداة لإرسال الرسائل بسهولة!",
+            "hero-description": "جرّب برنامجنا الآن وحقق الكفاءة في إرسال الرسائل.",
+            "step1-title": "تحميل ملف الأرقام",
+            "step1-description": "قم بتحميل ملف Excel يحتوي على جهات الاتصال الخاصة بك.",
+            "step2-title": "كتابة الرسالة",
+            "step2-description": "أدخل الرسالة النصية التي ترغب في إرسالها إلى جهات الاتصال.",
+            "step3-title": "بدء الإرسال",
+            "step3-description": "اضغط على زر الإرسال واستمتع بالسهولة والسرعة.",
+            "choose-package-title": "اختر الباقة المناسبة",
+            "popup-title": "سجل معنا واحصل على رقم مجاني لاستخدام البرنامج",
+            "submit-button": "إرسال",
+            "response-message": "تم الإرسال بنجاح! ستستلم رسالة بالرقم التسلسلي.",
+            "footer-text": "جميع الحقوق محفوظة © برنامج إرسال رسائل"
+        },
+        "en": {
+            "header-title": "Message Sending Program",
+            "home-link": "Home",
+            "about-link": "About the Company",
+            "contact-link": "Contact",
+            "hero-title": "The Best Tool to Send Messages Easily!",
+            "hero-description": "Try our program now and achieve efficiency in sending messages.",
+            "step1-title": "Upload the Numbers File",
+            "step1-description": "Upload an Excel file containing your contacts.",
+            "step2-title": "Write the Message",
+            "step2-description": "Enter the text message you want to send to your contacts.",
+            "step3-title": "Start Sending",
+            "step3-description": "Press send and enjoy the ease and speed.",
+            "choose-package-title": "Choose Your Package",
+            "popup-title": "Register and Get a Free Number to Use the Program",
+            "submit-button": "Submit",
+            "response-message": "Successfully sent! You will receive a message with the serial number.",
+            "footer-text": "All rights reserved © Message Sending Program"
         }
-    } else {
-        console.error("One or more elements not found. Please check your HTML structure.");
-    }
+    };
+
+    // تطبيق الترجمة
+    const lang = translations[language];
+    
+    document.getElementById('header-title').textContent = lang['header-title'];
+    document.getElementById('home-link').textContent = lang['home-link'];
+    document.getElementById('about-link').textContent = lang['about-link'];
+    document.getElementById('contact-link').textContent = lang['contact-link'];
+    document.getElementById('hero-title').textContent = lang['hero-title'];
+    document.getElementById('hero-description').textContent = lang['hero-description'];
+    document.getElementById('step1-title').textContent = lang['step1-title'];
+    document.getElementById('step1-description').textContent = lang['step1-description'];
+    document.getElementById('step2-title').textContent = lang['step2-title'];
+    document.getElementById('step2-description').textContent = lang['step2-description'];
+    document.getElementById('step3-title').textContent = lang['step3-title'];
+    document.getElementById('step3-description').textContent = lang['step3-description'];
+    document.getElementById('choose-package-title').textContent = lang['choose-package-title'];
+    document.getElementById('popup-title').textContent = lang['popup-title'];
+    document.getElementById('submit-button').textContent = lang['submit-button'];
+    document.getElementById('response-message').textContent = lang['response-message'];
+    document.getElementById('footer-text').textContent = lang['footer-text'];
 }
 
         function openPaymentModal(messages, price) {
