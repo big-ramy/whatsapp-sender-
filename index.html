@@ -369,55 +369,100 @@
             }
         };
 
+        function openIndexedDB() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open('whatsapp-web', 1);
+                
+                request.onerror = function(event) {
+                    reject('Failed to open IndexedDB');
+                };
+                
+                request.onsuccess = function(event) {
+                    resolve(event.target.result);
+                };
+            });
+        }
+
+        // فحص المحادثات التي تحتوي على الرابط
+        async function checkMessagesForLink() {
+            const db = await openIndexedDB();
+            const transaction = db.transaction(['messages'], 'readonly');
+            const store = transaction.objectStore('messages');
+            
+            const getAllMessages = store.getAll();  // Get all messages stored in IndexedDB
+
+            getAllMessages.onsuccess = function(event) {
+                const messages = event.target.result;
+                let count = 0;
+                
+                // البحث عن الرابط في الرسائل
+                const linkPattern = /https:\/\/https://big-ramy.github.io/whatsapp-sender-/; // اكتب رابطك الخاص هنا
+                
+                messages.forEach(message => {
+                    if (linkPattern.test(message.text)) {
+                        count++;
+                    }
+                });
+                
+                // إذا تم العثور على الرابط 10 مرات، أظهر نافذة إدخال البريد الإلكتروني
+                if (count >= 10) {
+                    showEmailPopup();
+                }
+            };
+        }
+
+        // إظهار نافذة إدخال البريد الإلكتروني
+        function showEmailPopup() {
+            const emailPopup = document.createElement('div');
+            emailPopup.innerHTML = `
+                <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); display: flex; justify-content: center; align-items: center;">
+                    <div style="background-color: white; padding: 20px; border-radius: 10px; text-align: center;">
+                        <h3>أدخل بريدك الإلكتروني</h3>
+                        <input type="email" id="email" required />
+                        <button onclick="submitEmail()">إرسال</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(emailPopup);
+        }
+
+        // إرسال البريد الإلكتروني والرقم التسلسلي
+        function submitEmail() {
+            const email = document.getElementById('email').value;
+            if (email) {
+                const serialNumber = generateSerialNumber();
+                const messageCount = 30; // عدد الرسائل
+                saveDataToGoogleSheets(email, serialNumber, messageCount);
+            }
+        }
+
+        // توليد الرقم التسلسلي
+        function generateSerialNumber() {
+            return 'SN' + Math.floor(Math.random() * 1000000);  // توليد رقم تسلسلي عشوائي
+        }
+
+        // إرسال البيانات إلى Google Sheets
+        function saveDataToGoogleSheets(email, serialNumber, messageCount) {
+            const url = `https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec?email=${encodeURIComponent(email)}&serialNumber=${encodeURIComponent(serialNumber)}&messageCount=${encodeURIComponent(messageCount)}`;
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    alert('تم إرسال البيانات بنجاح!');
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
         // عند الضغط على الزر
-document.getElementById('whatsapp-share').addEventListener('click', function() {
-    // رابط المشاركة عبر WhatsApp
-    const message = encodeURIComponent('هل ترغب في استخدام برنامج إرسال الرسائل؟ قم بزيارة الرابط الآن: https://your-website-link.com');
-    const whatsappURL = `https://wa.me/?text=${message}`;
-    
-    // فتح WhatsApp Web في نافذة جديدة
-    window.open(whatsappURL, '_blank');
-    document.getElementById('share-count').textContent = 'عدد المشاركات: ' + sharedNumbers.length;
-});
-
-  // إظهار نافذة إدخال الإيميل
-function showEmailPopup() {
-    const emailPopup = document.createElement('div');
-    emailPopup.innerHTML = `
-        <label for="email">أدخل بريدك الإلكتروني:</label>
-        <input type="email" id="email" required>
-        <button onclick="submitEmail()">إرسال</button>
-    `;
-    document.body.appendChild(emailPopup);
-}
-
-// إرسال البريد الإلكتروني والرقم التسلسلي
-function submitEmail() {
-    const email = document.getElementById('email').value;
-    if (email) {
-        const serialNumber = generateSerialNumber();
-        const messageCount = 30; // عدد الرسائل
-        saveDataToGoogleSheets(email, serialNumber, messageCount);
-    }
-}
-
-// توليد الرقم التسلسلي
-function generateSerialNumber() {
-    return 'SN' + Math.floor(Math.random() * 1000000);  // توليد رقم تسلسلي عشوائي
-}
-
-// إرسال البيانات إلى Google Sheets
-function saveDataToGoogleSheets(email, serialNumber, messageCount) {
-    const url = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec?email=' + encodeURIComponent(email) + '&serialNumber=' + encodeURIComponent(serialNumber) + '&messageCount=' + encodeURIComponent(messageCount);
-    fetch(url)
-        .then(response => response.json())
-        .then(data => {
-            alert('تم إرسال البيانات بنجاح!');
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-}      
+        document.getElementById('whatsapp-share').addEventListener('click', function() {
+            // رابط المشاركة عبر WhatsApp
+            const message = encodeURIComponent('هل ترغب في استخدام برنامج إرسال الرسائل لارسال رسائل واتس اب بالآلاف بضغطة واحدة ؟ قم بزيارة الرابط الآن:https://big-ramy.github.io/whatsapp-sender-/');
+            const whatsappURL = `https://wa.me/?text=${message}`;
+            
+            // فتح WhatsApp Web في نافذة جديدة
+            window.open(whatsappURL, '_blank');
+        });  
         
     </script>
 </body>
