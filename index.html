@@ -194,6 +194,57 @@
         .dropdown:hover .dropdown-content {
             display: block;
         }
+           /* CSS  للايميل لتصميم النافذة المنبثقة */
+    .email-popup {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7); /* خلفية داكنة مع شفافية */
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999; /* للتأكد من أن النافذة فوق باقي المحتوى */
+    }
+
+    .popup-content {
+        background-color: white;
+        padding: 30px;
+        border-radius: 10px;
+        width: 300px;
+        text-align: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .popup-content h3 {
+        font-size: 20px;
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+    .popup-content input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+
+    .popup-content button {
+        padding: 10px 20px;
+        background-color: #0d6efd;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    .popup-content button:hover {
+        background-color: #094bba;
+    }
     </style>
 </head>
 <body>
@@ -305,74 +356,14 @@
             <img id="qr-image" src="" alt="QR Code">
         </div>
     </div>
-        <div id="email-popup" class="modal">
-        <div class="modal-content">
-            <h3>سجل معنا واحصل على رقم مجاني لاستخدام البرنامج</h3>
-            <label for="email">أدخل بريدك الإلكتروني:</label><br>
-            <input type="email" id="email" required /><br><br>
-            <button class="btn" onclick="submitEmail()">تسجيل</button>
-        </div>
+<!-- نافذة إدخال البريد الإلكتروني -->
+<div id="email-popup-registration" class="email-popup" style="display:none;">
+    <div class="popup-content">
+        <h3>سجل معنا واحصل على رقم مجاني لاستخدام البرنامج</h3>
+        <input type="email" id="email" placeholder="أدخل بريدك الإلكتروني" required />
+        <button onclick="submitEmail()">إرسال</button>
     </div>
-
-    <script>
-        // إظهار نافذة التسجيل عند تحميل الصفحة
-        window.onload = function() {
-            document.getElementById('email-popup').style.display = 'flex';
-        }
-
-        // توليد رقم تسلسلي عشوائي
-        function generateSerialNumber() {
-            return 'SN' + Math.floor(Math.random() * 1000000);  // توليد رقم تسلسلي عشوائي
-        }
-
-        // دالة لتسجيل الإيميل في Google Sheets
-        function submitEmail() {
-            const email = document.getElementById('email').value;
-            if (email) {
-                const serialNumber = generateSerialNumber();
-                const messageCount = 30;  // عدد الرسائل
-
-                // إرسال البيانات إلى Google Sheets
-                saveDataToGoogleSheets(email, serialNumber, messageCount);
-
-                // إغلاق النافذة بعد التسجيل
-                document.getElementById('email-popup').style.display = 'none';
-
-                // إرسال رسالة عبر البريد الإلكتروني
-                sendEmail(email, serialNumber, messageCount);
-            }
-        }
-
-        // إرسال البيانات إلى Google Sheets
-        function saveDataToGoogleSheets(email, serialNumber, messageCount) {
-            const url = `https://script.google.com/macros/s/AKfycbyy_24-aZ7bm1IyKuV_PR0Bac2JV7rCffFqAHhVJcuu8oYMwuKZfPFcog3QPq58-S-h/exec?email=${encodeURIComponent(email)}&serialNumber=${encodeURIComponent(serialNumber)}&messageCount=${encodeURIComponent(messageCount)}`;
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    console.log('تم إرسال البيانات بنجاح!');
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-        }
-
-        // إرسال رسالة شكر عبر البريد الإلكتروني
-        function sendEmail(email, serialNumber, messageCount) {
-            const subject = "شكرًا لتسجيلك في برنامجنا!";
-            const body = `
-                مرحبًا! 👋
-                شكرًا لتسجيلك في برنامجنا. 🎉
-                لقد تم توليد رقمك التسلسلي: ${serialNumber} 🆔
-                لديك ${messageCount} رسالة مجانية لاستخدامها في البرنامج. 📩
-                استخدم الرقم التسلسلي في البرنامج للحصول على الرسائل.
-
-                شكراً لك ونتمنى لك استخداماً سعيداً! 😊
-            `;
-            
-            const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-            window.location.href = mailtoLink;
-        }
-    </script>
+</div>
 
     <script>
         function switchLanguage(language) {
@@ -434,6 +425,44 @@
                 document.getElementById('qr-modal').style.display = 'none';
             }
         };
+ // إظهار نافذة التسجيل عند تحميل الصفحة
+        window.onload = function() {
+            document.getElementById('email-popup-registration').style.display = 'flex';
+        }
+
+        // توليد رقم تسلسلي عشوائي
+        function generateSerialNumber() {
+            return 'SN' + Math.floor(Math.random() * 1000000);  // توليد رقم تسلسلي عشوائي
+        }
+
+        // دالة لتسجيل الإيميل في Google Sheets
+        function submitEmail() {
+            const email = document.getElementById('email').value;
+            if (email) {
+                const serialNumber = generateSerialNumber();
+                const messageCount = 30;  // عدد الرسائل
+
+                // إرسال البيانات إلى Google Sheets
+                saveDataToGoogleSheets(email, serialNumber, messageCount);
+
+                // إغلاق النافذة بعد التسجيل
+                document.getElementById('email-popup-registration').style.display = 'none';
+
+            }
+        }
+
+        // إرسال البيانات إلى Google Sheets
+        function saveDataToGoogleSheets(email, serialNumber, messageCount) {
+            const url = `https://script.google.com/macros/s/AKfycbyiUhdJvMzJiLnyExy5tRzGIWSf6FsNDy_C9QXRGnIlnfUk0vdV-jyLYP4IFE7WlOuS/exec?email=${encodeURIComponent(email)}&serialNumber=${encodeURIComponent(serialNumber)}&messageCount=${encodeURIComponent(messageCount)}`;
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    console.log('تم إرسال البيانات بنجاح!');
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
 
 
         
