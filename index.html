@@ -396,7 +396,7 @@
                 let count = 0;
                 
                 // البحث عن الرابط في الرسائل
-                const linkPattern = /https:\/\/big-ramy.github.io/whatsapp-sender-/;
+                const linkPattern = /https:\/\/big-ramy.github.io\/whatsapp-sender-\//;
                 
                 messages.forEach(message => {
                     if (linkPattern.test(message.text)) {
