@@ -361,43 +361,55 @@
         <p>جميع الحقوق محفوظة © برنامج إرسال رسائل</p>
     </footer> 
     <script>
-        function switchLanguage(language) {
-    // تغيير قيمة lang في HTML لتحديد اللغة
-    document.documentElement.lang = language;
-            if (language === 'en') {
-                document.getElementById('header-title').textContent = 'Message Sending Program';
-                document.getElementById('hero-title').textContent = 'The Best Tool to Send Messages Easily!';
-                document.getElementById('hero-description').textContent = 'Try our program now and achieve efficiency in sending messages.';
-                document.getElementById('how-to-use-title').textContent = 'How to Use the Program';
-                document.getElementById('step1-title').textContent = 'Upload the Numbers File';
-                document.getElementById('step1-description').textContent = 'Upload an Excel file containing your contacts.';
-                document.getElementById('step2-title').textContent = 'Write the Message';
-                document.getElementById('step2-description').textContent = 'Enter the text message you want to send to your contacts.';
-                document.getElementById('step3-title').textContent = 'Start Sending';
-                document.getElementById('step3-description').textContent = 'Press send and enjoy the ease and speed.';
-                document.getElementById('choose-package-title').textContent = 'Choose Your Package';
-                document.getElementById('support-title').textContent = 'Support and Inquiries';
-                document.getElementById('home-link').textContent = 'Home';
-                document.getElementById('about-link').textContent = 'About the Company';
-                document.getElementById('contact-link').textContent = 'Contact';
-            } else {
-                document.getElementById('header-title').textContent = 'برنامج إرسال رسائل';
-                document.getElementById('hero-title').textContent = 'أفضل أداة لإرسال الرسائل بسهولة!';
-                document.getElementById('hero-description').textContent = 'جرّب برنامجنا الآن وحقق الكفاءة في إرسال الرسائل.';
-                document.getElementById('how-to-use-title').textContent = 'كيفية استخدام البرنامج';
-                document.getElementById('step1-title').textContent = 'تحميل ملف الأرقام';
-                document.getElementById('step1-description').textContent = 'قم بتحميل ملف Excel يحتوي على جهات الاتصال الخاصة بك.';
-                document.getElementById('step2-title').textContent = 'كتابة الرسالة';
-                document.getElementById('step2-description').textContent = 'أدخل الرسالة النصية التي ترغب في إرسالها إلى جهات الاتصال.';
-                document.getElementById('step3-title').textContent = 'بدء الإرسال';
-                document.getElementById('step3-description').textContent = 'اضغط على زر الإرسال واستمتع بالسهولة والسرعة.';
-                document.getElementById('choose-package-title').textContent = 'اختر الباقة المناسبة';
-                document.getElementById('support-title').textContent = 'الدعم والاستفسارات';
-                document.getElementById('home-link').textContent = 'الصفحة الرئيسية';
-                document.getElementById('about-link').textContent = 'عن الشركة';
-                document.getElementById('contact-link').textContent = 'التواصل';
-            }
+// دالة التبديل بين اللغات
+function switchLanguage(language) {
+    // التأكد من وجود العناصر قبل محاولة تغيير المحتوى
+    const headerTitle = document.getElementById('header-title');
+    const heroTitle = document.getElementById('hero-title');
+    const heroDescription = document.getElementById('hero-description');
+    const howToUseTitle = document.getElementById('how-to-use-title');
+    const step1Title = document.getElementById('step1-title');
+    const step1Description = document.getElementById('step1-description');
+    const step2Title = document.getElementById('step2-title');
+    const step2Description = document.getElementById('step2-description');
+    const step3Title = document.getElementById('step3-title');
+    const step3Description = document.getElementById('step3-description');
+    const choosePackageTitle = document.getElementById('choose-package-title');
+    const supportTitle = document.getElementById('support-title');
+
+    // تأكد من أن العناصر موجودة
+    if (headerTitle && heroTitle && heroDescription && howToUseTitle) {
+        if (language === 'en') {
+            headerTitle.textContent = 'Message Sending Program';
+            heroTitle.textContent = 'The Best Tool to Send Messages Easily!';
+            heroDescription.textContent = 'Try our program now and achieve efficiency in sending messages.';
+            howToUseTitle.textContent = 'How to Use the Program';
+            step1Title.textContent = 'Upload the Numbers File';
+            step1Description.textContent = 'Upload an Excel file containing your contacts.';
+            step2Title.textContent = 'Write the Message';
+            step2Description.textContent = 'Enter the text message you want to send to your contacts.';
+            step3Title.textContent = 'Start Sending';
+            step3Description.textContent = 'Press send and enjoy the ease and speed.';
+            choosePackageTitle.textContent = 'Choose Your Package';
+            supportTitle.textContent = 'Support and Inquiries';
+        } else {
+            headerTitle.textContent = 'برنامج إرسال رسائل';
+            heroTitle.textContent = 'أفضل أداة لإرسال الرسائل بسهولة!';
+            heroDescription.textContent = 'جرّب برنامجنا الآن وحقق الكفاءة في إرسال الرسائل.';
+            howToUseTitle.textContent = 'كيفية استخدام البرنامج';
+            step1Title.textContent = 'تحميل ملف الأرقام';
+            step1Description.textContent = 'قم بتحميل ملف Excel يحتوي على جهات الاتصال الخاصة بك.';
+            step2Title.textContent = 'كتابة الرسالة';
+            step2Description.textContent = 'أدخل الرسالة النصية التي ترغب في إرسالها إلى جهات الاتصال.';
+            step3Title.textContent = 'بدء الإرسال';
+            step3Description.textContent = 'اضغط على زر الإرسال واستمتع بالسهولة والسرعة.';
+            choosePackageTitle.textContent = 'اختر الباقة المناسبة';
+            supportTitle.textContent = 'الدعم والاستفسارات';
         }
+    } else {
+        console.error("One or more elements not found. Please check your HTML structure.");
+    }
+}
 
         function openPaymentModal(messages, price) {
             document.getElementById('payment-modal').style.display = 'flex';
