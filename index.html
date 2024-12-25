@@ -22,21 +22,36 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: relative;
         }
 
-        header .nav {
+        .nav {
             display: flex;
             gap: 20px;
         }
 
-        header .nav a {
+        .nav a {
             color: white;
             text-decoration: none;
             padding: 10px;
         }
 
-        header .nav a:hover {
+        .nav a:hover {
             background-color: #094bba;
+            border-radius: 5px;
+        }
+
+        .hamburger-menu {
+            display: none; /* إخفاء في الشاشات الكبيرة */
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+        .hamburger-menu div {
+            width: 30px;
+            height: 3px;
+            background-color: white;
             border-radius: 5px;
         }
 
@@ -194,6 +209,39 @@
         .dropdown:hover .dropdown-content {
             display: block;
         }
+
+                /* النوافذ المنبثقة مع زر الإغلاق */
+        .popup-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 20px;
+            cursor: pointer;
+            color: #333;
+            background: none;
+            border: none;
+        }
+
+        .popup-close-ar {
+            left: 10px;
+            right: auto;
+        }
+
+
+        .popup-content {
+            position: relative;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 300px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* إخفاء النافذة عند الضغط خارجها */
+        .email-popup .popup-content {
+            box-sizing: border-box;
+        }
            /* CSS  للايميل لتصميم النافذة المنبثقة */
         .email-popup {
             position: fixed;
@@ -208,14 +256,6 @@
             z-index: 9999;
         }
 
-        .popup-content {
-            background-color: white;
-            padding: 30px;
-            border-radius: 10px;
-            width: 300px;
-            text-align: center;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
 
         .popup-content h3 {
             font-size: 20px;
@@ -251,23 +291,172 @@
             font-size: 16px;
             color: green;
         }
+                /* عند الشاشات الصغيرة */
+        @media (max-width: 768px) {
+            .nav {
+                display: none; /* إخفاء القائمة العادية */
+                width: 100%;
+                text-align: right;
+            }
+
+            .hamburger-menu {
+                display: flex; /* إظهار زر الهامبرغر */
+            }
+
+            .nav.active {
+                display: flex; /* إظهار القائمة عند الضغط */
+                flex-direction: column;
+                width: 100%;
+                background-color: #0d6efd;
+            }
+
+            .nav a {
+                padding: 15px;
+                text-align: right;
+            }
+        }
+
+        .hero {
+            position: relative;
+            background: url('hero-image.jpg') no-repeat center center/cover;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+            flex-direction: column;
+        }
+
+        .hero .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+
+        .hero h1, .hero p {
+            position: relative;
+            z-index: 2;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .section {
+            margin: 40px 0;
+        }
+
+        .section h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #0d6efd;
+        }
+
+        .cards {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 10px;
+            max-width: 300px;
+            text-align: center;
+            background: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+        }
+
+        .btn {
+            background-color: #0d6efd;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            background-color: #094bba;
+        }
+
+        footer {
+            background-color: #0d6efd;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .lang-btn {
+            background-color: #f7f9fc;
+            color: #0d6efd;
+            padding: 10px;
+            border: 1px solid #0d6efd;
+            cursor: pointer;
+        }
+
+        /* Popup styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .modal-content img {
+            width: 100px;
+            height: 100px;
+        }
     </style>
 </head>
 <body>
     <header>
-        <h1 id="header-title">برنامج إرسال رسائل</h1>
+     <h1 id="header-title">برنامج إرسال رسائل</h1>
         <div class="nav">
             <a href="#home" id="home-link">الصفحة الرئيسية</a>
             <a href="#about" id="about-link">عن الشركة</a>
             <a href="#contact" id="contact-link">التواصل</a>
-            <div class="dropdown">
+             <div class="dropdown">
                 <button class="btn">المنتجات</button>
                 <div class="dropdown-content">
                     <a href="#">الباقة الأساسية</a>
                     <a href="#">الباقة المتقدمة</a>
                     <a href="#">الباقة الاحترافية</a>
                 </div>
-            </div>
+        </div>
+        <div class="hamburger-menu" onclick="toggleMenu()">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
         </div>
         <div>
             <button class="lang-btn" onclick="switchLanguage('ar')">العربية</button>
@@ -350,6 +539,7 @@
     <!-- النافذة المنبثقة لطلب البريد الإلكتروني -->
     <div id="email-popup-registration" class="email-popup">
         <div class="popup-content">
+            <button class="popup-close" onclick="closePopup()">×</button> <!-- زر الإغلاق -->
             <h3>سجل معنا واحصل على رقم مجاني لاستخدام البرنامج</h3>
             <input type="email" id="email" placeholder="أدخل بريدك الإلكتروني" required />
             <button onclick="submitEmail()">إرسال</button>
@@ -361,6 +551,18 @@
         <p>جميع الحقوق محفوظة © برنامج إرسال رسائل</p>
     </footer> 
     <script>
+
+                // دالة لتبديل القائمة الهامبرغر
+        function toggleMenu() {
+            document.querySelector('.nav').classList.toggle('active');
+        }
+
+        // دالة لإغلاق النافذة المنبثقة
+        function closePopup() {
+            document.getElementById('email-popup-registration').style.display = 'none';
+        }
+
+        
 // دالة التبديل بين اللغات
 function switchLanguage(language) {
         document.documentElement.lang = language; // تحديث lang في HTML
