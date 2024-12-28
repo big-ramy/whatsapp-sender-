@@ -571,7 +571,7 @@
           data-src-en="stcpay.png"
           alt="STC Pay"
           class="lang-image"
-          style="width: 70px; cursor: pointer; margin:5px;"
+          style="width: 40px; height:10px; cursor: pointer; margin:5px;"
           onclick="openQrPaymentPopup('STC Pay', selectedMessages)"
         />
         <img
@@ -580,7 +580,7 @@
           data-src-en="alrajhi.png"
           alt="الراجحي"
           class="lang-image"
-          style="width: 70px; cursor: pointer; margin:5px;"
+          style="width: 40px; height:10px; cursor: pointer; margin:5px;"
           onclick="openQrPaymentPopup('AlRajhi', selectedMessages)"
         />
         <img
@@ -1068,13 +1068,13 @@
           let amount = 0;
           let packageName = '';
           if (msgCount === 500) {
-            amount = 90; // السعر الأساسي
+            amount = 24.99; // السعر الأساسي
             packageName = 'الباقة الأساسية';
           } else if (msgCount === 1000) {
-            amount = 150; // السعر المتقدم
+            amount = 39.99; // السعر المتقدم
             packageName = 'الباقة المتقدمة';
           } else if (msgCount === 2000) {
-            amount = 250; // السعر الاحترافي
+            amount = 65.99; // السعر الاحترافي
             packageName = 'الباقة الاحترافية';
           } else {
             amount = 100; // سعر افتراضي
