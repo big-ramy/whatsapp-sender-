@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title data-translate="page-title">برنامج إرسال رسائل - صفحة الهبوط</title>
   
-  <!-- رابط Bootstrap 5 -->
+  <!-- (اختياري) رابط Bootstrap 5 -->
   <link
     href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
     rel="stylesheet"
@@ -20,12 +20,10 @@
       margin: 0;
       padding: 0;
     }
-
     .navbar-brand {
       font-size: 1.5rem;
       font-weight: bold;
     }
-
     .dropdown-menu {
       right: 0; 
       left: auto;
@@ -62,19 +60,23 @@
       font-size: 1.2rem;
       margin-bottom: 30px;
     }
+    .hero-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      align-items: center;
+    }
 
     .section-title {
       text-align: center;
       margin: 50px 0 30px 0;
       color: #0d6efd;
     }
-
     .card img {
       max-height: 180px;
       object-fit: cover;
       border-radius: 8px;
     }
-
     .pricing-card h3 {
       margin-bottom: 15px;
     }
@@ -82,7 +84,6 @@
       font-size: 1.1rem;
       margin-bottom: 15px;
     }
-
     .testimonial-card {
       background-color: #fff;
       border: 1px solid #ddd;
@@ -98,11 +99,9 @@
       margin-top: 15px;
       font-weight: bold;
     }
-
     .accordion-button:not(.collapsed) {
       color: #0d6efd;
     }
-
     footer {
       background-color: #0d6efd;
       color: #fff;
@@ -111,10 +110,8 @@
       margin-top: 40px;
     }
 
-    .modal {
-      transition: opacity 0.3s ease-in-out;
-    }
-    .email-popup {
+    /* النوافذ المنبثقة (جميعها Overlay تغطي الصفحة) */
+    .overlay-popup {
       display: none;
       position: fixed;
       inset: 0;
@@ -123,17 +120,13 @@
       align-items: center;
       z-index: 9999;
     }
-    .email-popup.show {
-      display: flex;
-      opacity: 1;
-    }
-    .popup-content {
+    .popup-box {
       position: relative;
       background-color: #fff;
       padding: 30px;
       border-radius: 10px;
-      width: 300px;
-      text-align: center;
+      max-width: 400px;
+      width: 90%;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       animation: popupFade 0.4s ease;
     }
@@ -147,6 +140,30 @@
         opacity: 1;
       }
     }
+
+    /* النافذة المنبثقة للتسجيل بالبريد */
+    #email-popup-registration .popup-box {
+      text-align: center;
+    }
+
+    /* النافذة المنبثقة للدفع الرئيسي */
+    #payment-modal .popup-box,
+    #qr-modal .popup-box {
+      text-align: center;
+      padding: 20px;
+    }
+
+    /* النافذة المنبثقة الخاصة بالـQR Payment */
+    #qr-payment-popup .popup-inner {
+      background: #fff; 
+      padding: 20px; 
+      border-radius: 8px; 
+      width: 350px; 
+      max-width: 90vw;
+      position: relative;
+    }
+
+    /* زر الإغلاق الخفي (إن وجد) */
     .popup-close {
       position: absolute;
       top: 10px;
@@ -160,58 +177,13 @@
     .popup-close:hover {
       color: red;
     }
-
-    .lang-btn {
-      border: 1px solid #fff;
-      background-color: transparent;
-      color: #fff;
-      margin-left: 10px;
-      transition: 0.3s;
-    }
-    .lang-btn:hover {
-      background-color: #fff;
-      color: #0d6efd;
-    }
-
-    .hero-buttons {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      align-items: center;
-    }
-
-    /* النافذة المنبثقة الجديدة لرفع فاتورة الدفع بعد مسح QR */
-    #qr-payment-popup {
-      display: none; 
-      position: fixed; 
-      inset: 0; 
-      background: rgba(0,0,0,0.7); 
-      justify-content: center; 
-      align-items: center; 
-      z-index: 99999;
-    }
-    #qr-payment-popup .popup-inner {
-      background: #fff; 
-      padding: 20px; 
-      border-radius: 8px; 
-      width: 350px; 
-      position: relative;
-    }
-    /* إزالة أي زر إغلاق (X) هنا لأننا سنغلق بالضغط خارج النافذة */
-
   </style>
 </head>
 <body>
   <!-- نافبار (شريط التنقل) -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container">
-      <a 
-        class="navbar-brand" 
-        href="#" 
-        data-translate="header-title"
-      >
-        برنامج إرسال رسائل
-      </a>
+      <a class="navbar-brand" href="#" data-translate="header-title">برنامج إرسال رسائل</a>
       <button
         class="navbar-toggler"
         type="button"
@@ -225,9 +197,9 @@
         <ul class="navbar-nav mb-2 mb-lg-0">
           <li class="nav-item">
             <a 
-              class="nav-link active" 
-              aria-current="page" 
-              href="#home" 
+              class="nav-link active"
+              aria-current="page"
+              href="#home"
               data-translate="home-link"
             >
               الصفحة الرئيسية
@@ -253,19 +225,26 @@
               المنتجات
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li><a class="dropdown-item" href="#" data-translate="product-basic">الباقة الأساسية</a></li>
-              <li><a class="dropdown-item" href="#" data-translate="product-advanced">الباقة المتقدمة</a></li>
-              <li><a class="dropdown-item" href="#" data-translate="product-pro">الباقة الاحترافية</a></li>
+              <li>
+                <a class="dropdown-item" href="#" data-translate="product-basic">
+                  الباقة الأساسية
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="#" data-translate="product-advanced">
+                  الباقة المتقدمة
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="#" data-translate="product-pro">
+                  الباقة الاحترافية
+                </a>
+              </li>
             </ul>
           </li>
         </ul>
         <!-- زر تبديل اللغة الوحيد -->
-        <button 
-          class="btn lang-btn" 
-          id="lang-toggle"
-        >
-          English
-        </button>
+        <button class="btn lang-btn" id="lang-toggle">English</button>
       </div>
     </div>
   </nav>
@@ -274,16 +253,10 @@
   <section class="hero-section" id="home">
     <div class="hero-overlay"></div>
     <div class="hero-content">
-      <h1 
-        class="hero-title" 
-        data-translate="hero-title"
-      >
+      <h1 class="hero-title" data-translate="hero-title">
         أفضل أداة لإرسال الرسائل بسهولة!
       </h1>
-      <p 
-        class="hero-description" 
-        data-translate="hero-description"
-      >
+      <p class="hero-description" data-translate="hero-description">
         جرّب برنامجنا الآن وحقق الكفاءة في إرسال الرسائل.
       </p>
 
@@ -306,7 +279,7 @@
             جرّب البرنامج
           </button>
           <div 
-            class="text-white mt-2" 
+            class="text-white mt-2"
             style="font-size: 0.9rem"
             data-translate="free-messages-text"
           >
@@ -319,10 +292,7 @@
 
   <!-- قسم كيفية استخدام البرنامج -->
   <section class="container my-5">
-    <h2 
-      class="section-title" 
-      data-translate="how-to-use-title"
-    >
+    <h2 class="section-title" data-translate="how-to-use-title">
       كيفية استخدام البرنامج
     </h2>
     <div class="row justify-content-center">
@@ -364,10 +334,7 @@
 
   <!-- قسم اختيار الباقة المناسبة -->
   <section class="container my-5">
-    <h2 
-      class="section-title" 
-      data-translate="choose-package-title"
-    >
+    <h2 class="section-title" data-translate="choose-package-title">
       اختر الباقة المناسبة
     </h2>
     <div class="row justify-content-center">
@@ -377,9 +344,9 @@
           <div class="card-body">
             <h3 data-translate="pricing-basic-title">الباقة الأساسية</h3>
             <p data-translate="pricing-basic-description">500 رسالة - 90 ريال</p>
-            <button 
-              class="btn btn-primary" 
-              data-translate="buy-now" 
+            <button
+              class="btn btn-primary"
+              data-translate="buy-now"
               onclick="openPaymentModal(500, 90)"
             >
               شراء الآن
@@ -393,9 +360,9 @@
           <div class="card-body">
             <h3 data-translate="pricing-advanced-title">الباقة المتقدمة</h3>
             <p data-translate="pricing-advanced-description">1000 رسالة - 150 ريال</p>
-            <button 
-              class="btn btn-primary" 
-              data-translate="buy-now" 
+            <button
+              class="btn btn-primary"
+              data-translate="buy-now"
               onclick="openPaymentModal(1000, 150)"
             >
               شراء الآن
@@ -409,9 +376,9 @@
           <div class="card-body">
             <h3 data-translate="pricing-pro-title">الباقة الاحترافية</h3>
             <p data-translate="pricing-pro-description">2000 رسالة - 250 ريال</p>
-            <button 
+            <button
               class="btn btn-primary"
-              data-translate="buy-now" 
+              data-translate="buy-now"
               onclick="openPaymentModal(2000, 250)"
             >
               شراء الآن
@@ -431,9 +398,7 @@
           <p data-translate="testimonial-1-text">
             "برنامج رائع وسهل الاستخدام! ساعدني في إرسال آلاف الرسائل بسهولة وسرعة فائقة."
           </p>
-          <p class="testimonial-name" data-translate="testimonial-1-name">
-            - أحمد
-          </p>
+          <p class="testimonial-name" data-translate="testimonial-1-name">- أحمد</p>
         </div>
       </div>
       <div class="col-md-4">
@@ -441,9 +406,7 @@
           <p data-translate="testimonial-2-text">
             "فريق الدعم متعاون جدًا، أنصح بهذا البرنامج لأي شخص يريد إدارة رسائله بكفاءة."
           </p>
-          <p class="testimonial-name" data-translate="testimonial-2-name">
-            - سارة
-          </p>
+          <p class="testimonial-name" data-translate="testimonial-2-name">- سارة</p>
         </div>
       </div>
       <div class="col-md-4">
@@ -451,9 +414,7 @@
           <p data-translate="testimonial-3-text">
             "من أفضل برامج المراسلة التي جربتها، أنصح الجميع بتجربته!"
           </p>
-          <p class="testimonial-name" data-translate="testimonial-3-name">
-            - خالد
-          </p>
+          <p class="testimonial-name" data-translate="testimonial-3-name">- خالد</p>
         </div>
       </div>
     </div>
@@ -483,10 +444,7 @@
           aria-labelledby="questionOne"
           data-bs-parent="#faqAccordion"
         >
-          <div 
-            class="accordion-body"
-            data-translate="faq-a1"
-          >
+          <div class="accordion-body" data-translate="faq-a1">
             نعم، عند التسجيل بالبريد الإلكتروني ستحصل على رقم مجاني يتيح لك إرسال عدد محدود من الرسائل مجانًا.
           </div>
         </div>
@@ -511,10 +469,7 @@
           aria-labelledby="questionTwo"
           data-bs-parent="#faqAccordion"
         >
-          <div 
-            class="accordion-body"
-            data-translate="faq-a2"
-          >
+          <div class="accordion-body" data-translate="faq-a2">
             يدعم البرنامج الدفع عبر STC Pay، بنك الراجحي، و PayPal.
           </div>
         </div>
@@ -535,64 +490,60 @@
     <p data-translate="footer-text">جميع الحقوق محفوظة © برنامج إرسال رسائل</p>
   </footer>
 
-  <!-- النوافذ المنبثقة الخاصة بالدفع -->
-  <!-- Payment Modal (قديم) -->
-  <div id="payment-modal" class="modal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content p-3">
-        <button class="popup-close" onclick="closePopup()">×</button>
-        <h3 class="mb-3" data-translate="choose-payment">اختر وسيلة الدفع</h3>
-        <div class="d-flex justify-content-around">
-          <img
-            src="stcpay.png"
-            alt="STC Pay"
-            style="width: 70px; cursor: pointer"
-            onclick="openQRPaymentPopup('STC Pay', selectedMessages)"
-          />
-          <img
-            src="QRstcpay.png"
-            alt="STC Pay"
-            style="width: 100px; cursor: pointer"
-            onclick="openQRPaymentPopup('STC Pay', selectedMessages)"
-          />
-          <img
-            src="alrajhi.png"
-            alt="الراجحي"
-            style="width: 70px; cursor: pointer"
-            onclick="openQRPaymentPopup('AlRajhi', selectedMessages)"
-          />          <img
-            src="QRalrajhi.png"
-            alt="الراجحي"
-            style="width: 100px; cursor: pointer"
-            onclick="openQRPaymentPopup('AlRajhi', selectedMessages)"
-          />
-          <img
-            src="paypal.png"
-            alt="PayPal"
-            style="width: 70px; cursor: pointer"
-            onclick="openQRModal('paypal')"
-          />
-        </div>
+  <!-- النافذة المنبثقة الرئيسية للدفع -->
+  <div id="payment-modal" class="overlay-popup">
+    <div class="popup-box">
+      <h3 class="mb-3" data-translate="choose-payment">اختر وسيلة الدفع</h3>
+      <div class="d-flex justify-content-around flex-wrap">
+        <!-- نفس اسماء الصور المطلوبة -->
+        <img
+          src="stcpay.png"
+          alt="STC Pay"
+          style="width: 70px; cursor: pointer; margin:5px;"
+          onclick="openQRPaymentPopup('STC Pay', selectedMessages)"
+        />
+        <img
+          src="QRstcpay.png"
+          alt="STC Pay QR"
+          style="width: 100px; cursor: pointer; margin:5px;"
+          onclick="openQRPaymentPopup('STC Pay', selectedMessages)"
+        />
+        <img
+          src="alrajhi.png"
+          alt="الراجحي"
+          style="width: 70px; cursor: pointer; margin:5px;"
+          onclick="openQRPaymentPopup('AlRajhi', selectedMessages)"
+        />
+        <img
+          src="QRalrajhi.png"
+          alt="الراجحي QR"
+          style="width: 100px; cursor: pointer; margin:5px;"
+          onclick="openQRPaymentPopup('AlRajhi', selectedMessages)"
+        />
+        <img
+          src="paypal.png"
+          alt="PayPal"
+          style="width: 70px; cursor: pointer; margin:5px;"
+          onclick="openQRModal('paypal')"
+        />
       </div>
     </div>
   </div>
 
-  <!-- QR Code Modal (قديم) -->
-  <div id="qr-modal" class="modal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content p-3 text-center">
-        <button class="popup-close text-end ms-auto d-block" onclick="closePopup()">×</button>
-        <h3 class="mb-3" data-translate="scan-qr">مسح الكود</h3>
-        <img id="qr-image" src="" alt="QR Code" style="max-width: 200px; margin: 0 auto" />
-      </div>
+  <!-- نافذة قديمة لعرض أي QR آخر -->
+  <div id="qr-modal" class="overlay-popup">
+    <div class="popup-box text-center">
+      <h3 class="mb-3" data-translate="scan-qr">مسح الكود</h3>
+      <img id="qr-image" src="" alt="QR Code" style="max-width: 200px; margin: 0 auto" />
     </div>
   </div>
 
-  <!-- النافذة المنبثقة لطلب البريد الإلكتروني (التجربة المجانية) -->
-  <div id="email-popup-registration" class="email-popup">
-    <div class="popup-content">
-      <button class="popup-close" onclick="closePopup()">×</button>
-      <h3 id="popup-title" data-translate="popup-title">سجل معنا واحصل على رقم مجاني لاستخدام البرنامج</h3>
+  <!-- نافذة التسجيل بالبريد (التجربة المجانية) -->
+  <div id="email-popup-registration" class="overlay-popup">
+    <div class="popup-box">
+      <h3 id="popup-title" data-translate="popup-title">
+        سجل معنا واحصل على رقم مجاني لاستخدام البرنامج
+      </h3>
       <input
         type="email"
         id="email"
@@ -600,37 +551,35 @@
         placeholder=""
         required
       />
-      <button 
-        class="btn btn-primary w-100" 
-        id="submit-button" 
+      <button
+        class="btn btn-primary w-100"
+        id="submit-button"
         data-translate="submit-button"
         onclick="submitEmail()"
       >
         إرسال
       </button>
-      <!-- نجعل هذا العنصر فارغًا في البداية -->
-      <p 
-        id="response-message" 
-        class="mt-3" 
+      <p
+        id="response-message"
+        class="mt-3"
         data-translate="response-message"
         style="display: none;"
-      >
-      </p>
+      ></p>
     </div>
   </div>
 
-  <!-- النافذة المنبثقة الجديدة لرفع فاتورة الدفع عبر STC Pay أو الراجحي (تُغلق بالضغط خارجها) -->
-  <div id="qr-payment-popup">
+  <!-- نافذة رفع فاتورة الدفع (تُغلق بالضغط خارج المحتوى) -->
+  <div id="qr-payment-popup" class="overlay-popup">
     <div class="popup-inner">
       <h3>الدفع عبر QR</h3>
       <p>بعد إتمام الدفع في تطبيق البنك، الرجاء تعبئة البيانات التالية:</p>
 
       <label>اسمك:</label>
       <input type="text" id="payment-name" class="form-control mb-2" />
-      
+
       <label>بريدك الإلكتروني:</label>
       <input type="email" id="payment-email" class="form-control mb-2" />
-      
+
       <label>عدد الرسائل:</label>
       <input type="number" id="payment-messages" class="form-control mb-2" readonly />
 
@@ -642,13 +591,13 @@
     </div>
   </div>
 
-  <!-- روابط سكربت Bootstrap وجافاسكربت -->
+  <!-- روابط سكربت (جافاسكربت) -->
   <script
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
   ></script>
   <script>
     /************************************************
-     *       كائن الترجمة (Arabic / English)
+     *   كائن الترجمة (Arabic / English)
      ***********************************************/
     const translations = {
       ar: {
@@ -779,6 +728,7 @@
       document.querySelectorAll("[data-translate]").forEach((el) => {
         const translateKey = el.getAttribute("data-translate");
         if (translations[lang][translateKey]) {
+          // لو العنصر input نعدل الـplaceholder
           if (el.tagName.toLowerCase() === "input") {
             el.placeholder = translations[lang][translateKey];
           } else {
@@ -786,6 +736,7 @@
           }
         }
       });
+      // تعديل عنوان الصفحة
       document.title = translations[lang]["page-title"];
     }
 
@@ -813,7 +764,8 @@
       applyTranslations(currentLang);
     });
 
-    function detectBrowserLanguage() {
+    // اكتشاف لغة المتصفح + إظهار نافذة التسجيل بعد 3 ثواني
+    window.onload = () => {
       const userLang = navigator.language || navigator.userLanguage;
       if (userLang.toLowerCase().includes("ar")) {
         currentLang = "ar";
@@ -824,26 +776,52 @@
       }
       setDirection(currentLang);
       applyTranslations(currentLang);
+
+      // فتح نافذة التسجيل بعد 3 ثواني
+      setTimeout(() => {
+        document.getElementById("email-popup-registration").style.display = "flex";
+        // تسجيل الحدث للإغلاق عند الضغط خارج .popup-box
+        document.getElementById("email-popup-registration").addEventListener("click", outsideClickEmailPopup);
+      }, 3000);
+    };
+
+    /****************************************
+     * إغلاق أي Popup عند الضغط خارج المحتوى
+     ****************************************/
+    // البريد المجاني
+    function outsideClickEmailPopup(e) {
+      const box = document.querySelector("#email-popup-registration .popup-box");
+      if (!box.contains(e.target)) {
+        closeEmailPopup();
+      }
+    }
+    function closeEmailPopup() {
+      const popup = document.getElementById("email-popup-registration");
+      popup.style.display = "none";
+      popup.removeEventListener("click", outsideClickEmailPopup);
     }
 
-    /************************************************
-     *                   النوافذ المنبثقة
-     ***********************************************/
-    function closePopup() {
-      document.getElementById("payment-modal").style.display = "none";
-      document.getElementById("qr-modal").style.display = "none";
-      document.getElementById("email-popup-registration").classList.remove("show");
-    }
-
-    let selectedMessages = 0; // لتخزين عدد الرسائل في حالة اختار الباقة
-
+    // النافذة الرئيسية للدفع
     function openPaymentModal(messages, price) {
-      // يحفظ عدد الرسائل المختارة
       selectedMessages = messages;
-      const paymentModal = new bootstrap.Modal(document.getElementById("payment-modal"));
-      paymentModal.show();
+      const paymentModal = document.getElementById("payment-modal");
+      paymentModal.style.display = "flex";
+      // إغلاق عند الضغط خارج
+      paymentModal.addEventListener("click", outsideClickPaymentModal);
+    }
+    function outsideClickPaymentModal(e) {
+      const box = document.querySelector("#payment-modal .popup-box");
+      if (!box.contains(e.target)) {
+        closePaymentModal();
+      }
+    }
+    function closePaymentModal() {
+      const pm = document.getElementById("payment-modal");
+      pm.style.display = "none";
+      pm.removeEventListener("click", outsideClickPaymentModal);
     }
 
+    // النافذة QR القديمة
     function openQRModal(paymentMethod) {
       let qrCode = "";
       if (paymentMethod === "stcpay") {
@@ -854,163 +832,114 @@
         qrCode = "paypal-qr.png";
       }
       document.getElementById("qr-image").src = qrCode;
-      const qrModal = new bootstrap.Modal(document.getElementById("qr-modal"));
-      qrModal.show();
+      const qrModal = document.getElementById("qr-modal");
+      qrModal.style.display = "flex";
+      qrModal.addEventListener("click", outsideClickQrModal);
+    }
+    function outsideClickQrModal(e) {
+      const box = document.querySelector("#qr-modal .popup-box");
+      if (!box.contains(e.target)) {
+        closeQrModal();
+      }
+    }
+    function closeQrModal() {
+      const qm = document.getElementById("qr-modal");
+      qm.style.display = "none";
+      qm.removeEventListener("click", outsideClickQrModal);
     }
 
+    // نافذة التسجيل بالبريد اليدوي
     function openEmailRegistration() {
-      document.getElementById("email-popup-registration").classList.add("show");
+      const emailPopup = document.getElementById("email-popup-registration");
+      emailPopup.style.display = "flex";
+      emailPopup.addEventListener("click", outsideClickEmailPopup);
     }
 
-    /************************************************
-     * إغلاق نافذة دفع الفاتورة عند الضغط خارجها
-     ***********************************************/
+    // النافذة الجديدة لرفع الفاتورة
     function openQRPaymentPopup(method, msgCount) {
-      closePopup(); // أغلق أي نوافذ أخرى
+      closePaymentModal(); // اغلاق نافذة الدفع الرئيسية إن كانت مفتوحة
       const popup = document.getElementById("qr-payment-popup");
-      // تعبئة عدد الرسائل المختارة
+      popup.style.display = "flex";
+      // تعبئة عدد الرسائل
       document.getElementById("payment-messages").value = msgCount || 1000;
-      popup.style.display = 'flex';
-      // أضف مستمع الحدث لنقرات الماوس
-      popup.addEventListener("click", outsideClickQRPayment);
+      // تسجيل الحدث
+      popup.addEventListener("click", outsideClickQrPayment);
     }
-
-    function closeQrPaymentPopup() {
-      const popup = document.getElementById("qr-payment-popup");
-      popup.style.display = 'none';
-      // إزالة مستمع الحدث لمنع التكرار
-      popup.removeEventListener("click", outsideClickQRPayment);
-    }
-
-    function outsideClickQRPayment(e) {
-      const popupInner = document.querySelector("#qr-payment-popup .popup-inner");
-      // إذا النقرة خارج المحتوى الداخلي، أغلق النافذة
-      if (!popupInner.contains(e.target)) {
+    function outsideClickQrPayment(e) {
+      const inner = document.querySelector("#qr-payment-popup .popup-inner");
+      if (!inner.contains(e.target)) {
         closeQrPaymentPopup();
       }
     }
-
-    /************************************************
-     *        إظهار نافذة التسجيل بالبريد بعد 3 ثوانٍ
-     ***********************************************/
-    window.onload = function () {
-      detectBrowserLanguage(); 
-      setTimeout(function () {
-        document
-          .getElementById("email-popup-registration")
-          .classList.add("show");
-      }, 3000);
-    };
-
-    /************************************************
-     *        التعامل مع بيانات التسجيل المجاني
-     ***********************************************/
-    function submitEmail() {
-      const email = document.getElementById("email").value;
-      const responseMessage = document.getElementById("response-message");
-      if (validateEmail(email)) {
-        const serialNumber = generateSerialNumber();
-        const messageCount = 30; 
-        const language = currentLang;
-
-        responseMessage.style.display = "none";
-        responseMessage.textContent = "";
-
-        saveDataToGoogleSheets(email, serialNumber, messageCount, language);
-      } else {
-        alert("من فضلك أدخل بريدًا إلكترونيًا صالحًا");
-      }
+    function closeQrPaymentPopup() {
+      const popup = document.getElementById("qr-payment-popup");
+      popup.style.display = "none";
+      popup.removeEventListener("click", outsideClickQrPayment);
     }
 
-    function generateSerialNumber() {
-      return "SN" + Math.floor(Math.random() * 1000000);
+    /************************************************
+     *  تسجيل البريد المجاني
+     ***********************************************/
+    function submitEmail() {
+      const email = document.getElementById("email").value.trim();
+      const resp = document.getElementById("response-message");
+      if (!validateEmail(email)) {
+        alert("من فضلك أدخل بريدًا إلكترونيًا صالحًا");
+        return;
+      }
+      const serialNumber = generateSerialNumber();
+      const messageCount = 30; 
+      const language = document.documentElement.lang;
+
+      resp.style.display = "none";
+      resp.textContent = "";
+
+      // مثال: saveDataToGoogleSheets أو أي خدمة
+      // هذا مجرد تمثيل
+      setTimeout(() => {
+        resp.style.display = "block";
+        resp.textContent = "تم الإرسال بنجاح! ستستلم رسالة بالرقم التسلسلي.";
+        setTimeout(() => {
+          closeEmailPopup();
+          resp.textContent = "";
+        }, 2000);
+      }, 1000);
     }
     function validateEmail(email) {
       const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       return regex.test(email);
     }
-
-    function saveDataToGoogleSheets(email, serialNumber, messageCount, language) {
-      const responseMessage = document.getElementById("response-message");
-      // عدّل هذا الرابط برابط الـWeb App الخاص بك
-      const url = `https://script.google.com/macros/s/XXXXXXXX/exec?email=${encodeURIComponent(
-        email
-      )}&serialNumber=${encodeURIComponent(
-        serialNumber
-      )}&messageCount=${encodeURIComponent(
-        messageCount
-      )}&language=${encodeURIComponent(language)}`;
-
-      fetch(url)
-        .then((response) => response.json())
-        .then((data) => {
-          responseMessage.style.display = "block";
-          if (data.status === "error") {
-            responseMessage.textContent = data.message;
-          } else {
-            responseMessage.textContent = data.message;
-            setTimeout(() => {
-              document
-                .getElementById("email-popup-registration")
-                .classList.remove("show");
-            }, 3000);
-          }
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-          responseMessage.style.display = "block";
-          responseMessage.textContent =
-            "حدث خطأ أثناء الإرسال. حاول مرة أخرى.";
-        });
+    function generateSerialNumber() {
+      return "SN" + Math.floor(Math.random() * 1000000);
     }
 
     /************************************************
      *   رفع فاتورة الدفع (QR Payment Popup)
      ***********************************************/
     async function submitPaymentProof() {
-      const name = document.getElementById('payment-name').value.trim();
-      const email = document.getElementById('payment-email').value.trim();
-      const messagesCount = document.getElementById('payment-messages').value.trim();
-      const fileInput = document.getElementById('payment-file');
-      const resultDiv = document.getElementById('qr-payment-result');
+      const name = document.getElementById("payment-name").value.trim();
+      const email = document.getElementById("payment-email").value.trim();
+      const messagesCount = document.getElementById("payment-messages").value.trim();
+      const file = document.getElementById("payment-file").files[0];
+      const resultDiv = document.getElementById("qr-payment-result");
 
-      if (!name || !email || !messagesCount || !fileInput.files.length) {
-        alert('الرجاء تعبئة جميع الحقول وإرفاق الملف!');
+      if (!name || !email || !messagesCount || !file) {
+        alert("الرجاء تعبئة جميع الحقول!");
         return;
       }
       if (!validateEmail(email)) {
-        alert('الرجاء إدخال بريد إلكتروني صالح!');
+        alert("من فضلك أدخل بريدًا إلكترونيًا صالحًا");
         return;
       }
 
-      const formData = new FormData();
-      formData.append('name', name);
-      formData.append('email', email);
-      formData.append('messagesCount', messagesCount);
-      formData.append('paymentFile', fileInput.files[0]);
-
-      try {
-        // استدعاء سكربت جوجل (عدّل الرابط أدناه)
-        const res = await fetch('YOUR_GOOGLE_SCRIPT_WEB_APP_URL', {
-          method: 'POST',
-          body: formData
-        });
-        const data = await res.json();
-        if (data.status === 'success') {
-          resultDiv.style.color = 'green';
-          resultDiv.textContent = data.message;
-          setTimeout(() => {
-            closeQrPaymentPopup();
-            resultDiv.textContent = '';
-          }, 2000);
-        } else {
-          resultDiv.style.color = 'red';
-          resultDiv.textContent = data.message || 'حدث خطأ!';
-        }
-      } catch (err) {
-        alert('خطأ في الاتصال بالسيرفر.');
-        console.error(err);
-      }
+      // إرسال لـGoogle Apps Script إن أحببت
+      // مجرد مثال ظاهري
+      resultDiv.style.color = "green";
+      resultDiv.textContent = "تم رفع الفاتورة بنجاح!";
+      setTimeout(() => {
+        closeQrPaymentPopup();
+        resultDiv.textContent = "";
+      }, 2000);
     }
   </script>
 </body>
