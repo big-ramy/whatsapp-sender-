@@ -571,7 +571,7 @@
           alt="STC Pay"
           class="lang-image"
           style="width: 70px; cursor: pointer; margin:5px;"
-          onclick="openPaymentPopup('STC Pay', selectedMessages)"
+          onclick="openQrPaymentPopup('STC Pay', selectedMessages)"
         />
         <img
           src="alrajhi.png"
@@ -580,7 +580,7 @@
           alt="الراجحي"
           class="lang-image"
           style="width: 70px; cursor: pointer; margin:5px;"
-          onclick="openPaymentPopup('AlRajhi', selectedMessages)"
+          onclick="openQrPaymentPopup('AlRajhi', selectedMessages)"
         />
         <img
           src="paypal.png"
@@ -589,7 +589,7 @@
           alt="PayPal"
           class="lang-image"
           style="width: 70px; cursor: pointer; margin:5px;"
-          onclick="openPaymentPopup('PayPal', selectedMessages)"
+          onclick="openQrPaymentPopup('PayPal', selectedMessages)"
         />
       </div>
     </div>
@@ -641,7 +641,7 @@
   <div id="qr-payment-popup" class="overlay-popup">
     <div class="popup-inner">
       <h3>الدفع</h3>
-      <!-- إضافة صورة كيو آر كود بناءً على وسيلة الدفع (لـ STC Pay و AlRajhi) -->
+      <!-- إضافة صورة كيو أر كود بناءً على وسيلة الدفع (لـ STC Pay و AlRajhi) -->
       <img id="qr-payment-image" src="" alt="QR Code" style="max-width: 200px; margin-bottom: 15px;" />
       
       <!-- حاوية باي بال -->
@@ -878,14 +878,18 @@
     }
 
     let selectedMessages = 0; // لتخزين عدد الرسائل في حالة اختار الباقة
+    let selectedPrice = 0; // لتخزين السعر المختار
 
-    function openPaymentPopup(method, msgCount) {
-      selectedMessages = msgCount;
+    // دالة فتح نافذة الدفع
+    function openPaymentModal(messages, price) {
+      selectedMessages = messages;
+      selectedPrice = price;
       const paymentModal = document.getElementById("payment-modal");
       paymentModal.style.display = "flex";
       paymentModal.addEventListener("click", outsideClickPaymentModal);
-      // تخزين وسيلة الدفع المختارة
-      paymentModal.setAttribute("data-method", method);
+      // تخزين الباقة المختارة
+      paymentModal.setAttribute("data-messages", messages);
+      paymentModal.setAttribute("data-price", price);
     }
 
     function outsideClickPaymentModal(e) {
@@ -899,30 +903,11 @@
       const pm = document.getElementById("payment-modal");
       pm.style.display = "none";
       pm.removeEventListener("click", outsideClickPaymentModal);
-      pm.removeAttribute("data-method");
+      pm.removeAttribute("data-messages");
+      pm.removeAttribute("data-price");
     }
 
-    // نافذة التسجيل بالبريد
-    function openEmailPopup() {
-      const emailPopup = document.getElementById("email-popup-registration");
-      emailPopup.style.display = "flex";
-      emailPopup.addEventListener("click", outsideClickEmailPopup);
-    }
-
-    function outsideClickEmailPopup(e) {
-      const box = document.querySelector("#email-popup-registration .popup-box");
-      if (!box.contains(e.target)) {
-        closeEmailPopup();
-      }
-    }
-
-    function closeEmailPopup() {
-      const popup = document.getElementById("email-popup-registration");
-      popup.style.display = "none";
-      popup.removeEventListener("click", outsideClickEmailPopup);
-    }
-
-    // النافذة المنبثقة لرفع فاتورة الدفع
+    // دالة فتح نافذة اختيار وسيلة الدفع
     function openQrPaymentPopup(method, msgCount) {
       closePaymentModal(); // اغلاق نافذة الدفع الرئيسية إن كانت مفتوحة
       const popup = document.getElementById("qr-payment-popup");
@@ -969,6 +954,30 @@
       const paypalContainer = document.getElementById("paypal-button-container");
       paypalContainer.innerHTML = "";
       paypalContainer.style.display = "none";
+    }
+
+    // نافذة التسجيل بالبريد
+    function openEmailRegistration() {
+      openEmailPopup();
+    }
+
+    function openEmailPopup() {
+      const emailPopup = document.getElementById("email-popup-registration");
+      emailPopup.style.display = "flex";
+      emailPopup.addEventListener("click", outsideClickEmailPopup);
+    }
+
+    function outsideClickEmailPopup(e) {
+      const box = document.querySelector("#email-popup-registration .popup-box");
+      if (!box.contains(e.target)) {
+        closeEmailPopup();
+      }
+    }
+
+    function closeEmailPopup() {
+      const popup = document.getElementById("email-popup-registration");
+      popup.style.display = "none";
+      popup.removeEventListener("click", outsideClickEmailPopup);
     }
 
     /************************************************
