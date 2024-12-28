@@ -11,9 +11,8 @@
     rel="stylesheet"
   />
 
-  <!-- PayPal JavaScript SDK (استخدم Client ID الخاص بك) -->
-  <script src="https://www.paypal.com/sdk/js?client-id=AeeAWTTUiIffxzut4SPuKKn-qzkmdellWi0LKjKWVSWKBXdQ_NwpONrQDLalv-oYLDdUc_yuw1Yrk_gc&currency=USD"></script>
-
+  <!-- PayPal JavaScript SDK سيتم تحميله ديناميكيًا بناءً على لغة المستخدم -->
+  
   <style>
     /* تنسيقات عامة */
     body {
@@ -130,8 +129,8 @@
       background-color: #fff;
       padding: 30px;
       border-radius: 10px;
-      max-width: 400px;
-      width: 90%;
+      max-width: 600px; /* زيادة العرض */
+      width: 95%; /* زيادة العرض */
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       animation: popupFade 0.4s ease;
     }
@@ -571,7 +570,7 @@
           data-src-en="stcpay.png"
           alt="STC Pay"
           class="lang-image"
-          style="width: 40px; height:10px; cursor: pointer; margin:5px;"
+          style="width: 70px; cursor: pointer; margin:5px;"
           onclick="openQrPaymentPopup('STC Pay', selectedMessages)"
         />
         <img
@@ -580,7 +579,7 @@
           data-src-en="alrajhi.png"
           alt="الراجحي"
           class="lang-image"
-          style="width: 40px; height:10px; cursor: pointer; margin:5px;"
+          style="width: 70px; cursor: pointer; margin:5px;"
           onclick="openQrPaymentPopup('AlRajhi', selectedMessages)"
         />
         <img
@@ -659,10 +658,10 @@
         
         <label>عدد الرسائل:</label>
         <input type="number" id="payment-messages" class="form-control mb-2" readonly />
-  
+
         <label>أرفق إيصال الدفع (صورة / PDF):</label>
         <input type="file" id="payment-file" accept="image/*,application/pdf" class="form-control mb-3" />
-  
+
         <!-- زر إرسال للإيصال الدفع -->
         <button class="btn btn-primary w-100" onclick="submitPaymentProof()">إرسال</button>
         <div id="qr-payment-result" style="margin-top:10px; color:green;"></div>
@@ -737,7 +736,8 @@
 
         "popup-title": "سجل معنا واحصل على رقم مجاني لاستخدام البرنامج",
         "submit-button": "إرسال",
-        "response-message": "تم الإرسال بنجاح! ستستلم رسالة بالرقم التسلسلي."
+        "response-message": "تم الإرسال بنجاح! ستستلم رسالة بالرقم التسلسلي.",
+        "payment-success": "تم الدفع بنجاح! شكرًا لك على استخدام برنامجنا."
       },
       en: {
         "page-title": "Message Sending Program - Landing Page",
@@ -797,11 +797,33 @@
 
         "popup-title": "Register and Get a Free Number to Use the Program",
         "submit-button": "Submit",
-        "response-message": "Successfully sent! You will receive a message with the serial number."
+        "response-message": "Successfully sent! You will receive a message with the serial number.",
+        "payment-success": "Payment successful! Thank you for using our program."
       },
     };
 
     let currentLang = "ar"; // افتراضيًا العربي
+    let currentSerialNumber = null; // لتخزين الرقم التسلسلي
+
+    // دالة تحميل سكربت باي بال ديناميكيًا بناءً على اللغة
+    function loadPayPalSDK(lang) {
+      // إزالة سكربت باي بال الحالي إن وجد
+      const existingScript = document.getElementById("paypal-sdk");
+      if (existingScript) {
+        existingScript.parentNode.removeChild(existingScript);
+      }
+
+      // إنشاء سكربت جديد
+      const script = document.createElement("script");
+      script.id = "paypal-sdk";
+      const locale = (lang === "ar") ? "ar_SA" : "en_US";
+      script.src = `https://www.paypal.com/sdk/js?client-id=AeeAWTTUiIffxzut4SPuKKn-qzkmdellWi0LKjKWVSWKBXdQ_NwpONrQDLalv-oYLDdUc_yuw1Yrk_gc&currency=USD&locale=${locale}`;
+      script.onload = function() {
+        // إعادة رسم زر باي بال بعد تحميل السكربت
+        renderPayPalButton(selectedMessages);
+      };
+      document.head.appendChild(script);
+    }
 
     function applyTranslations(lang) {
       document.querySelectorAll("[data-translate]").forEach((el) => {
@@ -825,6 +847,9 @@
           img.src = newSrc;
         }
       });
+
+      // تحميل سكربت باي بال بناءً على اللغة
+      loadPayPalSDK(lang);
     }
 
     function setDirection(lang) {
@@ -998,6 +1023,7 @@
       const responseMessage = document.getElementById("response-message");
       if (validateEmail(email)) {
         const serialNumber = generateSerialNumber();
+        currentSerialNumber = serialNumber; // تخزين الرقم التسلسلي
         const messageCount = 30; 
         const language = currentLang;
 
@@ -1068,16 +1094,16 @@
           let amount = 0;
           let packageName = '';
           if (msgCount === 500) {
-            amount = 24.99; // السعر الأساسي
+            amount = 24.99; // السعر الأساسي بالدولار
             packageName = 'الباقة الأساسية';
           } else if (msgCount === 1000) {
-            amount = 39.99; // السعر المتقدم
+            amount = 39.99; // السعر المتقدم بالدولار
             packageName = 'الباقة المتقدمة';
           } else if (msgCount === 2000) {
-            amount = 65.99; // السعر الاحترافي
+            amount = 65.99; // السعر الاحترافي بالدولار
             packageName = 'الباقة الاحترافية';
           } else {
-            amount = 100; // سعر افتراضي
+            amount = 100; // سعر افتراضي بالدولار
             packageName = 'باقة غير محددة';
           }
           
@@ -1093,16 +1119,46 @@
         },
         onApprove: function(data, actions) {
           return actions.order.capture().then(function(details) {
-            alert('شكراً لك على الشراء، تم قبول الدفع بواسطة ' + details.payer.name.given_name);
-            // يمكنك هنا إعادة توجيه المستخدم إلى صفحة النجاح أو تحديث قاعدة البيانات
+            alert(translations[currentLang]["payment-success"]);
+            // إرسال البيانات إلى Google Sheets وإرسال البريد الإلكتروني
+            saveDataToGoogleSheetsAfterPayment(details.payer.email_address, selectedMessages, currentSerialNumber);
             closeQrPaymentPopup();
           });
         },
         onError: function(err) {
           console.error('PayPal Checkout Error:', err);
-          alert('حدث خطأ أثناء عملية الدفع. يرجى المحاولة مرة أخرى.');
+          alert(translations[currentLang]["faq-a2"]); // يمكن تغيير الرسالة حسب الحاجة
         }
       }).render('#paypal-button-container');
+    }
+
+    /************************************************
+     *        التعامل مع بيانات الدفع الناجح
+     ***********************************************/
+    function saveDataToGoogleSheetsAfterPayment(email, messageCount, serialNumber) {
+      // دالة مشابهة لـ saveDataToGoogleSheets ولكن مع تأكيد الدفع
+      const url = `https://script.google.com/macros/s/AKfycbw5cIqq6CHxSIUOv7cCTjP3VcDicvQv1Uxq-8ZbWpD1SF-11zpVTYMRm0o8vd-S-Ao/exec?email=${encodeURIComponent(
+        email
+      )}&serialNumber=${encodeURIComponent(
+        serialNumber
+      )}&messageCount=${encodeURIComponent(
+        messageCount
+      )}&language=${encodeURIComponent(currentLang)}&payment=true`; // إضافة معامل payment=true
+
+      fetch(url)
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.status === "error") {
+            alert(data.message);
+          } else {
+            // تم إرسال البريد الإلكتروني بنجاح من جانب الخادم
+            console.log(data.message);
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          alert("حدث خطأ أثناء معالجة الدفع. حاول مرة أخرى.");
+        });
     }
 
     /************************************************
