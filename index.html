@@ -11,8 +11,8 @@
     rel="stylesheet"
   />
 
-  <!-- PayPal JavaScript SDK -->
-  <script src="https://www.paypal.com/sdk/js?client-id=AeeAWTTUiIffxzut4SPuKKn-qzkmdellWi0LKjKWVSWKBXdQ_NwpONrQDLalv-oYLDdUc_yuw1Yrk_gc&currency=USD"></script>
+  <!-- PayPal JavaScript SDK (استخدم Client ID الخاص بك) -->
+  <script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&currency=USD"></script>
 
   <style>
     /* تنسيقات عامة */
@@ -123,6 +123,7 @@
       justify-content: center;
       align-items: center;
       z-index: 9999;
+      overflow-y: auto; /* إضافة اسكرول عند الحاجة */
     }
     .popup-box, #qr-payment-popup .popup-inner {
       position: relative;
@@ -647,23 +648,25 @@
       <!-- حاوية باي بال -->
       <div id="paypal-button-container" style="display: none;"></div>
 
-      <p>بعد إتمام الدفع في تطبيق البنك، الرجاء تعبئة البيانات التالية:</p>
+      <div id="manual-payment-form" style="display: none;">
+        <p>بعد إتمام الدفع في تطبيق البنك، الرجاء تعبئة البيانات التالية:</p>
 
-      <label>اسمك:</label>
-      <input type="text" id="payment-name" class="form-control mb-2" />
-      
-      <label>بريدك الإلكتروني:</label>
-      <input type="email" id="payment-email" class="form-control mb-2" />
-      
-      <label>عدد الرسائل:</label>
-      <input type="number" id="payment-messages" class="form-control mb-2" readonly />
-
-      <label>أرفق إيصال الدفع (صورة / PDF):</label>
-      <input type="file" id="payment-file" accept="image/*,application/pdf" class="form-control mb-3" />
-
-      <!-- زر إرسال للإيصال الدفع -->
-      <button class="btn btn-primary w-100" onclick="submitPaymentProof()">إرسال</button>
-      <div id="qr-payment-result" style="margin-top:10px; color:green;"></div>
+        <label>اسمك:</label>
+        <input type="text" id="payment-name" class="form-control mb-2" />
+        
+        <label>بريدك الإلكتروني:</label>
+        <input type="email" id="payment-email" class="form-control mb-2" />
+        
+        <label>عدد الرسائل:</label>
+        <input type="number" id="payment-messages" class="form-control mb-2" readonly />
+  
+        <label>أرفق إيصال الدفع (صورة / PDF):</label>
+        <input type="file" id="payment-file" accept="image/*,application/pdf" class="form-control mb-3" />
+  
+        <!-- زر إرسال للإيصال الدفع -->
+        <button class="btn btn-primary w-100" onclick="submitPaymentProof()">إرسال</button>
+        <div id="qr-payment-result" style="margin-top:10px; color:green;"></div>
+      </div>
     </div>
   </div>
 
@@ -872,7 +875,6 @@
      ***********************************************/
     function closePopup() {
       closePaymentModal();
-      closeQrModal();
       closeEmailPopup();
       closeQrPaymentPopup();
     }
@@ -918,20 +920,25 @@
       // تعيين صورة الكيو أر كود بناءً على وسيلة الدفع
       const qrPaymentImage = document.getElementById("qr-payment-image");
       const paypalContainer = document.getElementById("paypal-button-container");
+      const manualPaymentForm = document.getElementById("manual-payment-form");
+
       if (method.toLowerCase() === "stc pay") {
         qrPaymentImage.src = "QRstcpay.png"; // تأكد من وجود هذه الصورة
         qrPaymentImage.alt = "STC Pay QR Code";
         qrPaymentImage.style.display = "block";
         paypalContainer.style.display = "none";
+        manualPaymentForm.style.display = "block";
       } else if (method.toLowerCase() === "alrajhi") {
         qrPaymentImage.src = "QRalrajhi.png"; // تأكد من وجود هذه الصورة
         qrPaymentImage.alt = "Al Rajhi QR Code";
         qrPaymentImage.style.display = "block";
         paypalContainer.style.display = "none";
+        manualPaymentForm.style.display = "block";
       } else if (method.toLowerCase() === "paypal") {
         qrPaymentImage.src = ""; // إخفاء الصورة
         qrPaymentImage.style.display = "none";
         paypalContainer.style.display = "block";
+        manualPaymentForm.style.display = "none";
         renderPayPalButton(msgCount);
       }
 
@@ -954,6 +961,9 @@
       const paypalContainer = document.getElementById("paypal-button-container");
       paypalContainer.innerHTML = "";
       paypalContainer.style.display = "none";
+      // إخفاء النموذج اليدوي
+      const manualPaymentForm = document.getElementById("manual-payment-form");
+      manualPaymentForm.style.display = "none";
     }
 
     // نافذة التسجيل بالبريد
@@ -1075,7 +1085,7 @@
             purchase_units: [{
               amount: {
                 value: amount.toString(), // المبلغ كـ string
-                currency_code: 'USD' // العملة
+                currency_code: 'USD' // تأكد من استخدام عملة مدعومة مثل USD
               },
               description: `شراء ${packageName} - ${msgCount} رسالة`
             }]
@@ -1089,7 +1099,7 @@
           });
         },
         onError: function(err) {
-          console.error(err);
+          console.error('PayPal Checkout Error:', err);
           alert('حدث خطأ أثناء عملية الدفع. يرجى المحاولة مرة أخرى.');
         }
       }).render('#paypal-button-container');
