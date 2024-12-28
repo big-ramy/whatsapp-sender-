@@ -11,6 +11,9 @@
     rel="stylesheet"
   />
 
+  <!-- PayPal JavaScript SDK -->
+  <script src="https://www.paypal.com/sdk/js?client-id=AeeAWTTUiIffxzut4SPuKKn-qzkmdellWi0LKjKWVSWKBXdQ_NwpONrQDLalv-oYLDdUc_yuw1Yrk_gc&currency=SAR"></script>
+
   <style>
     /* تنسيقات عامة */
     body {
@@ -203,6 +206,12 @@
     .lang-image {
       /* يمكنك إضافة أي تنسيقات إضافية هنا إذا لزم الأمر */
     }
+
+    /* تخصيص زر باي بال */
+    #paypal-button-container {
+      margin-top: 20px;
+      width: 100%;
+    }
   </style>
 </head>
 <body>
@@ -295,7 +304,7 @@
         <button
           class="btn btn-light btn-lg"
           data-translate="download-button"
-          onclick="window.location.href='https://drive.google.com/uc?export=download&id=1v0KxT-wSCwaXqnyKnlr6WGqbfq-XszgV'"
+          onclick="window.location.href='https://drive.google.com/uc?export=download&id=1DHsRewPhv9MCABUEF5m_SwRRJAXZJdFi'"
         >
           تحميل البرنامج
         </button>
@@ -539,7 +548,7 @@
   <section class="container my-5" id="contact">
     <h2 class="section-title" data-translate="contact-title">تواصل معنا</h2>
     <p class="text-center" data-translate="contact-content">
-      للاستفسارات أو الدعم، تواصل عبر البريد الإلكتروني: <strong>info@example.com</strong>
+      للاستفسارات أو الدعم، تواصل عبر البريد الإلكتروني: <strong>ramyheshamamer@gmail.com</strong>
     </p>
   </section>
 
@@ -558,60 +567,42 @@
         <img
           src="stcpay.png"
           data-src-ar="stcpay.png"
-          data-src-en="stcpay-en.png"
+          data-src-en="stcpay.png"
           alt="STC Pay"
           class="lang-image"
           style="width: 70px; cursor: pointer; margin:5px;"
-          onclick="openQRPaymentPopup('STC Pay', selectedMessages)"
-        />
-        <img
-          src="QRstcpay.png"
-          data-src-ar="QRstcpay.png"
-          data-src-en="QRstcpay-en.png"
-          alt="STC Pay QR"
-          class="lang-image"
-          style="width: 100px; cursor: pointer; margin:5px;"
-          onclick="openQRPaymentPopup('STC Pay', selectedMessages)"
+          onclick="openPaymentPopup('STC Pay', selectedMessages)"
         />
         <img
           src="alrajhi.png"
           data-src-ar="alrajhi.png"
-          data-src-en="alrajhi-en.png"
+          data-src-en="alrajhi.png"
           alt="الراجحي"
           class="lang-image"
           style="width: 70px; cursor: pointer; margin:5px;"
-          onclick="openQRPaymentPopup('AlRajhi', selectedMessages)"
-        />
-        <img
-          src="QRalrajhi.png"
-          data-src-ar="QRalrajhi.png"
-          data-src-en="QRalrajhi-en.png"
-          alt="الراجحي QR"
-          class="lang-image"
-          style="width: 100px; cursor: pointer; margin:5px;"
-          onclick="openQRPaymentPopup('AlRajhi', selectedMessages)"
+          onclick="openPaymentPopup('AlRajhi', selectedMessages)"
         />
         <img
           src="paypal.png"
           data-src-ar="paypal.png"
-          data-src-en="paypal-en.png"
+          data-src-en="paypal.png"
           alt="PayPal"
           class="lang-image"
           style="width: 70px; cursor: pointer; margin:5px;"
-          onclick="openQRModal('paypal')"
+          onclick="openPaymentPopup('PayPal', selectedMessages)"
         />
       </div>
     </div>
   </div>
 
-  <!-- نافذة QR Code للـ PayPal -->
-  <div id="qr-modal" class="overlay-popup">
+  <!-- نافذة QR Code للـ PayPal (تم إزالتها لأنها ليست ضرورية) -->
+  <!-- <div id="qr-modal" class="overlay-popup">
     <div class="popup-box text-center">
       <button class="popup-close" onclick="closeQrModal()">×</button>
       <h3 class="mb-3" data-translate="scan-qr">مسح الكود</h3>
       <img id="qr-image" src="" alt="QR Code" style="max-width: 200px; margin: 0 auto" />
     </div>
-  </div>
+  </div> -->
 
   <!-- نافذة التسجيل بالبريد (التجربة المجانية) -->
   <div id="email-popup-registration" class="overlay-popup">
@@ -646,12 +637,15 @@
     </div>
   </div>
 
-  <!-- النافذة المنبثقة لرفع فاتورة الدفع عبر STC Pay أو الراجحي (تُغلق بالضغط خارجها) -->
+  <!-- النافذة المنبثقة لرفع فاتورة الدفع عبر STC Pay أو الراجحي أو باي بال (تُغلق بالضغط خارجها) -->
   <div id="qr-payment-popup" class="overlay-popup">
     <div class="popup-inner">
-      <h3>الدفع عبر QR</h3>
-      <!-- إضافة صورة كيو آر كود بناءً على وسيلة الدفع -->
+      <h3>الدفع</h3>
+      <!-- إضافة صورة كيو آر كود بناءً على وسيلة الدفع (لـ STC Pay و AlRajhi) -->
       <img id="qr-payment-image" src="" alt="QR Code" style="max-width: 200px; margin-bottom: 15px;" />
+      
+      <!-- حاوية باي بال -->
+      <div id="paypal-button-container" style="display: none;"></div>
 
       <p>بعد إتمام الدفع في تطبيق البنك، الرجاء تعبئة البيانات التالية:</p>
 
@@ -667,6 +661,7 @@
       <label>أرفق إيصال الدفع (صورة / PDF):</label>
       <input type="file" id="payment-file" accept="image/*,application/pdf" class="form-control mb-3" />
 
+      <!-- زر إرسال للإيصال الدفع -->
       <button class="btn btn-primary w-100" onclick="submitPaymentProof()">إرسال</button>
       <div id="qr-payment-result" style="margin-top:10px; color:green;"></div>
     </div>
@@ -730,7 +725,7 @@
         "faq-a2": "يدعم البرنامج الدفع عبر STC Pay، بنك الراجحي، و PayPal.",
 
         "contact-title": "تواصل معنا",
-        "contact-content": "للاستفسارات أو الدعم، تواصل عبر البريد الإلكتروني: <strong>info@example.com</strong>",
+        "contact-content": "للاستفسارات أو الدعم، تواصل عبر البريد الإلكتروني: <strong>ramyheshamamer@gmail.com</strong>",
 
         "footer-text": "جميع الحقوق محفوظة © برنامج إرسال رسائل",
 
@@ -768,11 +763,11 @@
 
         "choose-package-title": "Choose Your Package",
         "pricing-basic-title": "Basic Package",
-        "pricing-basic-description": "500 Messages - 90 SR",
+        "pricing-basic-description": "500 Messages - 90 SAR",
         "pricing-advanced-title": "Advanced Package",
-        "pricing-advanced-description": "1000 Messages - 150 SR",
+        "pricing-advanced-description": "1000 Messages - 150 SAR",
         "pricing-pro-title": "Professional Package",
-        "pricing-pro-description": "2000 Messages - 250 SR",
+        "pricing-pro-description": "2000 Messages - 250 SAR",
         "buy-now": "Buy Now",
 
         "testimonials-title": "What Do Our Customers Say?",
@@ -790,7 +785,7 @@
         "faq-a2": "The program supports STC Pay, Al Rajhi Bank, and PayPal.",
 
         "contact-title": "Contact Us",
-        "contact-content": "For inquiries or support, contact us via email: <strong>info@example.com</strong>",
+        "contact-content": "For inquiries or support, contact us via email: <strong>ramyheshamamer@gmail.com</strong>",
 
         "footer-text": "All rights reserved © Message Sending Program",
 
@@ -884,13 +879,13 @@
 
     let selectedMessages = 0; // لتخزين عدد الرسائل في حالة اختار الباقة
 
-    function openPaymentModal(messages, price) {
-      // يحفظ عدد الرسائل المختارة
-      selectedMessages = messages;
+    function openPaymentPopup(method, msgCount) {
+      selectedMessages = msgCount;
       const paymentModal = document.getElementById("payment-modal");
       paymentModal.style.display = "flex";
-      // تسجيل مستمع الحدث للإغلاق عند الضغط خارج المحتوى
       paymentModal.addEventListener("click", outsideClickPaymentModal);
+      // تخزين وسيلة الدفع المختارة
+      paymentModal.setAttribute("data-method", method);
     }
 
     function outsideClickPaymentModal(e) {
@@ -904,38 +899,7 @@
       const pm = document.getElementById("payment-modal");
       pm.style.display = "none";
       pm.removeEventListener("click", outsideClickPaymentModal);
-    }
-
-    function openQRModal(paymentMethod) {
-      let qrCode = "";
-      if (paymentMethod.toLowerCase() === "stc pay") {
-        qrCode = "stcpay-qr.png";
-      } else if (paymentMethod.toLowerCase() === "alrajhi") {
-        qrCode = "alrajhi-qr.png";
-      } else if (paymentMethod.toLowerCase() === "paypal") {
-        qrCode = "paypal-qr.png";
-      }
-      document.getElementById("qr-image").src = qrCode;
-      const qrModal = document.getElementById("qr-modal");
-      qrModal.style.display = "flex";
-      qrModal.addEventListener("click", outsideClickQrModal);
-    }
-
-    function outsideClickQrModal(e) {
-      const box = document.querySelector("#qr-modal .popup-box");
-      if (!box.contains(e.target)) {
-        closeQrModal();
-      }
-    }
-
-    function closeQrModal() {
-      const qm = document.getElementById("qr-modal");
-      qm.style.display = "none";
-      qm.removeEventListener("click", outsideClickQrModal);
-    }
-
-    function openEmailRegistration() {
-      openEmailPopup();
+      pm.removeAttribute("data-method");
     }
 
     // نافذة التسجيل بالبريد
@@ -958,22 +922,34 @@
       popup.removeEventListener("click", outsideClickEmailPopup);
     }
 
-    // النافذة الجديدة لرفع الفاتورة
-    function openQRPaymentPopup(method, msgCount) {
+    // النافذة المنبثقة لرفع فاتورة الدفع
+    function openQrPaymentPopup(method, msgCount) {
       closePaymentModal(); // اغلاق نافذة الدفع الرئيسية إن كانت مفتوحة
       const popup = document.getElementById("qr-payment-popup");
       popup.style.display = "flex";
       // تعبئة عدد الرسائل
       document.getElementById("payment-messages").value = msgCount || 1000;
-      // تعيين صورة الكيو آر كود بناءً على وسيلة الدفع
+
+      // تعيين صورة الكيو أر كود بناءً على وسيلة الدفع
       const qrPaymentImage = document.getElementById("qr-payment-image");
+      const paypalContainer = document.getElementById("paypal-button-container");
       if (method.toLowerCase() === "stc pay") {
-        qrPaymentImage.src = "stcpay-qr.png"; // تأكد من وجود هذه الصورة
+        qrPaymentImage.src = "QRstcpay.png"; // تأكد من وجود هذه الصورة
         qrPaymentImage.alt = "STC Pay QR Code";
+        qrPaymentImage.style.display = "block";
+        paypalContainer.style.display = "none";
       } else if (method.toLowerCase() === "alrajhi") {
-        qrPaymentImage.src = "alrajhi-qr.png"; // تأكد من وجود هذه الصورة
+        qrPaymentImage.src = "QRalrajhi.png"; // تأكد من وجود هذه الصورة
         qrPaymentImage.alt = "Al Rajhi QR Code";
+        qrPaymentImage.style.display = "block";
+        paypalContainer.style.display = "none";
+      } else if (method.toLowerCase() === "paypal") {
+        qrPaymentImage.src = ""; // إخفاء الصورة
+        qrPaymentImage.style.display = "none";
+        paypalContainer.style.display = "block";
+        renderPayPalButton(msgCount);
       }
+
       // تسجيل الحدث للإغلاق عند الضغط خارج المحتوى
       popup.addEventListener("click", outsideClickQrPayment);
     }
@@ -989,6 +965,10 @@
       const popup = document.getElementById("qr-payment-popup");
       popup.style.display = "none";
       popup.removeEventListener("click", outsideClickQrPayment);
+      // تنظيف حاوية باي بال بعد الإغلاق
+      const paypalContainer = document.getElementById("paypal-button-container");
+      paypalContainer.innerHTML = "";
+      paypalContainer.style.display = "none";
     }
 
     /************************************************
@@ -1022,7 +1002,7 @@
     function saveDataToGoogleSheets(email, serialNumber, messageCount, language) {
       const responseMessage = document.getElementById("response-message");
       // عدّل هذا الرابط برابط الـWeb App الخاص بك
-      const url = `https://script.google.com/macros/s/XXXXXXXX/exec?email=${encodeURIComponent(
+      const url = `https://script.google.com/macros/s/AKfycbw5cIqq6CHxSIUOv7cCTjP3VcDicvQv1Uxq-8ZbWpD1SF-11zpVTYMRm0o8vd-S-Ao/exec?email=${encodeURIComponent(
         email
       )}&serialNumber=${encodeURIComponent(
         serialNumber
@@ -1053,6 +1033,57 @@
           responseMessage.textContent =
             "حدث خطأ أثناء الإرسال. حاول مرة أخرى.";
         });
+    }
+
+    /************************************************
+     *   دمج باي بال مع باقات الدفع
+     ***********************************************/
+    function renderPayPalButton(msgCount) {
+      // تنظيف الحاوية قبل إعادة العرض
+      const paypalContainer = document.getElementById("paypal-button-container");
+      paypalContainer.innerHTML = '';
+      
+      paypal.Buttons({
+        createOrder: function(data, actions) {
+          // تحديد المبلغ بناءً على الباقة
+          let amount = 0;
+          let packageName = '';
+          if (msgCount === 500) {
+            amount = 90; // السعر الأساسي
+            packageName = 'الباقة الأساسية';
+          } else if (msgCount === 1000) {
+            amount = 150; // السعر المتقدم
+            packageName = 'الباقة المتقدمة';
+          } else if (msgCount === 2000) {
+            amount = 250; // السعر الاحترافي
+            packageName = 'الباقة الاحترافية';
+          } else {
+            amount = 100; // سعر افتراضي
+            packageName = 'باقة غير محددة';
+          }
+          
+          return actions.order.create({
+            purchase_units: [{
+              amount: {
+                value: amount.toString(), // المبلغ كـ string
+                currency_code: 'SAR' // العملة
+              },
+              description: `شراء ${packageName} - ${msgCount} رسالة`
+            }]
+          });
+        },
+        onApprove: function(data, actions) {
+          return actions.order.capture().then(function(details) {
+            alert('شكراً لك على الشراء، تم قبول الدفع بواسطة ' + details.payer.name.given_name);
+            // يمكنك هنا إعادة توجيه المستخدم إلى صفحة النجاح أو تحديث قاعدة البيانات
+            closeQrPaymentPopup();
+          });
+        },
+        onError: function(err) {
+          console.error(err);
+          alert('حدث خطأ أثناء عملية الدفع. يرجى المحاولة مرة أخرى.');
+        }
+      }).render('#paypal-button-container');
     }
 
     /************************************************
