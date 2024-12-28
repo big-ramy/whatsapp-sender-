@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -15,7 +15,6 @@
     /* تنسيقات عامة */
     body {
       font-family: "Tajawal", Arial, sans-serif;
-      direction: rtl; /* لتخطيط الصفحة من اليمين لليسار */
       background-color: #f7f9fc;
       color: #333;
       margin: 0;
@@ -29,7 +28,8 @@
     }
 
     .dropdown-menu {
-      right: 0; /* لمنعها من الخروج خارج الشاشة في الوضع RTL */
+      /* في حال اللغة العربية (RTL) يكون المنسدِل من اليمين، والعكس في الإنجليزية */
+      right: 0;
       left: auto;
     }
 
@@ -182,6 +182,14 @@
       background-color: #fff;
       color: #0d6efd;
     }
+
+    /* تعديل بسيط لأزرار الـHero */
+    .hero-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      align-items: center;
+    }
   </style>
 </head>
 <body>
@@ -269,13 +277,34 @@
       >
         جرّب برنامجنا الآن وحقق الكفاءة في إرسال الرسائل.
       </p>
-      <button
-        class="btn btn-light btn-lg"
-        data-translate="download-button"
-        onclick="window.location.href='https://drive.google.com/uc?export=download&id=1v0KxT-wSCwaXqnyKnlr6WGqbfq-XszgV'"
-      >
-        تحميل البرنامج
-      </button>
+
+      <div class="hero-buttons">
+        <button
+          class="btn btn-light btn-lg"
+          data-translate="download-button"
+          onclick="window.location.href='https://drive.google.com/uc?export=download&id=1v0KxT-wSCwaXqnyKnlr6WGqbfq-XszgV'"
+        >
+          تحميل البرنامج
+        </button>
+
+        <!-- زر للحصول على رسائل مجانية -->
+        <div>
+          <button
+            class="btn btn-outline-light btn-lg"
+            data-translate="try-program-button"
+            onclick="openEmailRegistration()"
+          >
+            جرّب البرنامج
+          </button>
+          <div 
+            class="text-white mt-2" 
+            style="font-size: 0.9rem"
+            data-translate="free-messages-text"
+          >
+            سجل للحصول على رسائل مجانية لاستخدام البرنامج
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -543,12 +572,17 @@
   <div id="email-popup-registration" class="email-popup">
     <div class="popup-content">
       <button class="popup-close" onclick="closePopup()">×</button>
-      <h3 id="popup-title" data-translate="popup-title">سجل معنا واحصل على رقم مجاني لاستخدام البرنامج</h3>
+      <h3 
+        id="popup-title" 
+        data-translate="popup-title"
+      >
+        سجل معنا واحصل على رقم مجاني لاستخدام البرنامج
+      </h3>
       <input
         type="email"
         id="email"
         class="form-control mb-3"
-        placeholder="أدخل بريدك الإلكتروني"
+        placeholder=""
         required
       />
       <button 
@@ -559,8 +593,13 @@
       >
         إرسال
       </button>
-      <p id="response-message" class="mt-3" data-translate="response-message">
-        تم الإرسال بنجاح! ستستلم رسالة بالرقم التسلسلي.
+      <!-- نجعل هذا العنصر فارغًا في البداية -->
+      <p 
+        id="response-message" 
+        class="mt-3" 
+        data-translate="response-message"
+        style="display: none;"
+      >
       </p>
     </div>
   </div>
@@ -588,6 +627,8 @@
         "hero-title": "أفضل أداة لإرسال الرسائل بسهولة!",
         "hero-description": "جرّب برنامجنا الآن وحقق الكفاءة في إرسال الرسائل.",
         "download-button": "تحميل البرنامج",
+        "try-program-button": "جرّب البرنامج",
+        "free-messages-text": "سجل للحصول على رسائل مجانية لاستخدام البرنامج",
 
         "how-to-use-title": "كيفية استخدام البرنامج",
         "step1-title": "تحميل ملف الأرقام",
@@ -646,6 +687,8 @@
         "hero-title": "The Best Tool to Send Messages Easily!",
         "hero-description": "Try our program now and achieve efficiency in sending messages.",
         "download-button": "Download Program",
+        "try-program-button": "Try the Program",
+        "free-messages-text": "Register to get free messages to use the program",
 
         "how-to-use-title": "How to Use the Program",
         "step1-title": "Upload the Numbers File",
@@ -693,25 +736,37 @@
     };
 
     /************************************************
-     *       تفعيل الترجمة على العناصر
+     *       تغيير اللغة واتجاه الصفحة
      ***********************************************/
-    let currentLang = "ar"; // اللغة الافتراضية
+    let currentLang = "ar"; // افتراضيًا العربي
 
+    // دالة تطبق الترجمات على جميع العناصر
     function applyTranslations(lang) {
       document.querySelectorAll("[data-translate]").forEach((el) => {
         const translateKey = el.getAttribute("data-translate");
         if (translations[lang][translateKey]) {
-          // إذا كان العنصر وسم <input> (مثل placeholder) أو <button> أو نص داخل الوسم
+          // إذا كان العنصر Input لتغيير الـplaceholder، أو عنصر نص
           if (el.tagName.toLowerCase() === "input") {
             el.placeholder = translations[lang][translateKey];
           } else {
-            // سمحنا بوضع HTML في بعض العناصر (مثل contact-content)
             el.innerHTML = translations[lang][translateKey];
           }
         }
       });
       // تحديث عنوان الصفحة
       document.title = translations[lang]["page-title"];
+    }
+
+    // دالة لتغيير الاتجاه بناء على اللغة
+    function setDirection(lang) {
+      const htmlTag = document.documentElement;
+      if (lang === "ar") {
+        htmlTag.lang = "ar";
+        htmlTag.dir = "rtl";
+      } else {
+        htmlTag.lang = "en";
+        htmlTag.dir = "ltr";
+      }
     }
 
     /************************************************
@@ -726,8 +781,26 @@
         currentLang = "ar";
         langToggleBtn.textContent = "English";
       }
+      setDirection(currentLang);
       applyTranslations(currentLang);
     });
+
+    /************************************************
+     *   اكتشاف لغة المتصفح لتحديد اللغة الافتراضية
+     ***********************************************/
+    function detectBrowserLanguage() {
+      const userLang = navigator.language || navigator.userLanguage;
+      // إذا كانت اللغة تشمل 'ar' فنجعل الصفحة عربية، وإلا إنجليزي
+      if (userLang.toLowerCase().includes("ar")) {
+        currentLang = "ar";
+        langToggleBtn.textContent = "English";
+      } else {
+        currentLang = "en";
+        langToggleBtn.textContent = "عربي";
+      }
+      setDirection(currentLang);
+      applyTranslations(currentLang);
+    }
 
     /************************************************
      *                   النوافذ المنبثقة
@@ -758,14 +831,18 @@
       qrModal.show();
     }
 
+    // فتح نافذة التسجيل بالبريد
+    function openEmailRegistration() {
+      document.getElementById("email-popup-registration").classList.add("show");
+    }
+
     /************************************************
-     *        إظهار نافذة التسجيل بالبريد عند تحميل الصفحة
+     *        إظهار نافذة التسجيل بالبريد بعد 3 ثوانٍ
+     *        (يمكنك الإبقاء أو الإزالة حسب الرغبة)
      ***********************************************/
     window.onload = function () {
-      // تطبيق الترجمة الافتراضية (عربي في البداية)
-      applyTranslations(currentLang);
-
-      // بعد 3 ثوانٍ من فتح الصفحة، أظهر نافذة التسجيل
+      detectBrowserLanguage();  // اكتشاف لغة المتصفح أولا
+      // بعد 3 ثوانٍ من فتح الصفحة، أظهر النافذة (إذا أردت الإبقاء عليها)
       setTimeout(function () {
         document
           .getElementById("email-popup-registration")
@@ -778,10 +855,15 @@
      ***********************************************/
     function submitEmail() {
       const email = document.getElementById("email").value;
+      const responseMessage = document.getElementById("response-message");
       if (validateEmail(email)) {
         const serialNumber = generateSerialNumber();
         const messageCount = 30; // عدد الرسائل المجانية
         const language = currentLang;
+
+        // إخفاء أي رسالة سابقة
+        responseMessage.style.display = "none";
+        responseMessage.textContent = "";
 
         // إرسال البيانات إلى Google Sheets
         saveDataToGoogleSheets(email, serialNumber, messageCount, language);
@@ -800,6 +882,7 @@
     }
 
     function saveDataToGoogleSheets(email, serialNumber, messageCount, language) {
+      const responseMessage = document.getElementById("response-message");
       // هذا الرابط مجرد مثال، عدّله برابط سكربت Google Apps Script لديك
       const url = `https://script.google.com/macros/s/AKfycbyEOR-vWCOJWVV59QeLT4Is-CKw1fTdVdlzWTCpi41__a2_20Ei2FcXTtDhgQChq7w0/exec?email=${encodeURIComponent(
         email
@@ -812,12 +895,15 @@
       fetch(url)
         .then((response) => response.json())
         .then((data) => {
+          // نظهر رسالة النجاح/الخطأ
+          responseMessage.style.display = "block";
+
           if (data.status === "error") {
             // إذا كان البريد مسجل مسبقًا
-            document.getElementById("response-message").textContent = data.message;
+            responseMessage.textContent = data.message;
           } else {
             // إذا تم الإرسال بنجاح
-            document.getElementById("response-message").textContent = data.message;
+            responseMessage.textContent = data.message;
             setTimeout(() => {
               document
                 .getElementById("email-popup-registration")
@@ -827,7 +913,8 @@
         })
         .catch((error) => {
           console.error("Error:", error);
-          document.getElementById("response-message").textContent =
+          responseMessage.style.display = "block";
+          responseMessage.textContent =
             "حدث خطأ أثناء الإرسال. حاول مرة أخرى.";
         });
     }
