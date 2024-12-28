@@ -197,15 +197,8 @@
       width: 350px; 
       position: relative;
     }
-    #qr-payment-popup .close-btn {
-      position: absolute; 
-      top: 10px; 
-      right: 10px; 
-      font-size: 1.2rem; 
-      cursor: pointer; 
-      background: none; 
-      border: none;
-    }
+    /* إزالة أي زر إغلاق (X) هنا لأننا سنغلق بالضغط خارج النافذة */
+
   </style>
 </head>
 <body>
@@ -384,7 +377,6 @@
           <div class="card-body">
             <h3 data-translate="pricing-basic-title">الباقة الأساسية</h3>
             <p data-translate="pricing-basic-description">500 رسالة - 90 ريال</p>
-            <!-- زر شرائي عادي -->
             <button 
               class="btn btn-primary" 
               data-translate="buy-now" 
@@ -555,13 +547,24 @@
             src="stcpay.png"
             alt="STC Pay"
             style="width: 70px; cursor: pointer"
-            onclick="openQRPaymentPopup( 'STC Pay', selectedMessages )"
+            onclick="openQRPaymentPopup('STC Pay', selectedMessages)"
+          />
+          <img
+            src="QRstcpay.png"
+            alt="STC Pay"
+            style="width: 100px; cursor: pointer"
+            onclick="openQRPaymentPopup('STC Pay', selectedMessages)"
           />
           <img
             src="alrajhi.png"
             alt="الراجحي"
             style="width: 70px; cursor: pointer"
-            onclick="openQRPaymentPopup( 'AlRajhi', selectedMessages )"
+            onclick="openQRPaymentPopup('AlRajhi', selectedMessages)"
+          />          <img
+            src="QRalrajhi.png"
+            alt="الراجحي"
+            style="width: 100px; cursor: pointer"
+            onclick="openQRPaymentPopup('AlRajhi', selectedMessages)"
           />
           <img
             src="paypal.png"
@@ -616,10 +619,9 @@
     </div>
   </div>
 
-  <!-- النافذة المنبثقة الجديدة لرفع فاتورة الدفع عبر STC Pay أو الراجحي -->
+  <!-- النافذة المنبثقة الجديدة لرفع فاتورة الدفع عبر STC Pay أو الراجحي (تُغلق بالضغط خارجها) -->
   <div id="qr-payment-popup">
     <div class="popup-inner">
-      <button class="close-btn" onclick="closeQrPaymentPopup()">×</button>
       <h3>الدفع عبر QR</h3>
       <p>بعد إتمام الدفع في تطبيق البنك، الرجاء تعبئة البيانات التالية:</p>
 
@@ -860,15 +862,32 @@
       document.getElementById("email-popup-registration").classList.add("show");
     }
 
-    // نافذة الـQR الجديدة
+    /************************************************
+     * إغلاق نافذة دفع الفاتورة عند الضغط خارجها
+     ***********************************************/
     function openQRPaymentPopup(method, msgCount) {
-      closePopup(); // أغلق النوافذ السابقة
-      document.getElementById("payment-messages").value = msgCount || 1000; 
-      // يمكن إظهار صورة QR حسب method لو أردت
-      document.getElementById("qr-payment-popup").style.display = 'flex';
+      closePopup(); // أغلق أي نوافذ أخرى
+      const popup = document.getElementById("qr-payment-popup");
+      // تعبئة عدد الرسائل المختارة
+      document.getElementById("payment-messages").value = msgCount || 1000;
+      popup.style.display = 'flex';
+      // أضف مستمع الحدث لنقرات الماوس
+      popup.addEventListener("click", outsideClickQRPayment);
     }
+
     function closeQrPaymentPopup() {
-      document.getElementById("qr-payment-popup").style.display = 'none';
+      const popup = document.getElementById("qr-payment-popup");
+      popup.style.display = 'none';
+      // إزالة مستمع الحدث لمنع التكرار
+      popup.removeEventListener("click", outsideClickQRPayment);
+    }
+
+    function outsideClickQRPayment(e) {
+      const popupInner = document.querySelector("#qr-payment-popup .popup-inner");
+      // إذا النقرة خارج المحتوى الداخلي، أغلق النافذة
+      if (!popupInner.contains(e.target)) {
+        closeQrPaymentPopup();
+      }
     }
 
     /************************************************
@@ -913,6 +932,7 @@
 
     function saveDataToGoogleSheets(email, serialNumber, messageCount, language) {
       const responseMessage = document.getElementById("response-message");
+      // عدّل هذا الرابط برابط الـWeb App الخاص بك
       const url = `https://script.google.com/macros/s/XXXXXXXX/exec?email=${encodeURIComponent(
         email
       )}&serialNumber=${encodeURIComponent(
@@ -963,7 +983,6 @@
         return;
       }
 
-      // تجهيز FormData
       const formData = new FormData();
       formData.append('name', name);
       formData.append('email', email);
@@ -971,7 +990,7 @@
       formData.append('paymentFile', fileInput.files[0]);
 
       try {
-        // استدعاء سكربت جوجل (غيّر الرابط أدناه)
+        // استدعاء سكربت جوجل (عدّل الرابط أدناه)
         const res = await fetch('YOUR_GOOGLE_SCRIPT_WEB_APP_URL', {
           method: 'POST',
           body: formData
