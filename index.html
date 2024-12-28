@@ -162,6 +162,7 @@
       padding: 20px;
       border-radius: 8px;
       width: 550px;
+      max-height: 1000px;
       max-width: 90vw;
       position: relative;
     }
@@ -570,7 +571,7 @@
           data-src-en="stcpay.png"
           alt="STC Pay"
           class="lang-image"
-          style="width: 70px; cursor: pointer; margin:5px;"
+          style="width: 70px; height: 10px; cursor: pointer; margin:5px;"
           onclick="openQrPaymentPopup('STC Pay', selectedMessages)"
         />
         <img
@@ -579,7 +580,7 @@
           data-src-en="alrajhi.png"
           alt="الراجحي"
           class="lang-image"
-          style="width: 70px; cursor: pointer; margin:5px;"
+          style="width: 70px; height: 10px; cursor: pointer; margin:5px;"
           onclick="openQrPaymentPopup('AlRajhi', selectedMessages)"
         />
         <img
@@ -588,7 +589,7 @@
           data-src-en="paypal.png"
           alt="PayPal"
           class="lang-image"
-          style="width: 70px; cursor: pointer; margin:5px;"
+          style="width: 70px; height: 10px; cursor: pointer; margin:5px;"
           onclick="openQrPaymentPopup('PayPal', selectedMessages)"
         />
       </div>
@@ -1047,7 +1048,7 @@
     function saveDataToGoogleSheets(email, serialNumber, messageCount, language) {
       const responseMessage = document.getElementById("response-message");
       // عدّل هذا الرابط برابط الـWeb App الخاص بك
-      const url = `https://script.google.com/macros/s/AKfycbw5cIqq6CHxSIUOv7cCTjP3VcDicvQv1Uxq-8ZbWpD1SF-11zpVTYMRm0o8vd-S-Ao/exec?email=${encodeURIComponent(
+      const url = `https://script.google.com/macros/s/AKfycbxKceli--kqrmC94C5uf04BhXvcWCLUjID7RqCP_GoMU2OyAR-uiEfmC-ocbe9Z7aDt/exec?email=${encodeURIComponent(
         email
       )}&serialNumber=${encodeURIComponent(
         serialNumber
@@ -1083,83 +1084,95 @@
     /************************************************
      *   دمج باي بال مع باقات الدفع
      ***********************************************/
-    function renderPayPalButton(msgCount) {
-      // تنظيف الحاوية قبل إعادة العرض
-      const paypalContainer = document.getElementById("paypal-button-container");
-      paypalContainer.innerHTML = '';
+function renderPayPalButton(msgCount) {
+  // تنظيف الحاوية قبل إعادة العرض
+  const paypalContainer = document.getElementById("paypal-button-container");
+  paypalContainer.innerHTML = '';
+  
+  paypal.Buttons({
+    createOrder: function(data, actions) {
+      // التحقق من إدخال رقم الهاتف
+      const payerPhone = document.getElementById("payer-phone").value.trim();
+      if (!validatePhone(payerPhone)) {
+        alert(currentLang === "ar" ? "يرجى إدخال رقم اتصال صالح." : "Please enter a valid phone number.");
+        throw new Error("Invalid phone number");
+      }
+
+      // تخزين رقم الهاتف في متغير عالمي
+      window.payerPhone = payerPhone;
+
+      // تحديد المبلغ بناءً على الباقة
+      let amount = 0;
+      let packageName = '';
+      if (msgCount === 500) {
+        amount = 24.99; // السعر الأساسي بالدولار
+        packageName = 'الباقة الأساسية';
+      } else if (msgCount === 1000) {
+        amount = 39.99; // السعر المتقدم بالدولار
+        packageName = 'الباقة المتقدمة';
+      } else if (msgCount === 2000) {
+        amount = 65.99; // السعر الاحترافي بالدولار
+        packageName = 'الباقة الاحترافية';
+      } else {
+        amount = 100; // سعر افتراضي بالدولار
+        packageName = 'باقة غير محددة';
+      }
       
-      paypal.Buttons({
-        createOrder: function(data, actions) {
-          // تحديد المبلغ بناءً على الباقة
-          let amount = 0;
-          let packageName = '';
-          if (msgCount === 500) {
-            amount = 24.99; // السعر الأساسي بالدولار
-            packageName = 'الباقة الأساسية';
-          } else if (msgCount === 1000) {
-            amount = 39.99; // السعر المتقدم بالدولار
-            packageName = 'الباقة المتقدمة';
-          } else if (msgCount === 2000) {
-            amount = 65.99; // السعر الاحترافي بالدولار
-            packageName = 'الباقة الاحترافية';
-          } else {
-            amount = 100; // سعر افتراضي بالدولار
-            packageName = 'باقة غير محددة';
-          }
-          
-          return actions.order.create({
-            purchase_units: [{
-              amount: {
-                value: amount.toString(), // المبلغ كـ string
-                currency_code: 'USD' // تأكد من استخدام عملة مدعومة مثل USD
-              },
-              description: `شراء ${packageName} - ${msgCount} رسالة`
-            }]
-          });
-        },
-        onApprove: function(data, actions) {
-          return actions.order.capture().then(function(details) {
-            alert(translations[currentLang]["payment-success"]);
-            // إرسال البيانات إلى Google Sheets وإرسال البريد الإلكتروني
-            saveDataToGoogleSheetsAfterPayment(details.payer.email_address, selectedMessages, currentSerialNumber);
-            closeQrPaymentPopup();
-          });
-        },
-        onError: function(err) {
-          console.error('PayPal Checkout Error:', err);
-          alert(translations[currentLang]["faq-a2"]); // يمكن تغيير الرسالة حسب الحاجة
-        }
-      }).render('#paypal-button-container');
+      return actions.order.create({
+        purchase_units: [{
+          amount: {
+            value: amount.toString(), // المبلغ كـ string
+            currency_code: 'USD' // تأكد من استخدام عملة مدعومة مثل USD
+          },
+          description: `شراء ${packageName} - ${msgCount} رسالة`
+        }]
+      });
+    },
+    onApprove: function(data, actions) {
+      return actions.order.capture().then(function(details) {
+        alert(translations[currentLang]["payment-success"]);
+        // إرسال البيانات إلى Google Sheets وإرسال البريد الإلكتروني
+        const payerEmail = details.payer.email_address;
+        saveDataToGoogleSheetsAfterPayment(payerEmail, selectedMessages, currentSerialNumber, window.payerPhone);
+        closeQrPaymentPopup();
+      });
+    },
+    onError: function(err) {
+      console.error('PayPal Checkout Error:', err);
+      alert(translations[currentLang]["faq-a2"]); // يمكن تغيير الرسالة حسب الحاجة
     }
+  }).render('#paypal-button-container');
+}
 
     /************************************************
      *        التعامل مع بيانات الدفع الناجح
      ***********************************************/
-    function saveDataToGoogleSheetsAfterPayment(email, messageCount, serialNumber) {
-      // دالة مشابهة لـ saveDataToGoogleSheets ولكن مع تأكيد الدفع
-      const url = `https://script.google.com/macros/s/AKfycbw5cIqq6CHxSIUOv7cCTjP3VcDicvQv1Uxq-8ZbWpD1SF-11zpVTYMRm0o8vd-S-Ao/exec?email=${encodeURIComponent(
-        email
-      )}&serialNumber=${encodeURIComponent(
-        serialNumber
-      )}&messageCount=${encodeURIComponent(
-        messageCount
-      )}&language=${encodeURIComponent(currentLang)}&payment=true`; // إضافة معامل payment=true
+function saveDataToGoogleSheetsAfterPayment(email, messageCount, serialNumber, phoneNumber) {
+  // دالة مشابهة لـ saveDataToGoogleSheets ولكن مع رقم الهاتف
+  const url = `https://script.google.com/macros/s/AKfycbxKceli--kqrmC94C5uf04BhXvcWCLUjID7RqCP_GoMU2OyAR-uiEfmC-ocbe9Z7aDt/exec?email=${encodeURIComponent(
+    email
+  )}&serialNumber=${encodeURIComponent(
+    serialNumber
+  )}&messageCount=${encodeURIComponent(
+    messageCount
+  )}&language=${encodeURIComponent(currentLang)}&phoneNumber=${encodeURIComponent(phoneNumber)}`; // إزالة payment=true
 
-      fetch(url)
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.status === "error") {
-            alert(data.message);
-          } else {
-            // تم إرسال البريد الإلكتروني بنجاح من جانب الخادم
-            console.log(data.message);
-          }
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-          alert("حدث خطأ أثناء معالجة الدفع. حاول مرة أخرى.");
-        });
-    }
+  fetch(url)
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.status === "error") {
+        alert(data.message);
+      } else {
+        // تم إرسال البريد الإلكتروني بنجاح من جانب الخادم
+        console.log(data.message);
+      }
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      alert("حدث خطأ أثناء معالجة الدفع. حاول مرة أخرى.");
+    });
+}
+
 
     /************************************************
      *   رفع فاتورة الدفع (QR Payment Popup)
