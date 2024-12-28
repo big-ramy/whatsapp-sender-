@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>برنامج إرسال رسائل - صفحة الهبوط</title>
+  <title data-translate="page-title">برنامج إرسال رسائل - صفحة الهبوط</title>
   
   <!-- رابط Bootstrap 5 -->
   <link
@@ -188,7 +188,13 @@
   <!-- نافبار (شريط التنقل) -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container">
-      <a class="navbar-brand" href="#" id="header-title">برنامج إرسال رسائل</a>
+      <a 
+        class="navbar-brand" 
+        href="#" 
+        data-translate="header-title"
+      >
+        برنامج إرسال رسائل
+      </a>
       <button
         class="navbar-toggler"
         type="button"
@@ -201,13 +207,20 @@
       <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
         <ul class="navbar-nav mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#home" id="home-link">الصفحة الرئيسية</a>
+            <a 
+              class="nav-link active" 
+              aria-current="page" 
+              href="#home" 
+              data-translate="home-link"
+            >
+              الصفحة الرئيسية
+            </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#about" id="about-link">عن الشركة</a>
+            <a class="nav-link" href="#about" data-translate="about-link">عن الشركة</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#contact" id="contact-link">التواصل</a>
+            <a class="nav-link" href="#contact" data-translate="contact-link">التواصل</a>
           </li>
           <!-- قائمة منسدلة للمنتجات -->
           <li class="nav-item dropdown">
@@ -218,19 +231,24 @@
               role="button"
               data-bs-toggle="dropdown"
               aria-expanded="false"
+              data-translate="products-link"
             >
               المنتجات
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li><a class="dropdown-item" href="#">الباقة الأساسية</a></li>
-              <li><a class="dropdown-item" href="#">الباقة المتقدمة</a></li>
-              <li><a class="dropdown-item" href="#">الباقة الاحترافية</a></li>
+              <li><a class="dropdown-item" href="#" data-translate="product-basic">الباقة الأساسية</a></li>
+              <li><a class="dropdown-item" href="#" data-translate="product-advanced">الباقة المتقدمة</a></li>
+              <li><a class="dropdown-item" href="#" data-translate="product-pro">الباقة الاحترافية</a></li>
             </ul>
           </li>
         </ul>
-        <!-- أزرار تغيير اللغة -->
-        <button class="btn lang-btn" onclick="switchLanguage('ar')">العربية</button>
-        <button class="btn lang-btn" onclick="switchLanguage('en')">English</button>
+        <!-- زر تبديل اللغة الوحيد -->
+        <button 
+          class="btn lang-btn" 
+          id="lang-toggle"
+        >
+          English
+        </button>
       </div>
     </div>
   </nav>
@@ -239,10 +257,21 @@
   <section class="hero-section" id="home">
     <div class="hero-overlay"></div>
     <div class="hero-content">
-      <h1 class="hero-title" id="hero-title">أفضل أداة لإرسال الرسائل بسهولة!</h1>
-      <p class="hero-description" id="hero-description">جرّب برنامجنا الآن وحقق الكفاءة في إرسال الرسائل.</p>
+      <h1 
+        class="hero-title" 
+        data-translate="hero-title"
+      >
+        أفضل أداة لإرسال الرسائل بسهولة!
+      </h1>
+      <p 
+        class="hero-description" 
+        data-translate="hero-description"
+      >
+        جرّب برنامجنا الآن وحقق الكفاءة في إرسال الرسائل.
+      </p>
       <button
         class="btn btn-light btn-lg"
+        data-translate="download-button"
         onclick="window.location.href='https://drive.google.com/uc?export=download&id=1v0KxT-wSCwaXqnyKnlr6WGqbfq-XszgV'"
       >
         تحميل البرنامج
@@ -252,14 +281,19 @@
 
   <!-- قسم كيفية استخدام البرنامج -->
   <section class="container my-5">
-    <h2 class="section-title" id="how-to-use-title">كيفية استخدام البرنامج</h2>
+    <h2 
+      class="section-title" 
+      data-translate="how-to-use-title"
+    >
+      كيفية استخدام البرنامج
+    </h2>
     <div class="row justify-content-center">
       <div class="col-md-4 mb-4">
         <div class="card text-center h-100">
           <img src="image2.png" class="card-img-top" alt="الخطوة الأولى" />
           <div class="card-body">
-            <h5 class="card-title" id="step1-title">تحميل ملف الأرقام</h5>
-            <p class="card-text" id="step1-description">
+            <h5 class="card-title" data-translate="step1-title">تحميل ملف الأرقام</h5>
+            <p class="card-text" data-translate="step1-description">
               قم بتحميل ملف Excel يحتوي على جهات الاتصال الخاصة بك.
             </p>
           </div>
@@ -269,8 +303,8 @@
         <div class="card text-center h-100">
           <img src="image.png" class="card-img-top" alt="الخطوة الثانية" />
           <div class="card-body">
-            <h5 class="card-title" id="step2-title">كتابة الرسالة</h5>
-            <p class="card-text" id="step2-description">
+            <h5 class="card-title" data-translate="step2-title">كتابة الرسالة</h5>
+            <p class="card-text" data-translate="step2-description">
               أدخل الرسالة النصية التي ترغب في إرسالها إلى جهات الاتصال.
             </p>
           </div>
@@ -280,8 +314,8 @@
         <div class="card text-center h-100">
           <img src="step3.jpg" class="card-img-top" alt="الخطوة الثالثة" />
           <div class="card-body">
-            <h5 class="card-title" id="step3-title">بدء الإرسال</h5>
-            <p class="card-text" id="step3-description">
+            <h5 class="card-title" data-translate="step3-title">بدء الإرسال</h5>
+            <p class="card-text" data-translate="step3-description">
               اضغط على زر الإرسال واستمتع بالسهولة والسرعة.
             </p>
           </div>
@@ -292,15 +326,26 @@
 
   <!-- قسم اختيار الباقة المناسبة -->
   <section class="container my-5">
-    <h2 class="section-title" id="choose-package-title">اختر الباقة المناسبة</h2>
+    <h2 
+      class="section-title" 
+      data-translate="choose-package-title"
+    >
+      اختر الباقة المناسبة
+    </h2>
     <div class="row justify-content-center">
       <!-- الباقة الأساسية -->
       <div class="col-md-4 mb-4">
         <div class="card text-center h-100 pricing-card">
           <div class="card-body">
-            <h3>الباقة الأساسية</h3>
-            <p>500 رسالة - 90 ريال</p>
-            <button class="btn btn-primary" onclick="openPaymentModal(500, 90)">شراء الآن</button>
+            <h3 data-translate="pricing-basic-title">الباقة الأساسية</h3>
+            <p data-translate="pricing-basic-description">500 رسالة - 90 ريال</p>
+            <button 
+              class="btn btn-primary" 
+              data-translate="buy-now" 
+              onclick="openPaymentModal(500, 90)"
+            >
+              شراء الآن
+            </button>
           </div>
         </div>
       </div>
@@ -308,9 +353,15 @@
       <div class="col-md-4 mb-4">
         <div class="card text-center h-100 pricing-card">
           <div class="card-body">
-            <h3>الباقة المتقدمة</h3>
-            <p>1000 رسالة - 150 ريال</p>
-            <button class="btn btn-primary" onclick="openPaymentModal(1000, 150)">شراء الآن</button>
+            <h3 data-translate="pricing-advanced-title">الباقة المتقدمة</h3>
+            <p data-translate="pricing-advanced-description">1000 رسالة - 150 ريال</p>
+            <button 
+              class="btn btn-primary" 
+              data-translate="buy-now" 
+              onclick="openPaymentModal(1000, 150)"
+            >
+              شراء الآن
+            </button>
           </div>
         </div>
       </div>
@@ -318,9 +369,15 @@
       <div class="col-md-4 mb-4">
         <div class="card text-center h-100 pricing-card">
           <div class="card-body">
-            <h3>الباقة الاحترافية</h3>
-            <p>2000 رسالة - 250 ريال</p>
-            <button class="btn btn-primary" onclick="openPaymentModal(2000, 250)">شراء الآن</button>
+            <h3 data-translate="pricing-pro-title">الباقة الاحترافية</h3>
+            <p data-translate="pricing-pro-description">2000 رسالة - 250 ريال</p>
+            <button 
+              class="btn btn-primary"
+              data-translate="buy-now" 
+              onclick="openPaymentModal(2000, 250)"
+            >
+              شراء الآن
+            </button>
           </div>
         </div>
       </div>
@@ -329,30 +386,36 @@
 
   <!-- قسم آراء العملاء (Testimonials) -->
   <section class="container my-5">
-    <h2 class="section-title">ماذا يقول عملاؤنا؟</h2>
+    <h2 class="section-title" data-translate="testimonials-title">ماذا يقول عملاؤنا؟</h2>
     <div class="row justify-content-center">
       <div class="col-md-4">
         <div class="testimonial-card">
-          <p>
+          <p data-translate="testimonial-1-text">
             "برنامج رائع وسهل الاستخدام! ساعدني في إرسال آلاف الرسائل بسهولة وسرعة فائقة."
           </p>
-          <p class="testimonial-name">- أحمد</p>
+          <p class="testimonial-name" data-translate="testimonial-1-name">
+            - أحمد
+          </p>
         </div>
       </div>
       <div class="col-md-4">
         <div class="testimonial-card">
-          <p>
+          <p data-translate="testimonial-2-text">
             "فريق الدعم متعاون جدًا، أنصح بهذا البرنامج لأي شخص يريد إدارة رسائله بكفاءة."
           </p>
-          <p class="testimonial-name">- سارة</p>
+          <p class="testimonial-name" data-translate="testimonial-2-name">
+            - سارة
+          </p>
         </div>
       </div>
       <div class="col-md-4">
         <div class="testimonial-card">
-          <p>
+          <p data-translate="testimonial-3-text">
             "من أفضل برامج المراسلة التي جربتها، أنصح الجميع بتجربته!"
           </p>
-          <p class="testimonial-name">- خالد</p>
+          <p class="testimonial-name" data-translate="testimonial-3-name">
+            - خالد
+          </p>
         </div>
       </div>
     </div>
@@ -360,7 +423,7 @@
 
   <!-- قسم الأسئلة الشائعة (FAQ) -->
   <section class="container my-5" id="about">
-    <h2 class="section-title">الأسئلة الشائعة</h2>
+    <h2 class="section-title" data-translate="faq-title">الأسئلة الشائعة</h2>
     <div class="accordion" id="faqAccordion">
       <div class="accordion-item">
         <h2 class="accordion-header" id="questionOne">
@@ -371,6 +434,7 @@
             data-bs-target="#collapseOne"
             aria-expanded="false"
             aria-controls="collapseOne"
+            data-translate="faq-q1"
           >
             هل يمكنني تجربة البرنامج مجانًا قبل الشراء؟
           </button>
@@ -381,7 +445,10 @@
           aria-labelledby="questionOne"
           data-bs-parent="#faqAccordion"
         >
-          <div class="accordion-body">
+          <div 
+            class="accordion-body"
+            data-translate="faq-a1"
+          >
             نعم، عند التسجيل بالبريد الإلكتروني ستحصل على رقم مجاني يتيح لك إرسال عدد محدود من الرسائل مجانًا.
           </div>
         </div>
@@ -395,6 +462,7 @@
             data-bs-target="#collapseTwo"
             aria-expanded="false"
             aria-controls="collapseTwo"
+            data-translate="faq-q2"
           >
             ما هي طرق الدفع المتاحة؟
           </button>
@@ -405,7 +473,10 @@
           aria-labelledby="questionTwo"
           data-bs-parent="#faqAccordion"
         >
-          <div class="accordion-body">
+          <div 
+            class="accordion-body"
+            data-translate="faq-a2"
+          >
             يدعم البرنامج الدفع عبر STC Pay، بنك الراجحي، و PayPal.
           </div>
         </div>
@@ -415,13 +486,15 @@
 
   <!-- قسم التواصل (Contact) -->
   <section class="container my-5" id="contact">
-    <h2 class="section-title">تواصل معنا</h2>
-    <p class="text-center">للاستفسارات أو الدعم، تواصل عبر البريد الإلكتروني: <strong>info@example.com</strong></p>
+    <h2 class="section-title" data-translate="contact-title">تواصل معنا</h2>
+    <p class="text-center" data-translate="contact-content">
+      للاستفسارات أو الدعم، تواصل عبر البريد الإلكتروني: <strong>info@example.com</strong>
+    </p>
   </section>
 
   <!-- الفوتر -->
   <footer>
-    <p id="footer-text">جميع الحقوق محفوظة © برنامج إرسال رسائل</p>
+    <p data-translate="footer-text">جميع الحقوق محفوظة © برنامج إرسال رسائل</p>
   </footer>
 
   <!-- النوافذ المنبثقة الخاصة بالدفع -->
@@ -430,7 +503,7 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content p-3">
         <button class="popup-close" onclick="closePopup()">×</button>
-        <h3 class="mb-3">اختر وسيلة الدفع</h3>
+        <h3 class="mb-3" data-translate="choose-payment">اختر وسيلة الدفع</h3>
         <div class="d-flex justify-content-around">
           <img
             src="stcpay.png"
@@ -460,7 +533,7 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content p-3 text-center">
         <button class="popup-close text-end ms-auto d-block" onclick="closePopup()">×</button>
-        <h3 class="mb-3">مسح الكود</h3>
+        <h3 class="mb-3" data-translate="scan-qr">مسح الكود</h3>
         <img id="qr-image" src="" alt="QR Code" style="max-width: 200px; margin: 0 auto" />
       </div>
     </div>
@@ -470,7 +543,7 @@
   <div id="email-popup-registration" class="email-popup">
     <div class="popup-content">
       <button class="popup-close" onclick="closePopup()">×</button>
-      <h3 id="popup-title">سجل معنا واحصل على رقم مجاني لاستخدام البرنامج</h3>
+      <h3 id="popup-title" data-translate="popup-title">سجل معنا واحصل على رقم مجاني لاستخدام البرنامج</h3>
       <input
         type="email"
         id="email"
@@ -478,8 +551,17 @@
         placeholder="أدخل بريدك الإلكتروني"
         required
       />
-      <button class="btn btn-primary w-100" id="submit-button" onclick="submitEmail()">إرسال</button>
-      <p id="response-message" class="mt-3"></p>
+      <button 
+        class="btn btn-primary w-100" 
+        id="submit-button" 
+        data-translate="submit-button"
+        onclick="submitEmail()"
+      >
+        إرسال
+      </button>
+      <p id="response-message" class="mt-3" data-translate="response-message">
+        تم الإرسال بنجاح! ستستلم رسالة بالرقم التسلسلي.
+      </p>
     </div>
   </div>
 
@@ -489,82 +571,163 @@
   ></script>
   <script>
     /************************************************
-     *           التبديل بين اللغات (عربي/إنجليزي)
+     *       كائن الترجمة (Arabic / English)
      ***********************************************/
-    function switchLanguage(language) {
-      document.documentElement.lang = language; // تحديث lang في HTML
-      const translations = {
-        ar: {
-          "header-title": "برنامج إرسال رسائل",
-          "home-link": "الصفحة الرئيسية",
-          "about-link": "عن الشركة",
-          "contact-link": "التواصل",
-          "hero-title": "أفضل أداة لإرسال الرسائل بسهولة!",
-          "hero-description": "جرّب برنامجنا الآن وحقق الكفاءة في إرسال الرسائل.",
-          "step1-title": "تحميل ملف الأرقام",
-          "step1-description": "قم بتحميل ملف Excel يحتوي على جهات الاتصال الخاصة بك.",
-          "step2-title": "كتابة الرسالة",
-          "step2-description": "أدخل الرسالة النصية التي ترغب في إرسالها إلى جهات الاتصال.",
-          "step3-title": "بدء الإرسال",
-          "step3-description": "اضغط على زر الإرسال واستمتع بالسهولة والسرعة.",
-          "choose-package-title": "اختر الباقة المناسبة",
-          "popup-title": "سجل معنا واحصل على رقم مجاني لاستخدام البرنامج",
-          "submit-button": "إرسال",
-          "response-message": "تم الإرسال بنجاح! ستستلم رسالة بالرقم التسلسلي.",
-          "footer-text": "جميع الحقوق محفوظة © برنامج إرسال رسائل",
-          "how-to-use-title": "كيفية استخدام البرنامج"
-        },
-        en: {
-          "header-title": "Message Sending Program",
-          "home-link": "Home",
-          "about-link": "About Us",
-          "contact-link": "Contact",
-          "hero-title": "The Best Tool to Send Messages Easily!",
-          "hero-description":
-            "Try our program now and achieve efficiency in sending messages.",
-          "step1-title": "Upload the Numbers File",
-          "step1-description": "Upload an Excel file containing your contacts.",
-          "step2-title": "Write the Message",
-          "step2-description": "Enter the text message you want to send to your contacts.",
-          "step3-title": "Start Sending",
-          "step3-description": "Press the send button and enjoy the speed & ease.",
-          "choose-package-title": "Choose Your Package",
-          "popup-title": "Register and Get a Free Number to Use the Program",
-          "submit-button": "Submit",
-          "response-message": "Successfully sent! You will receive a message with the serial number.",
-          "footer-text": "All rights reserved © Message Sending Program",
-          "how-to-use-title": "How to Use the Program"
-        },
-      };
+    const translations = {
+      ar: {
+        "page-title": "برنامج إرسال رسائل - صفحة الهبوط",
+        "header-title": "برنامج إرسال رسائل",
+        "home-link": "الصفحة الرئيسية",
+        "about-link": "عن الشركة",
+        "contact-link": "التواصل",
+        "products-link": "المنتجات",
+        "product-basic": "الباقة الأساسية",
+        "product-advanced": "الباقة المتقدمة",
+        "product-pro": "الباقة الاحترافية",
 
-      const lang = translations[language];
-      // تطبيق النصوص الجديدة
-      document.getElementById("header-title").textContent = lang["header-title"];
-      document.getElementById("home-link").textContent = lang["home-link"];
-      document.getElementById("about-link").textContent = lang["about-link"];
-      document.getElementById("contact-link").textContent = lang["contact-link"];
-      document.getElementById("hero-title").textContent = lang["hero-title"];
-      document.getElementById("hero-description").textContent =
-        lang["hero-description"];
-      document.getElementById("step1-title").textContent = lang["step1-title"];
-      document.getElementById("step1-description").textContent =
-        lang["step1-description"];
-      document.getElementById("step2-title").textContent = lang["step2-title"];
-      document.getElementById("step2-description").textContent =
-        lang["step2-description"];
-      document.getElementById("step3-title").textContent = lang["step3-title"];
-      document.getElementById("step3-description").textContent =
-        lang["step3-description"];
-      document.getElementById("choose-package-title").textContent =
-        lang["choose-package-title"];
-      document.getElementById("popup-title").textContent = lang["popup-title"];
-      document.getElementById("submit-button").textContent = lang["submit-button"];
-      document.getElementById("response-message").textContent =
-        lang["response-message"];
-      document.getElementById("footer-text").textContent = lang["footer-text"];
-      document.getElementById("how-to-use-title").textContent =
-        lang["how-to-use-title"];
+        "hero-title": "أفضل أداة لإرسال الرسائل بسهولة!",
+        "hero-description": "جرّب برنامجنا الآن وحقق الكفاءة في إرسال الرسائل.",
+        "download-button": "تحميل البرنامج",
+
+        "how-to-use-title": "كيفية استخدام البرنامج",
+        "step1-title": "تحميل ملف الأرقام",
+        "step1-description": "قم بتحميل ملف Excel يحتوي على جهات الاتصال الخاصة بك.",
+        "step2-title": "كتابة الرسالة",
+        "step2-description": "أدخل الرسالة النصية التي ترغب في إرسالها إلى جهات الاتصال.",
+        "step3-title": "بدء الإرسال",
+        "step3-description": "اضغط على زر الإرسال واستمتع بالسهولة والسرعة.",
+
+        "choose-package-title": "اختر الباقة المناسبة",
+        "pricing-basic-title": "الباقة الأساسية",
+        "pricing-basic-description": "500 رسالة - 90 ريال",
+        "pricing-advanced-title": "الباقة المتقدمة",
+        "pricing-advanced-description": "1000 رسالة - 150 ريال",
+        "pricing-pro-title": "الباقة الاحترافية",
+        "pricing-pro-description": "2000 رسالة - 250 ريال",
+        "buy-now": "شراء الآن",
+
+        "testimonials-title": "ماذا يقول عملاؤنا؟",
+        "testimonial-1-text": "\"برنامج رائع وسهل الاستخدام! ساعدني في إرسال آلاف الرسائل بسهولة وسرعة فائقة.\"",
+        "testimonial-1-name": "- أحمد",
+        "testimonial-2-text": "\"فريق الدعم متعاون جدًا، أنصح بهذا البرنامج لأي شخص يريد إدارة رسائله بكفاءة.\"",
+        "testimonial-2-name": "- سارة",
+        "testimonial-3-text": "\"من أفضل برامج المراسلة التي جربتها، أنصح الجميع بتجربته!\"",
+        "testimonial-3-name": "- خالد",
+
+        "faq-title": "الأسئلة الشائعة",
+        "faq-q1": "هل يمكنني تجربة البرنامج مجانًا قبل الشراء؟",
+        "faq-a1": "نعم، عند التسجيل بالبريد الإلكتروني ستحصل على رقم مجاني يتيح لك إرسال عدد محدود من الرسائل مجانًا.",
+        "faq-q2": "ما هي طرق الدفع المتاحة؟",
+        "faq-a2": "يدعم البرنامج الدفع عبر STC Pay، بنك الراجحي، و PayPal.",
+
+        "contact-title": "تواصل معنا",
+        "contact-content": "للاستفسارات أو الدعم، تواصل عبر البريد الإلكتروني: <strong>info@example.com</strong>",
+
+        "footer-text": "جميع الحقوق محفوظة © برنامج إرسال رسائل",
+
+        "choose-payment": "اختر وسيلة الدفع",
+        "scan-qr": "مسح الكود",
+
+        "popup-title": "سجل معنا واحصل على رقم مجاني لاستخدام البرنامج",
+        "submit-button": "إرسال",
+        "response-message": "تم الإرسال بنجاح! ستستلم رسالة بالرقم التسلسلي."
+      },
+      en: {
+        "page-title": "Message Sending Program - Landing Page",
+        "header-title": "Message Sending Program",
+        "home-link": "Home",
+        "about-link": "About Us",
+        "contact-link": "Contact",
+        "products-link": "Products",
+        "product-basic": "Basic Package",
+        "product-advanced": "Advanced Package",
+        "product-pro": "Professional Package",
+
+        "hero-title": "The Best Tool to Send Messages Easily!",
+        "hero-description": "Try our program now and achieve efficiency in sending messages.",
+        "download-button": "Download Program",
+
+        "how-to-use-title": "How to Use the Program",
+        "step1-title": "Upload the Numbers File",
+        "step1-description": "Upload an Excel file containing your contacts.",
+        "step2-title": "Write the Message",
+        "step2-description": "Enter the text message you want to send to your contacts.",
+        "step3-title": "Start Sending",
+        "step3-description": "Press send and enjoy the ease and speed.",
+
+        "choose-package-title": "Choose Your Package",
+        "pricing-basic-title": "Basic Package",
+        "pricing-basic-description": "500 Messages - 90 SR",
+        "pricing-advanced-title": "Advanced Package",
+        "pricing-advanced-description": "1000 Messages - 150 SR",
+        "pricing-pro-title": "Professional Package",
+        "pricing-pro-description": "2000 Messages - 250 SR",
+        "buy-now": "Buy Now",
+
+        "testimonials-title": "What Do Our Customers Say?",
+        "testimonial-1-text": "\"A great and easy-to-use program! It helped me send thousands of messages swiftly and easily.\"",
+        "testimonial-1-name": "- Ahmed",
+        "testimonial-2-text": "\"Very helpful support team, I recommend this program for anyone wanting efficient message management.\"",
+        "testimonial-2-name": "- Sarah",
+        "testimonial-3-text": "\"One of the best messaging programs I've tried, I recommend everyone to try it!\"",
+        "testimonial-3-name": "- Khaled",
+
+        "faq-title": "Frequently Asked Questions",
+        "faq-q1": "Can I try the program for free before purchasing?",
+        "faq-a1": "Yes, by registering with your email you can get a free number to send a limited amount of messages for free.",
+        "faq-q2": "What payment methods are available?",
+        "faq-a2": "The program supports STC Pay, Al Rajhi Bank, and PayPal.",
+
+        "contact-title": "Contact Us",
+        "contact-content": "For inquiries or support, contact us via email: <strong>info@example.com</strong>",
+
+        "footer-text": "All rights reserved © Message Sending Program",
+
+        "choose-payment": "Choose Payment Method",
+        "scan-qr": "Scan the Code",
+
+        "popup-title": "Register and Get a Free Number to Use the Program",
+        "submit-button": "Submit",
+        "response-message": "Successfully sent! You will receive a message with the serial number."
+      },
+    };
+
+    /************************************************
+     *       تفعيل الترجمة على العناصر
+     ***********************************************/
+    let currentLang = "ar"; // اللغة الافتراضية
+
+    function applyTranslations(lang) {
+      document.querySelectorAll("[data-translate]").forEach((el) => {
+        const translateKey = el.getAttribute("data-translate");
+        if (translations[lang][translateKey]) {
+          // إذا كان العنصر وسم <input> (مثل placeholder) أو <button> أو نص داخل الوسم
+          if (el.tagName.toLowerCase() === "input") {
+            el.placeholder = translations[lang][translateKey];
+          } else {
+            // سمحنا بوضع HTML في بعض العناصر (مثل contact-content)
+            el.innerHTML = translations[lang][translateKey];
+          }
+        }
+      });
+      // تحديث عنوان الصفحة
+      document.title = translations[lang]["page-title"];
     }
+
+    /************************************************
+     *       زر تبديل اللغة (عربي <-> إنجليزي)
+     ***********************************************/
+    const langToggleBtn = document.getElementById("lang-toggle");
+    langToggleBtn.addEventListener("click", () => {
+      if (currentLang === "ar") {
+        currentLang = "en";
+        langToggleBtn.textContent = "عربي"; 
+      } else {
+        currentLang = "ar";
+        langToggleBtn.textContent = "English";
+      }
+      applyTranslations(currentLang);
+    });
 
     /************************************************
      *                   النوافذ المنبثقة
@@ -576,7 +739,7 @@
     }
 
     function openPaymentModal(messages, price) {
-      // يمكن إضافة استخدام المتغيرين messages و price إذا لزم الأمر
+      // يمكن الاستفادة من المتغيرين messages و price إذا لزم الأمر
       const paymentModal = new bootstrap.Modal(document.getElementById("payment-modal"));
       paymentModal.show();
     }
@@ -596,33 +759,29 @@
     }
 
     /************************************************
-     *         إظهار نافذة التسجيل بالبريد عند تحميل الصفحة
+     *        إظهار نافذة التسجيل بالبريد عند تحميل الصفحة
      ***********************************************/
     window.onload = function () {
+      // تطبيق الترجمة الافتراضية (عربي في البداية)
+      applyTranslations(currentLang);
+
+      // بعد 3 ثوانٍ من فتح الصفحة، أظهر نافذة التسجيل
       setTimeout(function () {
         document
           .getElementById("email-popup-registration")
           .classList.add("show");
-      }, 3000); // يظهر بعد 3 ثوانٍ
-
-      // تحديد اللغة بناءً على لغة المتصفح
-      const userLang = navigator.language || navigator.userLanguage;
-      if (userLang.includes("ar")) {
-        switchLanguage("ar");
-      } else {
-        switchLanguage("en");
-      }
+      }, 3000);
     };
 
     /************************************************
-     *           التعامل مع بيانات التسجيل
+     *        التعامل مع بيانات التسجيل (Google Sheets)
      ***********************************************/
     function submitEmail() {
       const email = document.getElementById("email").value;
       if (validateEmail(email)) {
         const serialNumber = generateSerialNumber();
         const messageCount = 30; // عدد الرسائل المجانية
-        const language = document.documentElement.lang;
+        const language = currentLang;
 
         // إرسال البيانات إلى Google Sheets
         saveDataToGoogleSheets(email, serialNumber, messageCount, language);
@@ -641,7 +800,7 @@
     }
 
     function saveDataToGoogleSheets(email, serialNumber, messageCount, language) {
-      // هذا الرابط مثال فقط، يجب تعديله برابط السكربت الخاص بك في Google Apps Script
+      // هذا الرابط مجرد مثال، عدّله برابط سكربت Google Apps Script لديك
       const url = `https://script.google.com/macros/s/AKfycbyEOR-vWCOJWVV59QeLT4Is-CKw1fTdVdlzWTCpi41__a2_20Ei2FcXTtDhgQChq7w0/exec?email=${encodeURIComponent(
         email
       )}&serialNumber=${encodeURIComponent(
