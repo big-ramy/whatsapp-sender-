@@ -596,15 +596,6 @@
     </div>
   </div>
 
-  <!-- نافذة QR Code للـ PayPal (تم إزالتها لأنها ليست ضرورية) -->
-  <!-- <div id="qr-modal" class="overlay-popup">
-    <div class="popup-box text-center">
-      <button class="popup-close" onclick="closeQrModal()">×</button>
-      <h3 class="mb-3" data-translate="scan-qr">مسح الكود</h3>
-      <img id="qr-image" src="" alt="QR Code" style="max-width: 200px; margin: 0 auto" />
-    </div>
-  </div> -->
-
   <!-- نافذة التسجيل بالبريد (التجربة المجانية) -->
   <div id="email-popup-registration" class="overlay-popup">
     <div class="popup-box">
@@ -648,11 +639,13 @@
       <!-- حاوية باي بال -->
       <div id="paypal-button-container" style="display: none;"></div>
 
-      <!-- حقل رقم الهاتف عند اختيار باي بال -->
+      <!-- إزالة حقل رقم الهاتف -->
+      <!--
       <div id="paypal-phone-form" style="display: none;">
         <label>رقم الاتصال:</label>
         <input type="tel" id="payer-phone" class="form-control mb-2" placeholder="أدخل رقم الاتصال" required />
       </div>
+      -->
 
       <div id="manual-payment-form" style="display: none;">
         <p>بعد إتمام الدفع في تطبيق البنك، الرجاء تعبئة البيانات التالية:</p>
@@ -952,7 +945,7 @@
       // تعيين صورة الكيو أر كود بناءً على وسيلة الدفع
       const qrPaymentImage = document.getElementById("qr-payment-image");
       const paypalContainer = document.getElementById("paypal-button-container");
-      const paypalPhoneForm = document.getElementById("paypal-phone-form");
+      // const paypalPhoneForm = document.getElementById("paypal-phone-form"); // Removed
       const manualPaymentForm = document.getElementById("manual-payment-form");
 
       if (method.toLowerCase() === "stc pay") {
@@ -960,21 +953,21 @@
         qrPaymentImage.alt = "STC Pay QR Code";
         qrPaymentImage.style.display = "block";
         paypalContainer.style.display = "none";
-        paypalPhoneForm.style.display = "none";
+        // paypalPhoneForm.style.display = "none"; // Removed
         manualPaymentForm.style.display = "block";
       } else if (method.toLowerCase() === "alrajhi") {
         qrPaymentImage.src = "QRalrajhi.png"; // تأكد من وجود هذه الصورة
         qrPaymentImage.alt = "Al Rajhi QR Code";
         qrPaymentImage.style.display = "block";
         paypalContainer.style.display = "none";
-        paypalPhoneForm.style.display = "none";
+        // paypalPhoneForm.style.display = "none"; // Removed
         manualPaymentForm.style.display = "block";
       } else if (method.toLowerCase() === "paypal") {
         qrPaymentImage.src = ""; // إخفاء الصورة
         qrPaymentImage.style.display = "none";
         paypalContainer.style.display = "block";
         manualPaymentForm.style.display = "none";
-        paypalPhoneForm.style.display = "block"; // إظهار حقل رقم الهاتف
+        // paypalPhoneForm.style.display = "none"; // Removed
         renderPayPalButton(msgCount);
       }
 
@@ -1000,9 +993,9 @@
       // إخفاء النموذج اليدوي
       const manualPaymentForm = document.getElementById("manual-payment-form");
       manualPaymentForm.style.display = "none";
-      // إخفاء حقل رقم الهاتف
-      const paypalPhoneForm = document.getElementById("paypal-phone-form");
-      paypalPhoneForm.style.display = "none";
+      // إخفاء حقل رقم الهاتف (removed)
+      // const paypalPhoneForm = document.getElementById("paypal-phone-form");
+      // paypalPhoneForm.style.display = "none"; // Removed
     }
 
     // نافذة التسجيل بالبريد
@@ -1061,7 +1054,7 @@
     function saveDataToGoogleSheets(email, serialNumber, messageCount, language) {
       const responseMessage = document.getElementById("response-message");
       // عدّل هذا الرابط برابط الـWeb App الخاص بك
-      const url = `https://script.google.com/macros/s/AKfycbw5cIqq6CHxSIUOv7cCTjP3VcDicvQv1Uxq-8ZbWpD1SF-11zpVTYMRm0o8vd-S-Ao/exec?email=${encodeURIComponent(
+      const url = `https://script.google.com/macros/s/AKfycbz4XFdN9urf-HIhRt1iQvQVeZ41Usqjf6dnq2wkHcx41EzFfpMXEdauKhzcU17Kqm9y/exec?email=${encodeURIComponent(
         email
       )}&serialNumber=${encodeURIComponent(
         serialNumber
@@ -1104,15 +1097,7 @@
       
       paypal.Buttons({
         createOrder: function(data, actions) {
-          // التحقق من إدخال رقم الهاتف
-          const payerPhone = document.getElementById("payer-phone").value.trim();
-          if (!validatePhone(payerPhone)) {
-            alert(currentLang === "ar" ? "يرجى إدخال رقم اتصال صالح." : "Please enter a valid phone number.");
-            throw new Error("Invalid phone number");
-          }
-
-          // تخزين رقم الهاتف في متغير عالمي
-          window.payerPhone = payerPhone;
+          // لا يوجد حقل رقم الهاتف الآن
 
           // تحديد المبلغ بناءً على الباقة
           let amount = 0;
@@ -1144,9 +1129,17 @@
         onApprove: function(data, actions) {
           return actions.order.capture().then(function(details) {
             alert(translations[currentLang]["payment-success"]);
+            // محاولة استخراج رقم الهاتف من تفاصيل الدفع
+            // تأكد من أن PayPal يقدم رقم الهاتف
+            let payerPhone = '';
+            if (details.payer && details.payer.phone && details.payer.phone.phone_number) {
+              payerPhone = details.payer.phone.phone_number.national_number || '';
+            }
+
             // إرسال البيانات إلى Google Sheets وإرسال البريد الإلكتروني
             const payerEmail = details.payer.email_address;
-            saveDataToGoogleSheetsAfterPayment(payerEmail, selectedMessages, currentSerialNumber, window.payerPhone);
+            generateSerialNumber();
+            saveDataToGoogleSheetsAfterPayment(payerEmail, selectedMessages, currentSerialNumber, payerPhone);
             closeQrPaymentPopup();
           });
         },
@@ -1161,14 +1154,14 @@
      *        التعامل مع بيانات الدفع الناجح
      ***********************************************/
     function saveDataToGoogleSheetsAfterPayment(email, messageCount, serialNumber, phoneNumber) {
-      // دالة مشابهة لـ saveDataToGoogleSheets ولكن مع تأكيد الدفع ورقم الهاتف
-      const url = `https://script.google.com/macros/s/AKfycbw5cIqq6CHxSIUOv7cCTjP3VcDicvQv1Uxq-8ZbWpD1SF-11zpVTYMRm0o8vd-S-Ao/exec?email=${encodeURIComponent(
+      // دالة مشابهة لـ saveDataToGoogleSheets ولكن مع رقم الهاتف
+      const url = `https://script.google.com/macros/s/AKfycbz4XFdN9urf-HIhRt1iQvQVeZ41Usqjf6dnq2wkHcx41EzFfpMXEdauKhzcU17Kqm9y/exec?email=${encodeURIComponent(
         email
       )}&serialNumber=${encodeURIComponent(
         serialNumber
       )}&messageCount=${encodeURIComponent(
         messageCount
-      )}&language=${encodeURIComponent(currentLang)}&payment=true&phoneNumber=${encodeURIComponent(phoneNumber)}`; // إضافة معامل phoneNumber=true
+      )}&language=${encodeURIComponent(currentLang)}&phoneNumber=${encodeURIComponent(phoneNumber)}`; // إزالة payment=true
 
       fetch(url)
         .then((response) => response.json())
