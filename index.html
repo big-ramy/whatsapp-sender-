@@ -571,7 +571,7 @@
           data-src-en="stcpay.png"
           alt="STC Pay"
           class="lang-image"
-          style="width: 70px; height: 10px; cursor: pointer; margin:5px;"
+          style="width: 70px; height: 20px; cursor: pointer; margin:5px;"
           onclick="openQrPaymentPopup('STC Pay', selectedMessages)"
         />
         <img
@@ -580,7 +580,7 @@
           data-src-en="alrajhi.png"
           alt="الراجحي"
           class="lang-image"
-          style="width: 70px; height: 10px; cursor: pointer; margin:5px;"
+          style="width: 70px; height: 20px; cursor: pointer; margin:5px;"
           onclick="openQrPaymentPopup('AlRajhi', selectedMessages)"
         />
         <img
@@ -589,7 +589,7 @@
           data-src-en="paypal.png"
           alt="PayPal"
           class="lang-image"
-          style="width: 70px; height: 10px; cursor: pointer; margin:5px;"
+          style="width: 70px; height: 20px; cursor: pointer; margin:5px;"
           onclick="openQrPaymentPopup('PayPal', selectedMessages)"
         />
       </div>
@@ -807,283 +807,291 @@
     let currentSerialNumber = null; // لتخزين الرقم التسلسلي
 
     // دالة تحميل سكربت باي بال ديناميكيًا بناءً على اللغة
-    function loadPayPalSDK(lang) {
-      // إزالة سكربت باي بال الحالي إن وجد
-      const existingScript = document.getElementById("paypal-sdk");
-      if (existingScript) {
-        existingScript.parentNode.removeChild(existingScript);
-      }
+// دالة تحميل سكربت باي بال ديناميكيًا بناءً على اللغة
+function loadPayPalSDK(lang) {
+  // إزالة سكربت باي بال الحالي إن وجد
+  const existingScript = document.getElementById("paypal-sdk");
+  if (existingScript) {
+    existingScript.parentNode.removeChild(existingScript);
+  }
 
-      // إنشاء سكربت جديد
-      const script = document.createElement("script");
-      script.id = "paypal-sdk";
-      const locale = (lang === "ar") ? "ar_SA" : "en_US";
-      script.src = `https://www.paypal.com/sdk/js?client-id=AeeAWTTUiIffxzut4SPuKKn-qzkmdellWi0LKjKWVSWKBXdQ_NwpONrQDLalv-oYLDdUc_yuw1Yrk_gc&currency=USD&locale=${locale}`;
-      script.onload = function() {
-        // إعادة رسم زر باي بال بعد تحميل السكربت
-        renderPayPalButton(selectedMessages);
-      };
-      document.head.appendChild(script);
-    }
+  // إنشاء سكربت جديد
+  const script = document.createElement("script");
+  script.id = "paypal-sdk";
+  const locale = (lang === "ar") ? "ar_SA" : "en_US";
+  script.src = `https://www.paypal.com/sdk/js?client-id=AeeAWTTUiIffxzut4SPuKKn-qzkmdellWi0LKjKWVSWKBXdQ_NwpONrQDLalv-oYLDdUc_yuw1Yrk_gc&currency=USD&locale=${locale}`;
+  script.onload = function() {
+    // إعادة رسم زر باي بال بعد تحميل السكربت
+    renderPayPalButton(selectedMessages);
+  };
+  document.head.appendChild(script);
+}
 
-    function applyTranslations(lang) {
-      document.querySelectorAll("[data-translate]").forEach((el) => {
-        const translateKey = el.getAttribute("data-translate");
-        if (translations[lang][translateKey]) {
-          // لو العنصر input نعدل الـplaceholder
-          if (el.tagName.toLowerCase() === "input") {
-            el.placeholder = translations[lang][translateKey];
-          } else {
-            el.innerHTML = translations[lang][translateKey];
-          }
-        }
-      });
-      // تعديل عنوان الصفحة
-      document.title = translations[lang]["page-title"];
-
-      // تحديث الصور متعددة اللغات
-      document.querySelectorAll('.lang-image').forEach(img => {
-        const newSrc = img.getAttribute(`data-src-${lang}`);
-        if (newSrc) {
-          img.src = newSrc;
-        }
-      });
-
-      // تحميل سكربت باي بال بناءً على اللغة
-      loadPayPalSDK(lang);
-    }
-
-    function setDirection(lang) {
-      const htmlTag = document.documentElement;
-      if (lang === "ar") {
-        htmlTag.lang = "ar";
-        htmlTag.dir = "rtl";
+function applyTranslations(lang) {
+  document.querySelectorAll("[data-translate]").forEach((el) => {
+    const translateKey = el.getAttribute("data-translate");
+    if (translations[lang][translateKey]) {
+      // لو العنصر input نعدل الـplaceholder
+      if (el.tagName.toLowerCase() === "input") {
+        el.placeholder = translations[lang][translateKey];
       } else {
-        htmlTag.lang = "en";
-        htmlTag.dir = "ltr";
+        el.innerHTML = translations[lang][translateKey];
       }
     }
+  });
+  // تعديل عنوان الصفحة
+  document.title = translations[lang]["page-title"];
 
-    const langToggleBtn = document.getElementById("lang-toggle");
-    langToggleBtn.addEventListener("click", () => {
-      if (currentLang === "ar") {
-        currentLang = "en";
-        langToggleBtn.textContent = "عربي"; 
+  // تحديث الصور متعددة اللغات
+  document.querySelectorAll('.lang-image').forEach(img => {
+    const newSrc = img.getAttribute(`data-src-${lang}`);
+    if (newSrc) {
+      img.src = newSrc;
+    }
+  });
+
+  // تحميل سكربت باي بال بناءً على اللغة
+  loadPayPalSDK(lang);
+}
+
+function setDirection(lang) {
+  const htmlTag = document.documentElement;
+  if (lang === "ar") {
+    htmlTag.lang = "ar";
+    htmlTag.dir = "rtl";
+  } else {
+    htmlTag.lang = "en";
+    htmlTag.dir = "ltr";
+  }
+}
+
+const langToggleBtn = document.getElementById("lang-toggle");
+langToggleBtn.addEventListener("click", () => {
+  if (currentLang === "ar") {
+    currentLang = "en";
+    langToggleBtn.textContent = "عربي"; 
+  } else {
+    currentLang = "ar";
+    langToggleBtn.textContent = "English";
+  }
+  setDirection(currentLang);
+  applyTranslations(currentLang);
+});
+
+// اكتشاف لغة المتصفح + إظهار نافذة التسجيل بعد 3 ثواني
+window.onload = () => {
+  const userLang = navigator.language || navigator.userLanguage;
+  if (userLang.toLowerCase().includes("ar")) {
+    currentLang = "ar";
+    langToggleBtn.textContent = "English";
+  } else {
+    currentLang = "en";
+    langToggleBtn.textContent = "عربي";
+  }
+  setDirection(currentLang);
+  applyTranslations(currentLang);
+
+  // فتح نافذة التسجيل بعد 3 ثواني
+  setTimeout(() => {
+    openEmailPopup();
+  }, 3000);
+};
+
+/************************************************
+ *                   النوافذ المنبثقة
+ ***********************************************/
+function closePopup() {
+  closePaymentModal();
+  closeEmailPopup();
+  closeQrPaymentPopup();
+}
+
+let selectedMessages = 0; // لتخزين عدد الرسائل في حالة اختار الباقة
+let selectedPrice = 0; // لتخزين السعر المختار
+
+// دالة فتح نافذة الدفع
+function openPaymentModal(messages, price) {
+  selectedMessages = messages;
+  selectedPrice = price;
+  const paymentModal = document.getElementById("payment-modal");
+  paymentModal.style.display = "flex";
+  paymentModal.addEventListener("click", outsideClickPaymentModal);
+  // تخزين الباقة المختارة
+  paymentModal.setAttribute("data-messages", messages);
+  paymentModal.setAttribute("data-price", price);
+}
+
+function outsideClickPaymentModal(e) {
+  const box = document.querySelector("#payment-modal .popup-box");
+  if (!box.contains(e.target)) {
+    closePaymentModal();
+  }
+}
+
+function closePaymentModal() {
+  const pm = document.getElementById("payment-modal");
+  pm.style.display = "none";
+  pm.removeEventListener("click", outsideClickPaymentModal);
+  pm.removeAttribute("data-messages");
+  pm.removeAttribute("data-price");
+}
+
+// دالة فتح نافذة اختيار وسيلة الدفع
+function openQrPaymentPopup(method, msgCount) {
+  closePaymentModal(); // اغلاق نافذة الدفع الرئيسية إن كانت مفتوحة
+  const popup = document.getElementById("qr-payment-popup");
+  popup.style.display = "flex";
+  // تعبئة عدد الرسائل
+  document.getElementById("payment-messages").value = msgCount || 1000;
+
+  // تعيين صورة الكيو أر كود بناءً على وسيلة الدفع
+  const qrPaymentImage = document.getElementById("qr-payment-image");
+  const paypalContainer = document.getElementById("paypal-button-container");
+  const paypalPhoneForm = document.getElementById("paypal-phone-form");
+  const manualPaymentForm = document.getElementById("manual-payment-form");
+
+  if (method.toLowerCase() === "stc pay") {
+    qrPaymentImage.src = "QRstcpay.png"; // تأكد من وجود هذه الصورة
+    qrPaymentImage.alt = "STC Pay QR Code";
+    qrPaymentImage.style.display = "block";
+    paypalContainer.style.display = "none";
+    paypalPhoneForm.style.display = "none";
+    manualPaymentForm.style.display = "block";
+  } else if (method.toLowerCase() === "alrajhi") {
+    qrPaymentImage.src = "QRalrajhi.png"; // تأكد من وجود هذه الصورة
+    qrPaymentImage.alt = "Al Rajhi QR Code";
+    qrPaymentImage.style.display = "block";
+    paypalContainer.style.display = "none";
+    paypalPhoneForm.style.display = "none";
+    manualPaymentForm.style.display = "block";
+  } else if (method.toLowerCase() === "paypal") {
+    qrPaymentImage.src = ""; // إخفاء الصورة
+    qrPaymentImage.style.display = "none";
+    paypalContainer.style.display = "block";
+    manualPaymentForm.style.display = "none";
+    paypalPhoneForm.style.display = "block"; // إظهار حقل رقم الهاتف
+    renderPayPalButton(msgCount);
+  }
+
+  // تسجيل الحدث للإغلاق عند الضغط خارج المحتوى
+  popup.addEventListener("click", outsideClickQrPayment);
+}
+
+function outsideClickQrPayment(e) {
+  const box = document.querySelector("#qr-payment-popup .popup-inner");
+  if (!box.contains(e.target)) {
+    closeQrPaymentPopup();
+  }
+}
+
+function closeQrPaymentPopup() {
+  const popup = document.getElementById("qr-payment-popup");
+  popup.style.display = "none";
+  popup.removeEventListener("click", outsideClickQrPayment);
+  // تنظيف حاوية باي بال بعد الإغلاق
+  const paypalContainer = document.getElementById("paypal-button-container");
+  paypalContainer.innerHTML = "";
+  paypalContainer.style.display = "none";
+  // إخفاء النموذج اليدوي
+  const manualPaymentForm = document.getElementById("manual-payment-form");
+  manualPaymentForm.style.display = "none";
+  // إخفاء حقل رقم الهاتف
+  const paypalPhoneForm = document.getElementById("paypal-phone-form");
+  paypalPhoneForm.style.display = "none";
+}
+
+// نافذة التسجيل بالبريد
+function openEmailRegistration() {
+  openEmailPopup();
+}
+
+function openEmailPopup() {
+  const emailPopup = document.getElementById("email-popup-registration");
+  emailPopup.style.display = "flex";
+  emailPopup.addEventListener("click", outsideClickEmailPopup);
+}
+
+function outsideClickEmailPopup(e) {
+  const box = document.querySelector("#email-popup-registration .popup-box");
+  if (!box.contains(e.target)) {
+    closeEmailPopup();
+  }
+}
+
+function closeEmailPopup() {
+  const popup = document.getElementById("email-popup-registration");
+  popup.style.display = "none";
+  popup.removeEventListener("click", outsideClickEmailPopup);
+}
+
+/************************************************
+ *        التعامل مع بيانات التسجيل المجاني
+ ***********************************************/
+function submitEmail() {
+  const email = document.getElementById("email").value.trim();
+  const responseMessage = document.getElementById("response-message");
+  if (validateEmail(email)) {
+    const serialNumber = generateSerialNumber();
+    currentSerialNumber = serialNumber; // تخزين الرقم التسلسلي
+    const messageCount = 30; 
+    const language = currentLang;
+
+    responseMessage.style.display = "none";
+    responseMessage.textContent = "";
+
+    saveDataToGoogleSheets(email, serialNumber, messageCount, language);
+  } else {
+    alert("من فضلك أدخل بريدًا إلكترونيًا صالحًا");
+  }
+}
+
+function generateSerialNumber() {
+  return "SN" + Math.floor(Math.random() * 1000000);
+}
+function validateEmail(email) {
+  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return regex.test(email);
+}
+
+function saveDataToGoogleSheets(email, serialNumber, messageCount, language) {
+  const responseMessage = document.getElementById("response-message");
+  // عدّل هذا الرابط برابط الـWeb App الخاص بك
+  const url = `https://script.google.com/macros/s/AKfycbw5cIqq6CHxSIUOv7cCTjP3VcDicvQv1Uxq-8ZbWpD1SF-11zpVTYMRm0o8vd-S-Ao/exec?email=${encodeURIComponent(
+    email
+  )}&serialNumber=${encodeURIComponent(
+    serialNumber
+  )}&messageCount=${encodeURIComponent(
+    messageCount
+  )}&language=${encodeURIComponent(language)}`;
+
+  fetch(url)
+    .then((response) => response.json())
+    .then((data) => {
+      responseMessage.style.display = "block";
+      if (data.status === "error") {
+        responseMessage.style.color = "red";
+        responseMessage.textContent = data.message;
       } else {
-        currentLang = "ar";
-        langToggleBtn.textContent = "English";
+        responseMessage.style.color = "green";
+        responseMessage.textContent = data.message;
+        setTimeout(() => {
+          closeEmailPopup();
+          responseMessage.textContent = "";
+        }, 3000);
       }
-      setDirection(currentLang);
-      applyTranslations(currentLang);
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      responseMessage.style.display = "block";
+      responseMessage.style.color = "red";
+      responseMessage.textContent =
+        "حدث خطأ أثناء الإرسال. حاول مرة أخرى.";
     });
+}
 
-    // اكتشاف لغة المتصفح + إظهار نافذة التسجيل بعد 3 ثواني
-    window.onload = () => {
-      const userLang = navigator.language || navigator.userLanguage;
-      if (userLang.toLowerCase().includes("ar")) {
-        currentLang = "ar";
-        langToggleBtn.textContent = "English";
-      } else {
-        currentLang = "en";
-        langToggleBtn.textContent = "عربي";
-      }
-      setDirection(currentLang);
-      applyTranslations(currentLang);
-
-      // فتح نافذة التسجيل بعد 3 ثواني
-      setTimeout(() => {
-        openEmailPopup();
-      }, 3000);
-    };
-
-    /************************************************
-     *                   النوافذ المنبثقة
-     ***********************************************/
-    function closePopup() {
-      closePaymentModal();
-      closeEmailPopup();
-      closeQrPaymentPopup();
-    }
-
-    let selectedMessages = 0; // لتخزين عدد الرسائل في حالة اختار الباقة
-    let selectedPrice = 0; // لتخزين السعر المختار
-
-    // دالة فتح نافذة الدفع
-    function openPaymentModal(messages, price) {
-      selectedMessages = messages;
-      selectedPrice = price;
-      const paymentModal = document.getElementById("payment-modal");
-      paymentModal.style.display = "flex";
-      paymentModal.addEventListener("click", outsideClickPaymentModal);
-      // تخزين الباقة المختارة
-      paymentModal.setAttribute("data-messages", messages);
-      paymentModal.setAttribute("data-price", price);
-    }
-
-    function outsideClickPaymentModal(e) {
-      const box = document.querySelector("#payment-modal .popup-box");
-      if (!box.contains(e.target)) {
-        closePaymentModal();
-      }
-    }
-
-    function closePaymentModal() {
-      const pm = document.getElementById("payment-modal");
-      pm.style.display = "none";
-      pm.removeEventListener("click", outsideClickPaymentModal);
-      pm.removeAttribute("data-messages");
-      pm.removeAttribute("data-price");
-    }
-
-    // دالة فتح نافذة اختيار وسيلة الدفع
-    function openQrPaymentPopup(method, msgCount) {
-      closePaymentModal(); // اغلاق نافذة الدفع الرئيسية إن كانت مفتوحة
-      const popup = document.getElementById("qr-payment-popup");
-      popup.style.display = "flex";
-      // تعبئة عدد الرسائل
-      document.getElementById("payment-messages").value = msgCount || 1000;
-
-      // تعيين صورة الكيو أر كود بناءً على وسيلة الدفع
-      const qrPaymentImage = document.getElementById("qr-payment-image");
-      const paypalContainer = document.getElementById("paypal-button-container");
-      const manualPaymentForm = document.getElementById("manual-payment-form");
-
-      if (method.toLowerCase() === "stc pay") {
-        qrPaymentImage.src = "QRstcpay.png"; // تأكد من وجود هذه الصورة
-        qrPaymentImage.alt = "STC Pay QR Code";
-        qrPaymentImage.style.display = "block";
-        paypalContainer.style.display = "none";
-        manualPaymentForm.style.display = "block";
-      } else if (method.toLowerCase() === "alrajhi") {
-        qrPaymentImage.src = "QRalrajhi.png"; // تأكد من وجود هذه الصورة
-        qrPaymentImage.alt = "Al Rajhi QR Code";
-        qrPaymentImage.style.display = "block";
-        paypalContainer.style.display = "none";
-        manualPaymentForm.style.display = "block";
-      } else if (method.toLowerCase() === "paypal") {
-        qrPaymentImage.src = ""; // إخفاء الصورة
-        qrPaymentImage.style.display = "none";
-        paypalContainer.style.display = "block";
-        manualPaymentForm.style.display = "none";
-        renderPayPalButton(msgCount);
-      }
-
-      // تسجيل الحدث للإغلاق عند الضغط خارج المحتوى
-      popup.addEventListener("click", outsideClickQrPayment);
-    }
-
-    function outsideClickQrPayment(e) {
-      const box = document.querySelector("#qr-payment-popup .popup-inner");
-      if (!box.contains(e.target)) {
-        closeQrPaymentPopup();
-      }
-    }
-
-    function closeQrPaymentPopup() {
-      const popup = document.getElementById("qr-payment-popup");
-      popup.style.display = "none";
-      popup.removeEventListener("click", outsideClickQrPayment);
-      // تنظيف حاوية باي بال بعد الإغلاق
-      const paypalContainer = document.getElementById("paypal-button-container");
-      paypalContainer.innerHTML = "";
-      paypalContainer.style.display = "none";
-      // إخفاء النموذج اليدوي
-      const manualPaymentForm = document.getElementById("manual-payment-form");
-      manualPaymentForm.style.display = "none";
-    }
-
-    // نافذة التسجيل بالبريد
-    function openEmailRegistration() {
-      openEmailPopup();
-    }
-
-    function openEmailPopup() {
-      const emailPopup = document.getElementById("email-popup-registration");
-      emailPopup.style.display = "flex";
-      emailPopup.addEventListener("click", outsideClickEmailPopup);
-    }
-
-    function outsideClickEmailPopup(e) {
-      const box = document.querySelector("#email-popup-registration .popup-box");
-      if (!box.contains(e.target)) {
-        closeEmailPopup();
-      }
-    }
-
-    function closeEmailPopup() {
-      const popup = document.getElementById("email-popup-registration");
-      popup.style.display = "none";
-      popup.removeEventListener("click", outsideClickEmailPopup);
-    }
-
-    /************************************************
-     *        التعامل مع بيانات التسجيل المجاني
-     ***********************************************/
-    function submitEmail() {
-      const email = document.getElementById("email").value.trim();
-      const responseMessage = document.getElementById("response-message");
-      if (validateEmail(email)) {
-        const serialNumber = generateSerialNumber();
-        currentSerialNumber = serialNumber; // تخزين الرقم التسلسلي
-        const messageCount = 30; 
-        const language = currentLang;
-
-        responseMessage.style.display = "none";
-        responseMessage.textContent = "";
-
-        saveDataToGoogleSheets(email, serialNumber, messageCount, language);
-      } else {
-        alert("من فضلك أدخل بريدًا إلكترونيًا صالحًا");
-      }
-    }
-
-    function generateSerialNumber() {
-      return "SN" + Math.floor(Math.random() * 1000000);
-    }
-    function validateEmail(email) {
-      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      return regex.test(email);
-    }
-
-    function saveDataToGoogleSheets(email, serialNumber, messageCount, language) {
-      const responseMessage = document.getElementById("response-message");
-      // عدّل هذا الرابط برابط الـWeb App الخاص بك
-      const url = `https://script.google.com/macros/s/AKfycbxKceli--kqrmC94C5uf04BhXvcWCLUjID7RqCP_GoMU2OyAR-uiEfmC-ocbe9Z7aDt/exec?email=${encodeURIComponent(
-        email
-      )}&serialNumber=${encodeURIComponent(
-        serialNumber
-      )}&messageCount=${encodeURIComponent(
-        messageCount
-      )}&language=${encodeURIComponent(language)}`;
-
-      fetch(url)
-        .then((response) => response.json())
-        .then((data) => {
-          responseMessage.style.display = "block";
-          if (data.status === "error") {
-            responseMessage.style.color = "red";
-            responseMessage.textContent = data.message;
-          } else {
-            responseMessage.style.color = "green";
-            responseMessage.textContent = data.message;
-            setTimeout(() => {
-              closeEmailPopup();
-              responseMessage.textContent = "";
-            }, 3000);
-          }
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-          responseMessage.style.display = "block";
-          responseMessage.style.color = "red";
-          responseMessage.textContent =
-            "حدث خطأ أثناء الإرسال. حاول مرة أخرى.";
-        });
-    }
-
-    /************************************************
-     *   دمج باي بال مع باقات الدفع
-     ***********************************************/
+/************************************************
+ *   دمج باي بال مع باقات الدفع
+ ***********************************************/
 function renderPayPalButton(msgCount) {
   // تنظيف الحاوية قبل إعادة العرض
   const paypalContainer = document.getElementById("paypal-button-container");
@@ -1144,12 +1152,12 @@ function renderPayPalButton(msgCount) {
   }).render('#paypal-button-container');
 }
 
-    /************************************************
-     *        التعامل مع بيانات الدفع الناجح
-     ***********************************************/
+/************************************************
+ *        التعامل مع بيانات الدفع الناجح
+ ***********************************************/
 function saveDataToGoogleSheetsAfterPayment(email, messageCount, serialNumber, phoneNumber) {
   // دالة مشابهة لـ saveDataToGoogleSheets ولكن مع رقم الهاتف
-  const url = `https://script.google.com/macros/s/AKfycbxKceli--kqrmC94C5uf04BhXvcWCLUjID7RqCP_GoMU2OyAR-uiEfmC-ocbe9Z7aDt/exec?email=${encodeURIComponent(
+  const url = `https://script.google.com/macros/s/AKfycbw5cIqq6CHxSIUOv7cCTjP3VcDicvQv1Uxq-8ZbWpD1SF-11zpVTYMRm0o8vd-S-Ao/exec?email=${encodeURIComponent(
     email
   )}&serialNumber=${encodeURIComponent(
     serialNumber
@@ -1173,55 +1181,55 @@ function saveDataToGoogleSheetsAfterPayment(email, messageCount, serialNumber, p
     });
 }
 
+/************************************************
+ *   رفع فاتورة الدفع (QR Payment Popup)
+ ***********************************************/
+async function submitPaymentProof() {
+  const name = document.getElementById("payment-name").value.trim();
+  const email = document.getElementById("payment-email").value.trim();
+  const messagesCount = document.getElementById("payment-messages").value.trim();
+  const file = document.getElementById("payment-file").files[0];
+  const resultDiv = document.getElementById("qr-payment-result");
 
-    /************************************************
-     *   رفع فاتورة الدفع (QR Payment Popup)
-     ***********************************************/
-    async function submitPaymentProof() {
-      const name = document.getElementById("payment-name").value.trim();
-      const email = document.getElementById("payment-email").value.trim();
-      const messagesCount = document.getElementById("payment-messages").value.trim();
-      const file = document.getElementById("payment-file").files[0];
-      const resultDiv = document.getElementById("qr-payment-result");
+  if (!name || !email || !messagesCount || !file) {
+    alert("الرجاء تعبئة جميع الحقول وإرفاق الملف!");
+    return;
+  }
+  if (!validateEmail(email)) {
+    alert("من فضلك أدخل بريدًا إلكترونيًا صالحًا");
+    return;
+  }
 
-      if (!name || !email || !messagesCount || !file) {
-        alert("الرجاء تعبئة جميع الحقول وإرفاق الملف!");
-        return;
-      }
-      if (!validateEmail(email)) {
-        alert("من فضلك أدخل بريدًا إلكترونيًا صالحًا");
-        return;
-      }
+  const formData = new FormData();
+  formData.append('name', name);
+  formData.append('email', email);
+  formData.append('messagesCount', messagesCount);
+  formData.append('paymentFile', file);
 
-      const formData = new FormData();
-      formData.append('name', name);
-      formData.append('email', email);
-      formData.append('messagesCount', messagesCount);
-      formData.append('paymentFile', file);
-
-      try {
-        // استدعاء سكربت جوجل (عدّل الرابط أدناه)
-        const res = await fetch('YOUR_GOOGLE_SCRIPT_WEB_APP_URL', {
-          method: 'POST',
-          body: formData
-        });
-        const data = await res.json();
-        if (data.status === 'success') {
-          resultDiv.style.color = "green";
-          resultDiv.textContent = data.message;
-          setTimeout(() => {
-            closeQrPaymentPopup();
-            resultDiv.textContent = '';
-          }, 2000);
-        } else {
-          resultDiv.style.color = "red";
-          resultDiv.textContent = data.message || 'حدث خطأ!';
-        }
-      } catch (err) {
-        alert('خطأ في الاتصال بالسيرفر.');
-        console.error(err);
-      }
+  try {
+    // استدعاء سكربت جوجل (عدّل الرابط أدناه)
+    const res = await fetch('YOUR_GOOGLE_SCRIPT_WEB_APP_URL', {
+      method: 'POST',
+      body: formData
+    });
+    const data = await res.json();
+    if (data.status === 'success') {
+      resultDiv.style.color = "green";
+      resultDiv.textContent = data.message;
+      setTimeout(() => {
+        closeQrPaymentPopup();
+        resultDiv.textContent = '';
+      }, 2000);
+    } else {
+      resultDiv.style.color = "red";
+      resultDiv.textContent = data.message || 'حدث خطأ!';
     }
+  } catch (err) {
+    alert('خطأ في الاتصال بالسيرفر.');
+    console.error(err);
+  }
+}
+
   </script>
 </body>
 </html>
