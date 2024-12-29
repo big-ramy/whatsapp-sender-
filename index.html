@@ -1062,7 +1062,7 @@ function openQrPaymentPopup(method, msgCount) {
 function saveDataToGoogleSheets(email, serialNumber, messageCount, language) {
   const responseMessage = document.getElementById("response-message");
   // عدّل هذا الرابط برابط الـWeb App الخاص بك
-  const url = `https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec`;
+  const url = `https://script.google.com/macros/s/AKfycbzSYp_h_kS6wYATBk4QlCVsm8R8S21vgFQTo8VmE6eRXfuQEcaOqEBSXuGalV0H9X8/exec`;
   const params = new URLSearchParams();
   params.append('email', email);
   params.append('serialNumber', serialNumber);
