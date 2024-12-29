@@ -1059,46 +1059,47 @@ function openQrPaymentPopup(method, msgCount) {
       return regex.test(email);
     }
 
-    function saveDataToGoogleSheets(email, serialNumber, messageCount, language) {
-      const responseMessage = document.getElementById("response-message");
-      // عدّل هذا الرابط برابط الـWeb App الخاص بك
-      const url = `https://script.google.com/macros/s/AKfycbzSYp_h_kS6wYATBk4QlCVsm8R8S21vgFQTo8VmE6eRXfuQEcaOqEBSXuGalV0H9X8/exec?email=${encodeURIComponent(
-        email
-      )}&serialNumber=${encodeURIComponent(
-        serialNumber
-      )}&messageCount=${encodeURIComponent(
-        messageCount
-      )}&language=${encodeURIComponent(language)}`;
+function saveDataToGoogleSheets(email, serialNumber, messageCount, language) {
+  const responseMessage = document.getElementById("response-message");
+  // عدّل هذا الرابط برابط الـWeb App الخاص بك
+  const url = `https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec`;
+  const params = new URLSearchParams();
+  params.append('email', email);
+  params.append('serialNumber', serialNumber);
+  params.append('messageCount', messageCount);
+  params.append('language', language);
+  // لا تضيف 'paymentMethod' لأن هذا تسجيل مجاني
 
-        fetch(url, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          }
-        })
-        .then(response => response.json())
-        .then(data => {
-          responseMessage.style.display = "block";
-          if (data.status === "error") {
-            responseMessage.style.color = "red";
-            responseMessage.textContent = data.message;
-          } else {
-            responseMessage.style.color = "green";
-            responseMessage.textContent = data.message;
-            setTimeout(() => {
-              closeEmailPopup();
-              responseMessage.textContent = "";
-            }, 3000);
-          }
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-          responseMessage.style.display = "block";
-          responseMessage.style.color = "red";
-          responseMessage.textContent =
-            "حدث خطأ أثناء الإرسال. حاول مرة أخرى.";
-        });
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    body: params.toString()
+  })
+  .then(response => response.json())
+  .then(data => {
+    responseMessage.style.display = "block";
+    if (data.status === "error") {
+      responseMessage.style.color = "red";
+      responseMessage.textContent = data.message;
+    } else {
+      responseMessage.style.color = "green";
+      responseMessage.textContent = data.message;
+      setTimeout(() => {
+        closeEmailPopup();
+        responseMessage.textContent = "";
+      }, 3000);
     }
+  })
+  .catch((error) => {
+    console.error("Error:", error);
+    responseMessage.style.display = "block";
+    responseMessage.style.color = "red";
+    responseMessage.textContent =
+      "حدث خطأ أثناء الإرسال. حاول مرة أخرى.";
+  });
+}
 
     /************************************************
      *   دمج باي بال مع باقات الدفع
@@ -1185,36 +1186,37 @@ function renderPayPalButton(msgCount) {
     /************************************************
      *        التعامل مع بيانات الدفع الناجح
      ***********************************************/
-    function saveDataToGoogleSheetsAfterPayment(email, messageCount, serialNumber, phoneNumber) {
-      // دالة مشابهة لـ saveDataToGoogleSheets ولكن مع رقم الهاتف
-      const url = `https://script.google.com/macros/s/AKfycbzSYp_h_kS6wYATBk4QlCVsm8R8S21vgFQTo8VmE6eRXfuQEcaOqEBSXuGalV0H9X8/exec?email=${encodeURIComponent(
-        email
-      )}&serialNumber=${encodeURIComponent(
-        serialNumber
-      )}&messageCount=${encodeURIComponent(
-        messageCount
-      )}&language=${encodeURIComponent(currentLang)}&phoneNumber=${encodeURIComponent(phoneNumber)}`; // إزالة payment=true
+function saveDataToGoogleSheetsAfterPayment(email, messageCount, serialNumber, phoneNumber) {
+  const url = `https://script.google.com/macros/s/AKfycbzSYp_h_kS6wYATBk4QlCVsm8R8S21vgFQTo8VmE6eRXfuQEcaOqEBSXuGalV0H9X8/exec`;
+  const params = new URLSearchParams();
+  params.append('email', email);
+  params.append('serialNumber', serialNumber);
+  params.append('messageCount', messageCount);
+  params.append('language', currentLang);
+  params.append('phoneNumber', phoneNumber);
+  params.append('paymentMethod', 'STCPay'); // أو 'AlRajhi' حسب الطريقة
 
-        fetch(url, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          }
-        })
-        .then(response => response.json())
-        .then(data => {
-          if (data.status === "error") {
-            alert(data.message);
-          } else {
-            // تم إرسال البريد الإلكتروني بنجاح من جانب الخادم
-            console.log(data.message);
-          }
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-          alert("حدث خطأ أثناء معالجة الدفع. حاول مرة أخرى.");
-        });
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    body: params.toString()
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.status === "error") {
+      alert(data.message);
+    } else {
+      // تم إرسال البريد الإلكتروني بنجاح من جانب الخادم
+      console.log(data.message);
     }
+  })
+  .catch((error) => {
+    console.error("Error:", error);
+    alert("حدث خطأ أثناء معالجة الدفع. حاول مرة أخرى.");
+  });
+}
 
     /************************************************
      *   رفع فاتورة الدفع (QR Payment Popup)
@@ -1222,7 +1224,7 @@ function renderPayPalButton(msgCount) {
 async function submitPaymentProof() {
   const name = document.getElementById("payment-name").value.trim();
   const email = document.getElementById("payment-email").value.trim();
-  const phoneNumber = document.getElementById("payment-phone").value.trim(); // إضافة جمع رقم الهاتف
+  const phoneNumber = document.getElementById("payment-phone").value.trim(); // جمع رقم الهاتف
   const messagesCount = document.getElementById("payment-messages").value.trim();
   const file = document.getElementById("payment-file").files[0];
   const paymentMethod = document.getElementById("qr-payment-popup").getAttribute("data-payment-method");
@@ -1243,20 +1245,20 @@ async function submitPaymentProof() {
   reader.onload = async function () {
     const base64Data = reader.result.split(',')[1]; // استخراج جزء Base64 فقط
 
-    const formData = new URLSearchParams();
-    formData.append('email', email);
-    formData.append('serialNumber', generateSerialNumber());
-    formData.append('messageCount', messagesCount);
-    formData.append('language', currentLang);
-    formData.append('phoneNumber', phoneNumber);
-    formData.append('paymentMethod', paymentMethod);
-    formData.append('paymentFile', base64Data); // إرسال الإيصال كـ Base64
+    const params = new URLSearchParams();
+    params.append('email', email);
+    params.append('serialNumber', generateSerialNumber());
+    params.append('messageCount', messagesCount);
+    params.append('language', currentLang);
+    params.append('phoneNumber', phoneNumber);
+    params.append('paymentMethod', paymentMethod);
+    params.append('paymentFile', base64Data); // إرسال الإيصال كـ Base64
 
     try {
       // استدعاء سكربت جوجل (عدّل الرابط أدناه)
       const res = await fetch('https://script.google.com/macros/s/AKfycbzSYp_h_kS6wYATBk4QlCVsm8R8S21vgFQTo8VmE6eRXfuQEcaOqEBSXuGalV0H9X8/exec', {
         method: 'POST',
-        body: formData.toString(),
+        body: params.toString(),
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
         }
