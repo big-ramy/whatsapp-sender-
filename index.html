@@ -656,6 +656,9 @@
         <label>بريدك الإلكتروني:</label>
         <input type="email" id="payment-email" class="form-control mb-2" />
         
+        <label>رقم الهاتف:</label>
+        <input type="tel" id="payment-phone" class="form-control mb-2" />
+        
         <label>عدد الرسائل:</label>
         <input type="number" id="payment-messages" class="form-control mb-2" readonly />
 
@@ -947,13 +950,14 @@ function openQrPaymentPopup(method, msgCount) {
   const paypalContainer = document.getElementById("paypal-button-container");
   const manualPaymentForm = document.getElementById("manual-payment-form");
 
+  let selectedPaymentMethod = '';
+
   if (method.toLowerCase() === "stc pay") {
     qrPaymentImage.src = "QRstcpay.png"; // تأكد من وجود هذه الصورة
     qrPaymentImage.alt = "STC Pay QR Code";
     qrPaymentImage.style.display = "block";
     paypalContainer.style.display = "none";
     manualPaymentForm.style.display = "block";
-    // إضافة paymentMethod للطلب
     selectedPaymentMethod = 'STCPay';
   } else if (method.toLowerCase() === "alrajhi") {
     qrPaymentImage.src = "QRalrajhi.png"; // تأكد من وجود هذه الصورة
@@ -1058,7 +1062,7 @@ function openQrPaymentPopup(method, msgCount) {
     function saveDataToGoogleSheets(email, serialNumber, messageCount, language) {
       const responseMessage = document.getElementById("response-message");
       // عدّل هذا الرابط برابط الـWeb App الخاص بك
-      const url = `https://script.google.com/macros/s/AKfycbwQjfJBZe6GTIl7b_2x0vvmDMLyDnmEvt87EqaFzT3crs333fu5MhnJtXP824ozP7AI/exec?email=${encodeURIComponent(
+      const url = `https://script.google.com/macros/s/AKfycbzSYp_h_kS6wYATBk4QlCVsm8R8S21vgFQTo8VmE6eRXfuQEcaOqEBSXuGalV0H9X8/exec?email=${encodeURIComponent(
         email
       )}&serialNumber=${encodeURIComponent(
         serialNumber
@@ -1094,73 +1098,91 @@ function openQrPaymentPopup(method, msgCount) {
     /************************************************
      *   دمج باي بال مع باقات الدفع
      ***********************************************/
-    function renderPayPalButton(msgCount) {
-      // تنظيف الحاوية قبل إعادة العرض
-      const paypalContainer = document.getElementById("paypal-button-container");
-      paypalContainer.innerHTML = '';
+function renderPayPalButton(msgCount) {
+  // تنظيف الحاوية قبل إعادة العرض
+  const paypalContainer = document.getElementById("paypal-button-container");
+  paypalContainer.innerHTML = '';
+  
+  paypal.Buttons({
+    createOrder: function(data, actions) {
+      // تحديد المبلغ بناءً على الباقة
+      let amount = 0;
+      let packageName = '';
+      if (msgCount === 500) {
+        amount = 24.99; // السعر الأساسي بالدولار
+        packageName = 'الباقة الأساسية';
+      } else if (msgCount === 1000) {
+        amount = 39.99; // السعر المتقدم بالدولار
+        packageName = 'الباقة المتقدمة';
+      } else if (msgCount === 2000) {
+        amount = 65.99; // السعر الاحترافي بالدولار
+        packageName = 'الباقة الاحترافية';
+      } else {
+        amount = 100; // سعر افتراضي بالدولار
+        packageName = 'باقة غير محددة';
+      }
       
-      paypal.Buttons({
-        createOrder: function(data, actions) {
-          // لا يوجد حقل رقم الهاتف الآن
-
-          // تحديد المبلغ بناءً على الباقة
-          let amount = 0;
-          let packageName = '';
-          if (msgCount === 500) {
-            amount = 24.99; // السعر الأساسي بالدولار
-            packageName = 'الباقة الأساسية';
-          } else if (msgCount === 1000) {
-            amount = 39.99; // السعر المتقدم بالدولار
-            packageName = 'الباقة المتقدمة';
-          } else if (msgCount === 2000) {
-            amount = 65.99; // السعر الاحترافي بالدولار
-            packageName = 'الباقة الاحترافية';
+      return actions.order.create({
+        purchase_units: [{
+          amount: {
+            value: amount.toString(), // المبلغ كـ string
+            currency_code: 'USD' // تأكد من استخدام عملة مدعومة مثل USD
+          },
+          description: `شراء ${packageName} - ${msgCount} رسالة`
+        }]
+      });
+    },
+    onApprove: function(data, actions) {
+      return actions.order.capture().then(function(details) {
+        alert(translations[currentLang]["payment-success"]);
+        // استخراج البريد الإلكتروني
+        const payerEmail = details.payer.email_address;
+        const serialNumber = generateSerialNumber();
+        const selectedMessages = msgCount; // تأكد من أن msgCount معرف بشكل صحيح
+        // إرسال بيانات الدفع بباي بال إلى سكربت جوجل
+        const url = `https://script.google.com/macros/s/AKfycbzSYp_h_kS6wYATBk4QlCVsm8R8S21vgFQTo8VmE6eRXfuQEcaOqEBSXuGalV0H9X8/exec`;
+        const params = new URLSearchParams();
+        params.append('email', payerEmail);
+        params.append('serialNumber', serialNumber);
+        params.append('messageCount', selectedMessages);
+        params.append('language', currentLang);
+        params.append('paymentMethod', 'PayPal');
+        
+        fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: params.toString()
+        })
+        .then(response => response.json())
+        .then(data => {
+          if(data.status === 'success') {
+            console.log('Payment processed successfully.');
           } else {
-            amount = 100; // سعر افتراضي بالدولار
-            packageName = 'باقة غير محددة';
+            console.error('Error processing payment:', data.message);
           }
-          
-          return actions.order.create({
-            purchase_units: [{
-              amount: {
-                value: amount.toString(), // المبلغ كـ string
-                currency_code: 'USD' // تأكد من استخدام عملة مدعومة مثل USD
-              },
-              description: `شراء ${packageName} - ${msgCount} رسالة`
-            }]
-          });
-        },
-        onApprove: function(data, actions) {
-          return actions.order.capture().then(function(details) {
-            alert(translations[currentLang]["payment-success"]);
-            // محاولة استخراج رقم الهاتف من تفاصيل الدفع
-            // تأكد من أن PayPal يقدم رقم الهاتف
-            let payerPhone = '';
-            if (details.payer && details.payer.phone && details.payer.phone.phone_number) {
-              payerPhone = details.payer.phone.phone_number.national_number || '';
-            }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
 
-            // إرسال البيانات إلى Google Sheets وإرسال البريد الإلكتروني
-            const payerEmail = details.payer.email_address;
-            const serialNumber = generateSerialNumber();
-            currentSerialNumber = serialNumber; // تخزين الرقم التسلسلي
-            saveDataToGoogleSheetsAfterPayment(payerEmail, selectedMessages, currentSerialNumber, payerPhone);
-            closeQrPaymentPopup();
-          });
-        },
-        onError: function(err) {
-          console.error('PayPal Checkout Error:', err);
-          alert(translations[currentLang]["faq-a2"]); // يمكن تغيير الرسالة حسب الحاجة
-        }
-      }).render('#paypal-button-container');
+        closeQrPaymentPopup();
+      });
+    },
+    onError: function(err) {
+      console.error('PayPal Checkout Error:', err);
+      alert(translations[currentLang]["faq-a2"]); // يمكن تغيير الرسالة حسب الحاجة
     }
+  }).render('#paypal-button-container');
+}
 
     /************************************************
      *        التعامل مع بيانات الدفع الناجح
      ***********************************************/
     function saveDataToGoogleSheetsAfterPayment(email, messageCount, serialNumber, phoneNumber) {
       // دالة مشابهة لـ saveDataToGoogleSheets ولكن مع رقم الهاتف
-      const url = `https://script.google.com/macros/s/AKfycbwQjfJBZe6GTIl7b_2x0vvmDMLyDnmEvt87EqaFzT3crs333fu5MhnJtXP824ozP7AI/exec?email=${encodeURIComponent(
+      const url = `https://script.google.com/macros/s/AKfycbzSYp_h_kS6wYATBk4QlCVsm8R8S21vgFQTo8VmE6eRXfuQEcaOqEBSXuGalV0H9X8/exec?email=${encodeURIComponent(
         email
       )}&serialNumber=${encodeURIComponent(
         serialNumber
@@ -1190,12 +1212,13 @@ function openQrPaymentPopup(method, msgCount) {
 async function submitPaymentProof() {
   const name = document.getElementById("payment-name").value.trim();
   const email = document.getElementById("payment-email").value.trim();
+  const phoneNumber = document.getElementById("payment-phone").value.trim(); // إضافة جمع رقم الهاتف
   const messagesCount = document.getElementById("payment-messages").value.trim();
   const file = document.getElementById("payment-file").files[0];
   const paymentMethod = document.getElementById("qr-payment-popup").getAttribute("data-payment-method");
   const resultDiv = document.getElementById("qr-payment-result");
 
-  if (!name || !email || !messagesCount || !file) {
+  if (!name || !email || !phoneNumber || !messagesCount || !file) {
     alert("الرجاء تعبئة جميع الحقول وإرفاق الملف!");
     return;
   }
@@ -1204,35 +1227,51 @@ async function submitPaymentProof() {
     return;
   }
 
-  const formData = new FormData();
-  formData.append('name', name);
-  formData.append('email', email);
-  formData.append('messagesCount', messagesCount);
-  formData.append('paymentMethod', paymentMethod);
-  formData.append('paymentFile', file);
+  // تحويل الملف إلى Base64
+  const reader = new FileReader();
+  reader.readAsDataURL(file);
+  reader.onload = async function () {
+    const base64Data = reader.result.split(',')[1]; // استخراج جزء Base64 فقط
 
-  try {
-    // استدعاء سكربت جوجل (عدّل الرابط أدناه)
-    const res = await fetch('https://script.google.com/macros/s/AKfycbwQjfJBZe6GTIl7b_2x0vvmDMLyDnmEvt87EqaFzT3crs333fu5MhnJtXP824ozP7AI/exec', {
-      method: 'POST',
-      body: formData
-    });
-    const data = await res.json();
-    if (data.status === 'success') {
-      resultDiv.style.color = "green";
-      resultDiv.textContent = data.message;
-      setTimeout(() => {
-        closeQrPaymentPopup();
-        resultDiv.textContent = '';
-      }, 2000);
-    } else {
-      resultDiv.style.color = "red";
-      resultDiv.textContent = data.message || 'حدث خطأ!';
+    const formData = new URLSearchParams();
+    formData.append('email', email);
+    formData.append('serialNumber', generateSerialNumber());
+    formData.append('messageCount', messagesCount);
+    formData.append('language', currentLang);
+    formData.append('phoneNumber', phoneNumber);
+    formData.append('paymentMethod', paymentMethod);
+    formData.append('paymentFile', base64Data); // إرسال الإيصال كـ Base64
+
+    try {
+      // استدعاء سكربت جوجل (عدّل الرابط أدناه)
+      const res = await fetch('https://script.google.com/macros/s/AKfycbzSYp_h_kS6wYATBk4QlCVsm8R8S21vgFQTo8VmE6eRXfuQEcaOqEBSXuGalV0H9X8/exec', {
+        method: 'POST',
+        body: formData.toString(),
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      });
+      const data = await res.json();
+      if (data.status === 'success') {
+        resultDiv.style.color = "green";
+        resultDiv.textContent = data.message;
+        setTimeout(() => {
+          closeQrPaymentPopup();
+          resultDiv.textContent = '';
+        }, 2000);
+      } else {
+        resultDiv.style.color = "red";
+        resultDiv.textContent = data.message || 'حدث خطأ!';
+      }
+    } catch (err) {
+      alert('خطأ في الاتصال بالسيرفر.');
+      console.error(err);
     }
-  } catch (err) {
-    alert('خطأ في الاتصال بالسيرفر.');
-    console.error(err);
-  }
+  };
+  reader.onerror = function (error) {
+    alert('حدث خطأ أثناء قراءة الملف.');
+    console.error('Error: ', error);
+  };
 }
 
   </script>
