@@ -935,45 +935,49 @@
     }
 
     // دالة فتح نافذة اختيار وسيلة الدفع
-    function openQrPaymentPopup(method, msgCount) {
-      closePaymentModal(); // اغلاق نافذة الدفع الرئيسية إن كانت مفتوحة
-      const popup = document.getElementById("qr-payment-popup");
-      popup.style.display = "flex";
-      // تعبئة عدد الرسائل
-      document.getElementById("payment-messages").value = msgCount || 1000;
+function openQrPaymentPopup(method, msgCount) {
+  closePaymentModal(); // اغلاق نافذة الدفع الرئيسية إن كانت مفتوحة
+  const popup = document.getElementById("qr-payment-popup");
+  popup.style.display = "flex";
+  // تعبئة عدد الرسائل
+  document.getElementById("payment-messages").value = msgCount || 1000;
 
-      // تعيين صورة الكيو أر كود بناءً على وسيلة الدفع
-      const qrPaymentImage = document.getElementById("qr-payment-image");
-      const paypalContainer = document.getElementById("paypal-button-container");
-      // const paypalPhoneForm = document.getElementById("paypal-phone-form"); // Removed
-      const manualPaymentForm = document.getElementById("manual-payment-form");
+  // تعيين صورة الكيو أر كود بناءً على وسيلة الدفع
+  const qrPaymentImage = document.getElementById("qr-payment-image");
+  const paypalContainer = document.getElementById("paypal-button-container");
+  const manualPaymentForm = document.getElementById("manual-payment-form");
 
-      if (method.toLowerCase() === "stc pay") {
-        qrPaymentImage.src = "QRstcpay.png"; // تأكد من وجود هذه الصورة
-        qrPaymentImage.alt = "STC Pay QR Code";
-        qrPaymentImage.style.display = "block";
-        paypalContainer.style.display = "none";
-        // paypalPhoneForm.style.display = "none"; // Removed
-        manualPaymentForm.style.display = "block";
-      } else if (method.toLowerCase() === "alrajhi") {
-        qrPaymentImage.src = "QRalrajhi.png"; // تأكد من وجود هذه الصورة
-        qrPaymentImage.alt = "Al Rajhi QR Code";
-        qrPaymentImage.style.display = "block";
-        paypalContainer.style.display = "none";
-        // paypalPhoneForm.style.display = "none"; // Removed
-        manualPaymentForm.style.display = "block";
-      } else if (method.toLowerCase() === "paypal") {
-        qrPaymentImage.src = ""; // إخفاء الصورة
-        qrPaymentImage.style.display = "none";
-        paypalContainer.style.display = "block";
-        manualPaymentForm.style.display = "none";
-        // paypalPhoneForm.style.display = "none"; // Removed
-        renderPayPalButton(msgCount);
-      }
+  if (method.toLowerCase() === "stc pay") {
+    qrPaymentImage.src = "QRstcpay.png"; // تأكد من وجود هذه الصورة
+    qrPaymentImage.alt = "STC Pay QR Code";
+    qrPaymentImage.style.display = "block";
+    paypalContainer.style.display = "none";
+    manualPaymentForm.style.display = "block";
+    // إضافة paymentMethod للطلب
+    selectedPaymentMethod = 'STCPay';
+  } else if (method.toLowerCase() === "alrajhi") {
+    qrPaymentImage.src = "QRalrajhi.png"; // تأكد من وجود هذه الصورة
+    qrPaymentImage.alt = "Al Rajhi QR Code";
+    qrPaymentImage.style.display = "block";
+    paypalContainer.style.display = "none";
+    manualPaymentForm.style.display = "block";
+    selectedPaymentMethod = 'AlRajhi';
+  } else if (method.toLowerCase() === "paypal") {
+    qrPaymentImage.src = ""; // إخفاء الصورة
+    qrPaymentImage.style.display = "none";
+    paypalContainer.style.display = "block";
+    manualPaymentForm.style.display = "none";
+    selectedPaymentMethod = 'PayPal';
+    renderPayPalButton(msgCount);
+  }
 
-      // تسجيل الحدث للإغلاق عند الضغط خارج المحتوى
-      popup.addEventListener("click", outsideClickQrPayment);
-    }
+  // تسجيل طريقة الدفع المختارة
+  popup.setAttribute("data-payment-method", selectedPaymentMethod);
+
+  // تسجيل الحدث للإغلاق عند الضغط خارج المحتوى
+  popup.addEventListener("click", outsideClickQrPayment);
+}
+
 
     function outsideClickQrPayment(e) {
       const box = document.querySelector("#qr-payment-popup .popup-inner");
@@ -1183,51 +1187,53 @@
     /************************************************
      *   رفع فاتورة الدفع (QR Payment Popup)
      ***********************************************/
-    async function submitPaymentProof() {
-      const name = document.getElementById("payment-name").value.trim();
-      const email = document.getElementById("payment-email").value.trim();
-      const messagesCount = document.getElementById("payment-messages").value.trim();
-      const file = document.getElementById("payment-file").files[0];
-      const resultDiv = document.getElementById("qr-payment-result");
+async function submitPaymentProof() {
+  const name = document.getElementById("payment-name").value.trim();
+  const email = document.getElementById("payment-email").value.trim();
+  const messagesCount = document.getElementById("payment-messages").value.trim();
+  const file = document.getElementById("payment-file").files[0];
+  const paymentMethod = document.getElementById("qr-payment-popup").getAttribute("data-payment-method");
+  const resultDiv = document.getElementById("qr-payment-result");
 
-      if (!name || !email || !messagesCount || !file) {
-        alert("الرجاء تعبئة جميع الحقول وإرفاق الملف!");
-        return;
-      }
-      if (!validateEmail(email)) {
-        alert("من فضلك أدخل بريدًا إلكترونيًا صالحًا");
-        return;
-      }
+  if (!name || !email || !messagesCount || !file) {
+    alert("الرجاء تعبئة جميع الحقول وإرفاق الملف!");
+    return;
+  }
+  if (!validateEmail(email)) {
+    alert("من فضلك أدخل بريدًا إلكترونيًا صالحًا");
+    return;
+  }
 
-      const formData = new FormData();
-      formData.append('name', name);
-      formData.append('email', email);
-      formData.append('messagesCount', messagesCount);
-      formData.append('paymentFile', file);
+  const formData = new FormData();
+  formData.append('name', name);
+  formData.append('email', email);
+  formData.append('messagesCount', messagesCount);
+  formData.append('paymentMethod', paymentMethod);
+  formData.append('paymentFile', file);
 
-      try {
-        // استدعاء سكربت جوجل (عدّل الرابط أدناه)
-        const res = await fetch('YOUR_GOOGLE_SCRIPT_WEB_APP_URL', {
-          method: 'POST',
-          body: formData
-        });
-        const data = await res.json();
-        if (data.status === 'success') {
-          resultDiv.style.color = "green";
-          resultDiv.textContent = data.message;
-          setTimeout(() => {
-            closeQrPaymentPopup();
-            resultDiv.textContent = '';
-          }, 2000);
-        } else {
-          resultDiv.style.color = "red";
-          resultDiv.textContent = data.message || 'حدث خطأ!';
-        }
-      } catch (err) {
-        alert('خطأ في الاتصال بالسيرفر.');
-        console.error(err);
-      }
+  try {
+    // استدعاء سكربت جوجل (عدّل الرابط أدناه)
+    const res = await fetch('https://script.google.com/macros/s/AKfycbyIq5cW17NPh-kS2FcsqJYkTb6MrNL0R-iEfZHCoffxwB16iiKp_kQSZ_1Aqcbhw_-8/exec', {
+      method: 'POST',
+      body: formData
+    });
+    const data = await res.json();
+    if (data.status === 'success') {
+      resultDiv.style.color = "green";
+      resultDiv.textContent = data.message;
+      setTimeout(() => {
+        closeQrPaymentPopup();
+        resultDiv.textContent = '';
+      }, 2000);
+    } else {
+      resultDiv.style.color = "red";
+      resultDiv.textContent = data.message || 'حدث خطأ!';
     }
+  } catch (err) {
+    alert('خطأ في الاتصال بالسيرفر.');
+    console.error(err);
+  }
+}
 
   </script>
 </body>
