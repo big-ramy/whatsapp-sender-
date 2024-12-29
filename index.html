@@ -571,7 +571,7 @@
           data-src-en="stcpay.png"
           alt="STC Pay"
           class="lang-image"
-          style="width: 90px; height: 20px; cursor: pointer; margin:5px;"
+          style="width: 70px; height: 20px; cursor: pointer; margin:5px;"
           onclick="openQrPaymentPopup('STC Pay', selectedMessages)"
         />
         <img
@@ -580,7 +580,7 @@
           data-src-en="alrajhi.png"
           alt="الراجحي"
           class="lang-image"
-          style="width: 90px; height: 20px; cursor: pointer; margin:5px;"
+          style="width: 90px; height: 25px; cursor: pointer; margin:5px;"
           onclick="openQrPaymentPopup('AlRajhi', selectedMessages)"
         />
         <img
@@ -589,7 +589,7 @@
           data-src-en="paypal.png"
           alt="PayPal"
           class="lang-image"
-          style="width: 90px; height: 20px; cursor: pointer; margin:5px;"
+          style="width: 80px; height: 20px; cursor: pointer; margin:5px;"
           onclick="openQrPaymentPopup('PayPal', selectedMessages)"
         />
       </div>
@@ -1138,7 +1138,6 @@
 
             // إرسال البيانات إلى Google Sheets وإرسال البريد الإلكتروني
             const payerEmail = details.payer.email_address;
-            generateSerialNumber();
             saveDataToGoogleSheetsAfterPayment(payerEmail, selectedMessages, currentSerialNumber, payerPhone);
             closeQrPaymentPopup();
           });
@@ -1154,6 +1153,8 @@
      *        التعامل مع بيانات الدفع الناجح
      ***********************************************/
     function saveDataToGoogleSheetsAfterPayment(email, messageCount, serialNumber, phoneNumber) {
+       const serialNumber = generateSerialNumber();
+       currentSerialNumber = serialNumber; // تخزين الرقم التسلسلي
       // دالة مشابهة لـ saveDataToGoogleSheets ولكن مع رقم الهاتف
       const url = `https://script.google.com/macros/s/AKfycbz4XFdN9urf-HIhRt1iQvQVeZ41Usqjf6dnq2wkHcx41EzFfpMXEdauKhzcU17Kqm9y/exec?email=${encodeURIComponent(
         email
