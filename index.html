@@ -1058,7 +1058,7 @@ function openQrPaymentPopup(method, msgCount) {
     function saveDataToGoogleSheets(email, serialNumber, messageCount, language) {
       const responseMessage = document.getElementById("response-message");
       // عدّل هذا الرابط برابط الـWeb App الخاص بك
-      const url = `https://script.google.com/macros/s/AKfycbyIq5cW17NPh-kS2FcsqJYkTb6MrNL0R-iEfZHCoffxwB16iiKp_kQSZ_1Aqcbhw_-8/exec?email=${encodeURIComponent(
+      const url = `https://script.google.com/macros/s/AKfycbwQjfJBZe6GTIl7b_2x0vvmDMLyDnmEvt87EqaFzT3crs333fu5MhnJtXP824ozP7AI/exec?email=${encodeURIComponent(
         email
       )}&serialNumber=${encodeURIComponent(
         serialNumber
@@ -1160,7 +1160,7 @@ function openQrPaymentPopup(method, msgCount) {
      ***********************************************/
     function saveDataToGoogleSheetsAfterPayment(email, messageCount, serialNumber, phoneNumber) {
       // دالة مشابهة لـ saveDataToGoogleSheets ولكن مع رقم الهاتف
-      const url = `https://script.google.com/macros/s/AKfycbyIq5cW17NPh-kS2FcsqJYkTb6MrNL0R-iEfZHCoffxwB16iiKp_kQSZ_1Aqcbhw_-8/exec?email=${encodeURIComponent(
+      const url = `https://script.google.com/macros/s/AKfycbwQjfJBZe6GTIl7b_2x0vvmDMLyDnmEvt87EqaFzT3crs333fu5MhnJtXP824ozP7AI/exec?email=${encodeURIComponent(
         email
       )}&serialNumber=${encodeURIComponent(
         serialNumber
@@ -1213,7 +1213,7 @@ async function submitPaymentProof() {
 
   try {
     // استدعاء سكربت جوجل (عدّل الرابط أدناه)
-    const res = await fetch('https://script.google.com/macros/s/AKfycbyIq5cW17NPh-kS2FcsqJYkTb6MrNL0R-iEfZHCoffxwB16iiKp_kQSZ_1Aqcbhw_-8/exec', {
+    const res = await fetch('https://script.google.com/macros/s/AKfycbwQjfJBZe6GTIl7b_2x0vvmDMLyDnmEvt87EqaFzT3crs333fu5MhnJtXP824ozP7AI/exec', {
       method: 'POST',
       body: formData
     });
