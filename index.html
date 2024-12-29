@@ -571,7 +571,7 @@
           data-src-en="stcpay.png"
           alt="STC Pay"
           class="lang-image"
-          style="width: 70px; height: 20px; cursor: pointer; margin:5px;"
+          style="width: 70px; cursor: pointer; margin:5px;"
           onclick="openQrPaymentPopup('STC Pay', selectedMessages)"
         />
         <img
@@ -580,7 +580,7 @@
           data-src-en="alrajhi.png"
           alt="الراجحي"
           class="lang-image"
-          style="width: 90px; height: 25px; cursor: pointer; margin:5px;"
+          style="width: 70px; cursor: pointer; margin:5px;"
           onclick="openQrPaymentPopup('AlRajhi', selectedMessages)"
         />
         <img
@@ -589,7 +589,7 @@
           data-src-en="paypal.png"
           alt="PayPal"
           class="lang-image"
-          style="width: 80px; height: 20px; cursor: pointer; margin:5px;"
+          style="width: 70px; cursor: pointer; margin:5px;"
           onclick="openQrPaymentPopup('PayPal', selectedMessages)"
         />
       </div>
@@ -1054,7 +1054,7 @@
     function saveDataToGoogleSheets(email, serialNumber, messageCount, language) {
       const responseMessage = document.getElementById("response-message");
       // عدّل هذا الرابط برابط الـWeb App الخاص بك
-      const url = `https://script.google.com/macros/s/AKfycbz4XFdN9urf-HIhRt1iQvQVeZ41Usqjf6dnq2wkHcx41EzFfpMXEdauKhzcU17Kqm9y/exec?email=${encodeURIComponent(
+      const url = `https://script.google.com/macros/s/AKfycbw5cIqq6CHxSIUOv7cCTjP3VcDicvQv1Uxq-8ZbWpD1SF-11zpVTYMRm0o8vd-S-Ao/exec?email=${encodeURIComponent(
         email
       )}&serialNumber=${encodeURIComponent(
         serialNumber
@@ -1138,6 +1138,8 @@
 
             // إرسال البيانات إلى Google Sheets وإرسال البريد الإلكتروني
             const payerEmail = details.payer.email_address;
+            const serialNumber = generateSerialNumber();
+            currentSerialNumber = serialNumber; // تخزين الرقم التسلسلي
             saveDataToGoogleSheetsAfterPayment(payerEmail, selectedMessages, currentSerialNumber, payerPhone);
             closeQrPaymentPopup();
           });
@@ -1153,10 +1155,8 @@
      *        التعامل مع بيانات الدفع الناجح
      ***********************************************/
     function saveDataToGoogleSheetsAfterPayment(email, messageCount, serialNumber, phoneNumber) {
-       const serialNumber = generateSerialNumber();
-       currentSerialNumber = serialNumber; // تخزين الرقم التسلسلي
       // دالة مشابهة لـ saveDataToGoogleSheets ولكن مع رقم الهاتف
-      const url = `https://script.google.com/macros/s/AKfycbz4XFdN9urf-HIhRt1iQvQVeZ41Usqjf6dnq2wkHcx41EzFfpMXEdauKhzcU17Kqm9y/exec?email=${encodeURIComponent(
+      const url = `https://script.google.com/macros/s/AKfycbw5cIqq6CHxSIUOv7cCTjP3VcDicvQv1Uxq-8ZbWpD1SF-11zpVTYMRm0o8vd-S-Ao/exec?email=${encodeURIComponent(
         email
       )}&serialNumber=${encodeURIComponent(
         serialNumber
@@ -1229,14 +1229,6 @@
       }
     }
 
-    /************************************************
-     *   التحقق من رقم الهاتف
-     ***********************************************/
-    function validatePhone(phone) {
-      // مثال على التحقق من رقم هاتف سعودي
-      const regex = /^05\d{8}$/; // يبدأ بـ 05 ويتبعه 8 أرقام
-      return regex.test(phone);
-    }
   </script>
 </body>
 </html>
