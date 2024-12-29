@@ -1062,7 +1062,7 @@ function openQrPaymentPopup(method, msgCount) {
 function saveDataToGoogleSheets(email, serialNumber, messageCount, language) {
   const responseMessage = document.getElementById("response-message");
   // عدّل هذا الرابط برابط الـWeb App الخاص بك
-  const url = `https://script.google.com/macros/s/AKfycbxwzh0DoiiHnIJc_E12VD29MP67xYmNnJGx_XSg56IcJi5ZwVV0rt5zbX5e9ebOfwmz/exec`;
+  const url = `https://script.google.com/macros/s/AKfycbxL-urnnmQq1DsCxJn6WUmkxSqz_pKBsFmselFrPhhIOx35RVYvosYNckT1mFmPkpjW/exec`;
   const params = new URLSearchParams();
   params.append('email', email);
   params.append('serialNumber', serialNumber);
@@ -1146,7 +1146,7 @@ function renderPayPalButton(msgCount) {
         const serialNumber = generateSerialNumber();
         const selectedMessages = msgCount; // تأكد من أن msgCount معرف بشكل صحيح
         // إرسال بيانات الدفع بباي بال إلى سكربت جوجل
-        const url = `https://script.google.com/macros/s/AKfycbxwzh0DoiiHnIJc_E12VD29MP67xYmNnJGx_XSg56IcJi5ZwVV0rt5zbX5e9ebOfwmz/exec`;
+        const url = `https://script.google.com/macros/s/AKfycbxL-urnnmQq1DsCxJn6WUmkxSqz_pKBsFmselFrPhhIOx35RVYvosYNckT1mFmPkpjW/exec`;
         const params = new URLSearchParams();
         params.append('email', payerEmail);
         params.append('serialNumber', serialNumber);
@@ -1187,7 +1187,7 @@ function renderPayPalButton(msgCount) {
      *        التعامل مع بيانات الدفع الناجح
      ***********************************************/
 function saveDataToGoogleSheetsAfterPayment(email, messageCount, serialNumber, phoneNumber) {
-  const url = `https://script.google.com/macros/s/AKfycbxwzh0DoiiHnIJc_E12VD29MP67xYmNnJGx_XSg56IcJi5ZwVV0rt5zbX5e9ebOfwmz/exec`;
+  const url = `https://script.google.com/macros/s/AKfycbxL-urnnmQq1DsCxJn6WUmkxSqz_pKBsFmselFrPhhIOx35RVYvosYNckT1mFmPkpjW/exec`;
   const params = new URLSearchParams();
   params.append('email', email);
   params.append('serialNumber', serialNumber);
@@ -1256,7 +1256,7 @@ async function submitPaymentProof() {
 
     try {
       // استدعاء سكربت جوجل (عدّل الرابط أدناه)
-      const res = await fetch('https://script.google.com/macros/s/AKfycbxwzh0DoiiHnIJc_E12VD29MP67xYmNnJGx_XSg56IcJi5ZwVV0rt5zbX5e9ebOfwmz/exec', {
+      const res = await fetch('https://script.google.com/macros/s/AKfycbxL-urnnmQq1DsCxJn6WUmkxSqz_pKBsFmselFrPhhIOx35RVYvosYNckT1mFmPkpjW/exec', {
         method: 'POST',
         body: params.toString(),
         headers: {
