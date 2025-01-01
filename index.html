@@ -1060,7 +1060,7 @@ function submitEmail() {
 }
 
 function saveFreeRegistration(email, serialNumber, messageCount, language) {
-  const scriptUrl = `https://script.google.com/macros/s/AKfycbziA52vvOPQR08ztC8Oo4OlpddTlVY_jpXRmhh19kNCPKAyW_Odzvm40rx17j6_dPXk/exec`; // استبدل بـ FreeRegistration.gs URL
+  const scriptUrl = `https://script.google.com/macros/s/AKfycbyepqfIXjDJBVCRUSP4enowWTG-celop3qD-4uXdIFOP6aMGTHDJn3YJ5agH1Pke2Vv/exec`; // استبدل بـ FreeRegistration.gs URL
 
   // بناء الرابط مع معلمة callback
   const fullUrl = `${scriptUrl}?email=${encodeURIComponent(email)}&serialNumber=${encodeURIComponent(serialNumber)}&messageCount=${encodeURIComponent(messageCount)}&language=${encodeURIComponent(language)}&callback=handleFreeRegistrationResponse`;
