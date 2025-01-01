@@ -1061,7 +1061,7 @@ function openQrPaymentPopup(method, msgCount) {
 
 function saveDataToGoogleSheets(email, serialNumber, messageCount, language) {
   const responseMessage = document.getElementById("response-message");
-  const scriptUrl = `https://script.google.com/macros/s/AKfycbzJopAfDEz8ZRMA4WMRlo-0TbuHuKWn7aCAfe-SordVkPmWF3EBRvtO6QTF4GuTsA0y/exec`; // Replace with your Script 1 URL
+  const scriptUrl = `https://script.google.com/macros/s/AKfycbxxbP7JNIXsLbqnjZbzvOPEys7wD6EoUPRsi6hG7Agrysh5VgR17YULy6uliVXmS1RX/exec`; // Replace with your Script 1 URL
   const fullUrl = `${scriptUrl}?email=${encodeURIComponent(email)}&serialNumber=${encodeURIComponent(serialNumber)}&messageCount=${encodeURIComponent(messageCount)}&language=${encodeURIComponent(language)}`;
 
   fetch(fullUrl, {
