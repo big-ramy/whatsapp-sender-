@@ -1030,14 +1030,6 @@ function openQrPaymentPopup(method, msgCount) {
       popup.removeEventListener("click", outsideClickEmailPopup);
     }
 
-/************************************************
- *        التعامل مع بيانات التسجيل المجاني
- ***********************************************/
-/************************************************
- *        التعامل مع بيانات التسجيل المجاني
- ***********************************************/
-let currentSerialNumber = "";
-let currentLang = 'ar'; // تأكد من تعيين اللغة بشكل ديناميكي حسب احتياجك
 
 function generateSerialNumber() {
   return "SN" + Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
