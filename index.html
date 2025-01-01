@@ -1033,15 +1033,13 @@ function openQrPaymentPopup(method, msgCount) {
 /************************************************
  *        التعامل مع بيانات التسجيل المجاني
  ***********************************************/
-  /**
-   * التحقق من صحة البريد الإلكتروني باستخدام تعبير نمطي
-   * @param {string} email - البريد الإلكتروني للتحقق منه
-   * @returns {boolean} - يعود بـ true إذا كان البريد الإلكتروني صالحًا، وإلا false
-   */
-  function validateEmail(email) {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return regex.test(email);
-  }
+    function generateSerialNumber() {
+      return "SN" + Math.floor(Math.random() * 1000000);
+    }
+    function validateEmail(email) {
+      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return regex.test(email);
+    }
     
 function submitEmail() {
   const email = document.getElementById("email").value.trim();
