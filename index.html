@@ -1061,21 +1061,11 @@ function openQrPaymentPopup(method, msgCount) {
 
 function saveDataToGoogleSheets(email, serialNumber, messageCount, language) {
   const responseMessage = document.getElementById("response-message");
-  // عدّل هذا الرابط برابط الـWeb App الخاص بك
-  const url = `https://script.google.com/macros/s/AKfycbxL-urnnmQq1DsCxJn6WUmkxSqz_pKBsFmselFrPhhIOx35RVYvosYNckT1mFmPkpjW/exec`;
-  const params = new URLSearchParams();
-  params.append('email', email);
-  params.append('serialNumber', serialNumber);
-  params.append('messageCount', messageCount);
-  params.append('language', language);
-  // لا تضيف 'paymentMethod' لأن هذا تسجيل مجاني
+  const scriptUrl = `https://script.google.com/macros/s/AKfycbzJopAfDEz8ZRMA4WMRlo-0TbuHuKWn7aCAfe-SordVkPmWF3EBRvtO6QTF4GuTsA0y/exec`; // Replace with your Script 1 URL
+  const fullUrl = `${scriptUrl}?email=${encodeURIComponent(email)}&serialNumber=${encodeURIComponent(serialNumber)}&messageCount=${encodeURIComponent(messageCount)}&language=${encodeURIComponent(language)}`;
 
-  fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    },
-    body: params.toString()
+  fetch(fullUrl, {
+    method: 'GET',
   })
   .then(response => response.json())
   .then(data => {
@@ -1097,9 +1087,10 @@ function saveDataToGoogleSheets(email, serialNumber, messageCount, language) {
     responseMessage.style.display = "block";
     responseMessage.style.color = "red";
     responseMessage.textContent =
-      "حدث خطأ أثناء الإرسال. حاول مرة أخرى.";
+      language === 'ar' ? "حدث خطأ أثناء الإرسال. حاول مرة أخرى." : "An error occurred during submission. Please try again.";
   });
 }
+
 
     /************************************************
      *   دمج باي بال مع باقات الدفع
@@ -1187,7 +1178,7 @@ function renderPayPalButton(msgCount) {
      *        التعامل مع بيانات الدفع الناجح
      ***********************************************/
 function saveDataToGoogleSheetsAfterPayment(email, messageCount, serialNumber, phoneNumber) {
-  const url = `https://script.google.com/macros/s/AKfycbxL-urnnmQq1DsCxJn6WUmkxSqz_pKBsFmselFrPhhIOx35RVYvosYNckT1mFmPkpjW/exec`;
+  const url = `https://script.google.com/macros/s/AKfycbwtn5YVB7huzaNP3Xh2Z2grVSfjvdqY7X3ccZMfkGzseMbdaw927VkM-Q9GuYqySDQp/exec`;
   const params = new URLSearchParams();
   params.append('email', email);
   params.append('serialNumber', serialNumber);
@@ -1224,44 +1215,39 @@ function saveDataToGoogleSheetsAfterPayment(email, messageCount, serialNumber, p
 async function submitPaymentProof() {
   const name = document.getElementById("payment-name").value.trim();
   const email = document.getElementById("payment-email").value.trim();
-  const phoneNumber = document.getElementById("payment-phone").value.trim(); // جمع رقم الهاتف
+  const phoneNumber = document.getElementById("payment-phone").value.trim();
   const messagesCount = document.getElementById("payment-messages").value.trim();
   const file = document.getElementById("payment-file").files[0];
   const paymentMethod = document.getElementById("qr-payment-popup").getAttribute("data-payment-method");
   const resultDiv = document.getElementById("qr-payment-result");
 
   if (!name || !email || !phoneNumber || !messagesCount || !file) {
-    alert("الرجاء تعبئة جميع الحقول وإرفاق الملف!");
+    alert(language === 'ar' ? "الرجاء تعبئة جميع الحقول وإرفاق الملف!" : "Please fill out all fields and attach the file!");
     return;
   }
   if (!validateEmail(email)) {
-    alert("من فضلك أدخل بريدًا إلكترونيًا صالحًا");
+    alert(language === 'ar' ? "من فضلك أدخل بريدًا إلكترونيًا صالحًا" : "Please enter a valid email address");
     return;
   }
 
-  // تحويل الملف إلى Base64
+  // Convert file to Base64
   const reader = new FileReader();
   reader.readAsDataURL(file);
   reader.onload = async function () {
-    const base64Data = reader.result.split(',')[1]; // استخراج جزء Base64 فقط
+    const base64Data = reader.result.split(',')[1]; // Extract Base64 part
 
-    const params = new URLSearchParams();
-    params.append('email', email);
-    params.append('serialNumber', generateSerialNumber());
-    params.append('messageCount', messagesCount);
-    params.append('language', currentLang);
-    params.append('phoneNumber', phoneNumber);
-    params.append('paymentMethod', paymentMethod);
-    params.append('paymentFile', base64Data); // إرسال الإيصال كـ Base64
+    // Ensure the Base64 data is within URL length limits (~2000 characters)
+    if (base64Data.length > 1500) { // Approximation
+      alert(language === 'ar' ? "الإيصال كبير جدًا. الرجاء استخدام ملف أصغر." : "The receipt is too large. Please use a smaller file.");
+      return;
+    }
+
+    const scriptUrl = `https://script.google.com/macros/s/YOUR_SCRIPT2_ID/exec`; // Replace with your Script 2 URL
+    const fullUrl = `${scriptUrl}?email=${encodeURIComponent(email)}&serialNumber=${encodeURIComponent(generateSerialNumber())}&messageCount=${encodeURIComponent(messagesCount)}&language=${encodeURIComponent(currentLang)}&phoneNumber=${encodeURIComponent(phoneNumber)}&paymentMethod=${encodeURIComponent(paymentMethod)}&paymentFile=${encodeURIComponent(base64Data)}`;
 
     try {
-      // استدعاء سكربت جوجل (عدّل الرابط أدناه)
-      const res = await fetch('https://script.google.com/macros/s/AKfycbxL-urnnmQq1DsCxJn6WUmkxSqz_pKBsFmselFrPhhIOx35RVYvosYNckT1mFmPkpjW/exec', {
-        method: 'POST',
-        body: params.toString(),
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        }
+      const res = await fetch(fullUrl, {
+        method: 'GET',
       });
       const data = await res.json();
       if (data.status === 'success') {
@@ -1273,18 +1259,19 @@ async function submitPaymentProof() {
         }, 2000);
       } else {
         resultDiv.style.color = "red";
-        resultDiv.textContent = data.message || 'حدث خطأ!';
+        resultDiv.textContent = data.message || (currentLang === 'ar' ? 'حدث خطأ!' : 'An error occurred!');
       }
     } catch (err) {
-      alert('خطأ في الاتصال بالسيرفر.');
+      alert(currentLang === 'ar' ? 'خطأ في الاتصال بالسيرفر.' : 'Server connection error.');
       console.error(err);
     }
   };
   reader.onerror = function (error) {
-    alert('حدث خطأ أثناء قراءة الملف.');
+    alert(currentLang === 'ar' ? 'حدث خطأ أثناء قراءة الملف.' : 'An error occurred while reading the file.');
     console.error('Error: ', error);
   };
 }
+
 
   </script>
 </body>
