@@ -1030,44 +1030,42 @@ function openQrPaymentPopup(method, msgCount) {
       popup.removeEventListener("click", outsideClickEmailPopup);
     }
 
-    /************************************************
-     *        التعامل مع بيانات التسجيل المجاني
-     ***********************************************/
-    function submitEmail() {
-      const email = document.getElementById("email").value.trim();
-      const responseMessage = document.getElementById("response-message");
-      if (validateEmail(email)) {
-        const serialNumber = generateSerialNumber();
-        currentSerialNumber = serialNumber; // تخزين الرقم التسلسلي
-        const messageCount = 30; 
-        const language = currentLang;
-
-        responseMessage.style.display = "none";
-        responseMessage.textContent = "";
-
-        saveDataToGoogleSheets(email, serialNumber, messageCount, language);
-      } else {
-        alert("من فضلك أدخل بريدًا إلكترونيًا صالحًا");
-      }
-    }
-
-    function generateSerialNumber() {
-      return "SN" + Math.floor(Math.random() * 1000000);
-    }
-    function validateEmail(email) {
-      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      return regex.test(email);
-    }
-
-function saveDataToGoogleSheets(email, serialNumber, messageCount, language) {
+/************************************************
+ *        التعامل مع بيانات التسجيل المجاني
+ ***********************************************/
+function submitEmail() {
+  const email = document.getElementById("email").value.trim();
   const responseMessage = document.getElementById("response-message");
-  const scriptUrl = `https://script.google.com/macros/s/AKfycbxxbP7JNIXsLbqnjZbzvOPEys7wD6EoUPRsi6hG7Agrysh5VgR17YULy6uliVXmS1RX/exec`; // Replace with your Script 1 URL
+  if (validateEmail(email)) {
+    const serialNumber = generateSerialNumber();
+    currentSerialNumber = serialNumber; // تخزين الرقم التسلسلي
+    const messageCount = 30; 
+    const language = currentLang;
+
+    responseMessage.style.display = "none";
+    responseMessage.textContent = "";
+
+    saveFreeRegistration(email, serialNumber, messageCount, language);
+  } else {
+    alert(currentLang === 'ar' ? "من فضلك أدخل بريدًا إلكترونيًا صالحًا" : "Please enter a valid email address");
+  }
+}
+
+function saveFreeRegistration(email, serialNumber, messageCount, language) {
+  const responseMessage = document.getElementById("response-message");
+  const scriptUrl = `https://script.google.com/macros/s/AKfycbwaIJbhb4-_rNymkNaIrIR4QUsuUx6QR2HgIBh30VIRWtMq_D1D_KoFgpABxoIkyvt1/exec`; // استبدل بـ FreeRegistration.gs URL
+
   const fullUrl = `${scriptUrl}?email=${encodeURIComponent(email)}&serialNumber=${encodeURIComponent(serialNumber)}&messageCount=${encodeURIComponent(messageCount)}&language=${encodeURIComponent(language)}`;
 
   fetch(fullUrl, {
     method: 'GET',
   })
-  .then(response => response.json())
+  .then(response => {
+    if (!response.ok) {
+      return response.json().then(err => { throw err; });
+    }
+    return response.json();
+  })
   .then(data => {
     responseMessage.style.display = "block";
     if (data.status === "error") {
@@ -1087,7 +1085,7 @@ function saveDataToGoogleSheets(email, serialNumber, messageCount, language) {
     responseMessage.style.display = "block";
     responseMessage.style.color = "red";
     responseMessage.textContent =
-      language === 'ar' ? "حدث خطأ أثناء الإرسال. حاول مرة أخرى." : "An error occurred during submission. Please try again.";
+      error.message || (language === 'ar' ? "حدث خطأ أثناء الإرسال. حاول مرة أخرى." : "An error occurred during submission. Please try again.");
   });
 }
 
