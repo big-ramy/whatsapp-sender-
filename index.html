@@ -1073,7 +1073,7 @@ function saveFreeRegistration(email, serialNumber, messageCount, language) {
   document.body.appendChild(script);
 }
 
-    /**
+/**
  * الدالة التي ستستقبل البيانات من JSONP
  * @param {Object} data - البيانات المستقبلة من السكربت
  */
@@ -1081,12 +1081,27 @@ function handleFreeRegistrationResponse(data) {
   const responseMessage = document.getElementById("response-message");
   responseMessage.style.display = "block";
   
-  if (data.status === "error") {
+  if (data.content.includes('مسجل مسبقاً') || data.content.includes('already registered')) {
+    // إذا كانت الرسالة تشير إلى تكرار البريد الإلكتروني
     responseMessage.style.color = "red";
-    responseMessage.textContent = data.message;
-  } else {
+  } else if (data.content.includes('تم التسجيل بنجاح') || data.content.includes('Registration successful')) {
+    // الرسالة تشير إلى نجاح التسجيل
     responseMessage.style.color = "green";
-    responseMessage.textContent = data.message;
+  } else if (data.content.includes('تمت الموافقة على الدفع') || data.content.includes('Payment approved')) {
+    // الرسالة تشير إلى موافقة الدفع
+    responseMessage.style.color = "green";
+  } else if (data.content.includes('تم رفض الدفع') || data.content.includes('Payment rejected')) {
+    // الرسالة تشير إلى رفض الدفع
+    responseMessage.style.color = "red";
+  } else {
+    // أي رسالة أخرى
+    responseMessage.style.color = "black";
+  }
+  
+  responseMessage.textContent = data.content;
+  
+  if (data.content.includes('تم التسجيل بنجاح') || data.content.includes('Registration successful') ||
+      data.content.includes('تمت الموافقة على الدفع') || data.content.includes('Payment approved')) {
     setTimeout(() => {
       closeEmailPopup();
       responseMessage.textContent = "";
