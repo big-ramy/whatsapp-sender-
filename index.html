@@ -1033,17 +1033,25 @@ function openQrPaymentPopup(method, msgCount) {
 /************************************************
  *        التعامل مع بيانات التسجيل المجاني
  ***********************************************/
-    function generateSerialNumber() {
-      return "SN" + Math.floor(Math.random() * 1000000);
-    }
-    function validateEmail(email) {
-      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      return regex.test(email);
-    }
-    
+/************************************************
+ *        التعامل مع بيانات التسجيل المجاني
+ ***********************************************/
+let currentSerialNumber = "";
+let currentLang = 'ar'; // تأكد من تعيين اللغة بشكل ديناميكي حسب احتياجك
+
+function generateSerialNumber() {
+  return "SN" + Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
+}
+
+function validateEmail(email) {
+  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return regex.test(email);
+}
+
 function submitEmail() {
   const email = document.getElementById("email").value.trim();
   const responseMessage = document.getElementById("response-message");
+  
   if (validateEmail(email)) {
     const serialNumber = generateSerialNumber();
     currentSerialNumber = serialNumber; // تخزين الرقم التسلسلي
@@ -1060,14 +1068,31 @@ function submitEmail() {
 }
 
 function saveFreeRegistration(email, serialNumber, messageCount, language) {
-  const scriptUrl = `https://script.google.com/macros/s/AKfycbyepqfIXjDJBVCRUSP4enowWTG-celop3qD-4uXdIFOP6aMGTHDJn3YJ5agH1Pke2Vv/exec`; // استبدل بـ FreeRegistration.gs URL
+  const scriptUrl = `https://script.google.com/macros/s/AKfycbzzN0SshEYOkuaevtn_fdKDuzvbbcSEI1szA9dUgWweeW0i60jalJwGlHJkx4TdNDX9/exec`; // استبدل بـ FreeRegistration.gs URL
 
   // بناء الرابط مع معلمة callback
-  const fullUrl = `${scriptUrl}?email=${encodeURIComponent(email)}&serialNumber=${encodeURIComponent(serialNumber)}&messageCount=${encodeURIComponent(messageCount)}&language=${encodeURIComponent(language)}&callback=handleFreeRegistrationResponse`;
+  const callbackName = `handleFreeRegistrationResponse_${Date.now()}`;
+  const fullUrl = `${scriptUrl}?email=${encodeURIComponent(email)}&serialNumber=${encodeURIComponent(serialNumber)}&messageCount=${encodeURIComponent(messageCount)}&language=${encodeURIComponent(language)}&callback=${callbackName}`;
+
+  // تعريف الدالة الخاصة بالرد
+  window[callbackName] = function(data) {
+    handleFreeRegistrationResponse(data);
+    // إزالة السكربت بعد التنفيذ
+    document.body.removeChild(script);
+    delete window[callbackName];
+  };
 
   // إنشاء عنصر سكربت جديد
   const script = document.createElement('script');
   script.src = fullUrl;
+  script.onerror = function() {
+    const responseMessage = document.getElementById("response-message");
+    responseMessage.style.display = "block";
+    responseMessage.style.color = "red";
+    responseMessage.textContent = currentLang === 'ar' ? "حدث خطأ في الاتصال بالخادم. حاول مرة أخرى لاحقًا." : "An error occurred while connecting to the server. Please try again later.";
+    document.body.removeChild(script);
+    delete window[callbackName];
+  };
 
   // إضافة السكربت إلى الصفحة
   document.body.appendChild(script);
@@ -1108,7 +1133,6 @@ function handleFreeRegistrationResponse(data) {
     }, 3000);
   }
 }
-
 
 
     /************************************************
