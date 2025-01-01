@@ -1060,42 +1060,40 @@ function submitEmail() {
 }
 
 function saveFreeRegistration(email, serialNumber, messageCount, language) {
-  const responseMessage = document.getElementById("response-message");
-  const scriptUrl = `https://script.google.com/macros/s/AKfycbwaIJbhb4-_rNymkNaIrIR4QUsuUx6QR2HgIBh30VIRWtMq_D1D_KoFgpABxoIkyvt1/exec`; // استبدل بـ FreeRegistration.gs URL
+  const scriptUrl = `https://script.google.com/macros/s/AKfycbziA52vvOPQR08ztC8Oo4OlpddTlVY_jpXRmhh19kNCPKAyW_Odzvm40rx17j6_dPXk/exec`; // استبدل بـ FreeRegistration.gs URL
 
-  const fullUrl = `${scriptUrl}?email=${encodeURIComponent(email)}&serialNumber=${encodeURIComponent(serialNumber)}&messageCount=${encodeURIComponent(messageCount)}&language=${encodeURIComponent(language)}`;
+  // بناء الرابط مع معلمة callback
+  const fullUrl = `${scriptUrl}?email=${encodeURIComponent(email)}&serialNumber=${encodeURIComponent(serialNumber)}&messageCount=${encodeURIComponent(messageCount)}&language=${encodeURIComponent(language)}&callback=handleFreeRegistrationResponse`;
 
-  fetch(fullUrl, {
-    method: 'GET',
-  })
-  .then(response => {
-    if (!response.ok) {
-      return response.json().then(err => { throw err; });
-    }
-    return response.json();
-  })
-  .then(data => {
-    responseMessage.style.display = "block";
-    if (data.status === "error") {
-      responseMessage.style.color = "red";
-      responseMessage.textContent = data.message;
-    } else {
-      responseMessage.style.color = "green";
-      responseMessage.textContent = data.message;
-      setTimeout(() => {
-        closeEmailPopup();
-        responseMessage.textContent = "";
-      }, 3000);
-    }
-  })
-  .catch((error) => {
-    console.error("Error:", error);
-    responseMessage.style.display = "block";
-    responseMessage.style.color = "red";
-    responseMessage.textContent =
-      error.message || (language === 'ar' ? "حدث خطأ أثناء الإرسال. حاول مرة أخرى." : "An error occurred during submission. Please try again.");
-  });
+  // إنشاء عنصر سكربت جديد
+  const script = document.createElement('script');
+  script.src = fullUrl;
+
+  // إضافة السكربت إلى الصفحة
+  document.body.appendChild(script);
 }
+
+    /**
+ * الدالة التي ستستقبل البيانات من JSONP
+ * @param {Object} data - البيانات المستقبلة من السكربت
+ */
+function handleFreeRegistrationResponse(data) {
+  const responseMessage = document.getElementById("response-message");
+  responseMessage.style.display = "block";
+  
+  if (data.status === "error") {
+    responseMessage.style.color = "red";
+    responseMessage.textContent = data.message;
+  } else {
+    responseMessage.style.color = "green";
+    responseMessage.textContent = data.message;
+    setTimeout(() => {
+      closeEmailPopup();
+      responseMessage.textContent = "";
+    }, 3000);
+  }
+}
+
 
 
     /************************************************
