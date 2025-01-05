@@ -1215,6 +1215,8 @@ function renderPayPalButton(msgCount) {
 function saveDataToGoogleSheetsAfterPayment(email, messageCount, serialNumber, phoneNumber) {
   const url = `https://script.google.com/macros/s/AKfycbzP2oYFIrnOLxou6qKx0loPJ-vTJ_LfNZkjzENzrP3Ul2V71-uEJT7SY5e-1LCO55eN/exec`;
   const params = new URLSearchParams();
+  const serialNumber = generateSerialNumber();
+  currentSerialNumber = serialNumber; // تخزين الرقم التسلسلي
   params.append('email', email);
   params.append('serialNumber', serialNumber);
   params.append('messageCount', messageCount);
