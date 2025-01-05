@@ -342,13 +342,6 @@
     <div class="row justify-content-center">
       <div class="col-md-4 mb-4">
         <div class="card text-center h-100">
-            <!-- النافذة المنبثقة الرئيسية للدفع -->
-  <div id="payment-modal" class="overlay-popup">
-    <div class="popup-box">
-      <button class="popup-close" onclick="closePaymentModal()">×</button>
-      <h3 class="mb-3" data-translate="choose-payment">صورة للشرح</h3>
-      <div class="d-flex justify-content-around flex-wrap">
-          <!-- إضافة سمات البيانات وتعيين كلاس 'lang-image' -->
           <a href="#" onclick="openImageModal(this); return false;">
           <img 
             src="image2.png" 
@@ -368,13 +361,14 @@
       <div class="col-md-4 mb-4">
         <div class="card text-center h-100">
           <!-- إضافة سمات البيانات وتعيين كلاس 'lang-image' -->
+          <a href="#" onclick="openImageModal(this); return false;">
           <img 
             src="image.png" 
             data-src-ar="image.png" 
             data-src-en="step2.png" 
             class="card-img-top lang-image" 
             alt="الخطوة الثانية" 
-          />
+          /></a>
           <div class="card-body">
             <h5 class="card-title" data-translate="step2-title">كتابة الرسالة</h5>
             <p class="card-text" data-translate="step2-description">
@@ -386,16 +380,14 @@
       <div class="col-md-4 mb-4">
         <div class="card text-center h-100">
           <!-- إضافة سمات البيانات وتعيين كلاس 'lang-image' -->
+          <a href="#" onclick="openImageModal(this); return false;">
           <img 
             src="step3.jpg" 
             data-src-ar="step3.jpg" 
             data-src-en="step3-en.jpg" 
             class="card-img-top lang-image" 
             alt="الخطوة الثالثة" 
-          />
-   </div>
-   </div>
-   </div>
+          /></a>
           <div class="card-body">
             <h5 class="card-title" data-translate="step3-title">بدء الإرسال</h5>
             <p class="card-text" data-translate="step3-description">
@@ -834,24 +826,6 @@
 
     let currentLang = "ar"; // افتراضيًا العربي
     let currentSerialNumber = null; // لتخزين الرقم التسلسلي
-   // فتح نافذة الصورة واختيار مصدرها حسب اختيار اللغة
-    function openImageModal(element) {
-      const modal = document.getElementById("image-modal");
-      const modalImage = document.getElementById("modal-image");
-    
-      // اختيار مصدر الصورة بناءً على اللغة الحالية
-      const src = currentLang === "ar" 
-        ? element.querySelector("img").getAttribute("data-src-ar")
-        : element.querySelector("img").getAttribute("data-src-en");
-    
-      modalImage.src = src; // استخدم مصدر الصورة المناسب
-      modal.style.display = "block"; // أظهر النافذة
-    }
-    
-    function closeImageModal() {
-      const modal = document.getElementById("image-modal");
-      modal.style.display = "none"; // أخفِ النافذة
-    }
     
     // دالة تحميل سكربت باي بال ديناميكيًا بناءً على اللغة
     function loadPayPalSDK(lang) {
@@ -956,31 +930,69 @@
     let selectedPrice = 0; // لتخزين السعر المختار
 
     // دالة فتح نافذة الدفع
-    function openPaymentModal(messages, price) {
-      selectedMessages = messages;
-      selectedPrice = price;
-      const paymentModal = document.getElementById("payment-modal");
-      paymentModal.style.display = "flex";
-      paymentModal.addEventListener("click", outsideClickPaymentModal);
-      // تخزين الباقة المختارة
-      paymentModal.setAttribute("data-messages", messages);
-      paymentModal.setAttribute("data-price", price);
-    }
+let currentLang = "ar"; // اللغة الافتراضية
+let modalMode = "payment"; // لتحديد الوضع (دفع أو عرض صور)
 
-    function outsideClickPaymentModal(e) {
-      const box = document.querySelector("#payment-modal .popup-box");
-      if (!box.contains(e.target)) {
-        closePaymentModal();
-      }
-    }
+function openPaymentModal(messages, price) {
+  modalMode = "payment"; // تحديد الوضع الحالي للدفع
+  selectedMessages = messages;
+  selectedPrice = price;
+  const paymentModal = document.getElementById("payment-modal");
+  const modalContent = document.querySelector("#payment-modal .popup-box");
+  
+  // إعداد محتوى الدفع
+  modalContent.innerHTML = `
+    <button class="popup-close" onclick="closePaymentModal()">×</button>
+    <h3 class="mb-3">${currentLang === "ar" ? "اختر وسيلة الدفع" : "Choose Payment Method"}</h3>
+    <div class="d-flex justify-content-around flex-wrap">
+      <!-- محتوى الدفع -->
+      <img src="stcpay.png" alt="STC Pay" class="lang-image" style="width: 70px; cursor: pointer;" />
+      <img src="alrajhi.png" alt="Al Rajhi" class="lang-image" style="width: 70px; cursor: pointer;" />
+      <img src="paypal.png" alt="PayPal" class="lang-image" style="width: 70px; cursor: pointer;" />
+    </div>
+  `;
+  
+  paymentModal.style.display = "flex";
+  paymentModal.addEventListener("click", outsideClickPaymentModal);
+  paymentModal.setAttribute("data-messages", messages);
+  paymentModal.setAttribute("data-price", price);
+}
 
-    function closePaymentModal() {
-      const pm = document.getElementById("payment-modal");
-      pm.style.display = "none";
-      pm.removeEventListener("click", outsideClickPaymentModal);
-      pm.removeAttribute("data-messages");
-      pm.removeAttribute("data-price");
-    }
+function openImageModal(element) {
+  modalMode = "image"; // تحديد الوضع الحالي للصور
+  const paymentModal = document.getElementById("payment-modal");
+  const modalContent = document.querySelector("#payment-modal .popup-box");
+  
+  // الحصول على مصدر الصورة بناءً على اللغة
+  const src = currentLang === "ar" 
+    ? element.querySelector("img").getAttribute("data-src-ar")
+    : element.querySelector("img").getAttribute("data-src-en");
+
+  // إعداد محتوى عرض الصورة
+  modalContent.innerHTML = `
+    <button class="popup-close" onclick="closePaymentModal()">×</button>
+    <img src="${src}" alt="Image" style="max-width: 100%; border-radius: 8px;" />
+  `;
+
+  paymentModal.style.display = "flex";
+  paymentModal.addEventListener("click", outsideClickPaymentModal);
+}
+
+function outsideClickPaymentModal(e) {
+  const box = document.querySelector("#payment-modal .popup-box");
+  if (!box.contains(e.target)) {
+    closePaymentModal();
+  }
+}
+
+function closePaymentModal() {
+  const pm = document.getElementById("payment-modal");
+  pm.style.display = "none";
+  pm.removeEventListener("click", outsideClickPaymentModal);
+  pm.removeAttribute("data-messages");
+  pm.removeAttribute("data-price");
+}
+
 
     // دالة فتح نافذة اختيار وسيلة الدفع
 function openQrPaymentPopup(method, msgCount) {
