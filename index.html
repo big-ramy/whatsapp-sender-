@@ -342,14 +342,21 @@
     <div class="row justify-content-center">
       <div class="col-md-4 mb-4">
         <div class="card text-center h-100">
+            <!-- النافذة المنبثقة الرئيسية للدفع -->
+  <div id="payment-modal" class="overlay-popup">
+    <div class="popup-box">
+      <button class="popup-close" onclick="closePaymentModal()">×</button>
+      <h3 class="mb-3" data-translate="choose-payment">صورة للشرح</h3>
+      <div class="d-flex justify-content-around flex-wrap">
           <!-- إضافة سمات البيانات وتعيين كلاس 'lang-image' -->
+          <a href="#" onclick="openImageModal(this); return false;">
           <img 
             src="image2.png" 
             data-src-ar="image2.png" 
             data-src-en="step1.png" 
             class="card-img-top lang-image" 
             alt="الخطوة الأولى" 
-          />
+          /></a>    
           <div class="card-body">
             <h5 class="card-title" data-translate="step1-title">تحميل ملف الأرقام</h5>
             <p class="card-text" data-translate="step1-description">
@@ -386,11 +393,15 @@
             class="card-img-top lang-image" 
             alt="الخطوة الثالثة" 
           />
+   </div>
+   </div>
+   </div>
           <div class="card-body">
             <h5 class="card-title" data-translate="step3-title">بدء الإرسال</h5>
             <p class="card-text" data-translate="step3-description">
               اضغط على زر الإرسال واستمتع بالسهولة والسرعة.
             </p>
+            
           </div>
         </div>
       </div>
@@ -823,7 +834,25 @@
 
     let currentLang = "ar"; // افتراضيًا العربي
     let currentSerialNumber = null; // لتخزين الرقم التسلسلي
-
+   // فتح نافذة الصورة واختيار مصدرها حسب اختيار اللغة
+    function openImageModal(element) {
+      const modal = document.getElementById("image-modal");
+      const modalImage = document.getElementById("modal-image");
+    
+      // اختيار مصدر الصورة بناءً على اللغة الحالية
+      const src = currentLang === "ar" 
+        ? element.querySelector("img").getAttribute("data-src-ar")
+        : element.querySelector("img").getAttribute("data-src-en");
+    
+      modalImage.src = src; // استخدم مصدر الصورة المناسب
+      modal.style.display = "block"; // أظهر النافذة
+    }
+    
+    function closeImageModal() {
+      const modal = document.getElementById("image-modal");
+      modal.style.display = "none"; // أخفِ النافذة
+    }
+    
     // دالة تحميل سكربت باي بال ديناميكيًا بناءً على اللغة
     function loadPayPalSDK(lang) {
       // إزالة سكربت باي بال الحالي إن وجد
