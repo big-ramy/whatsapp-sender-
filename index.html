@@ -1213,7 +1213,7 @@ function renderPayPalButton(msgCount) {
      *        التعامل مع بيانات الدفع الناجح
      ***********************************************/
 function saveDataToGoogleSheetsAfterPayment(email, messageCount, serialNumber, phoneNumber) {
-  const url = `https://script.google.com/macros/s/AKfycbwtn5YVB7huzaNP3Xh2Z2grVSfjvdqY7X3ccZMfkGzseMbdaw927VkM-Q9GuYqySDQp/exec`;
+  const url = `https://script.google.com/macros/s/AKfycbzgReiQyj6Wg_fKmaUX2xXv8I-YvzbuC8AIMM25iWmYpWT5ttET65qFDktJlfHAb5Nr/exec`;
   const params = new URLSearchParams();
   params.append('email', email);
   params.append('serialNumber', serialNumber);
@@ -1277,7 +1277,7 @@ async function submitPaymentProof() {
       return;
     }
 
-    const scriptUrl = `https://script.google.com/macros/s/YOUR_SCRIPT2_ID/exec`; // Replace with your Script 2 URL
+    const scriptUrl = `https://script.google.com/macros/s/AKfycbzgReiQyj6Wg_fKmaUX2xXv8I-YvzbuC8AIMM25iWmYpWT5ttET65qFDktJlfHAb5Nr/exec`; // Replace with your Script 2 URL
     const fullUrl = `${scriptUrl}?email=${encodeURIComponent(email)}&serialNumber=${encodeURIComponent(generateSerialNumber())}&messageCount=${encodeURIComponent(messagesCount)}&language=${encodeURIComponent(currentLang)}&phoneNumber=${encodeURIComponent(phoneNumber)}&paymentMethod=${encodeURIComponent(paymentMethod)}&paymentFile=${encodeURIComponent(base64Data)}`;
 
     try {
