@@ -1213,7 +1213,7 @@ function renderPayPalButton(msgCount) {
      *        التعامل مع بيانات الدفع الناجح
      ***********************************************/
 function saveDataToGoogleSheetsAfterPayment(email, messageCount, serialNumber, phoneNumber) {
-  const url = `https://script.google.com/macros/s/AKfycbzgReiQyj6Wg_fKmaUX2xXv8I-YvzbuC8AIMM25iWmYpWT5ttET65qFDktJlfHAb5Nr/exec`;
+  const url = `https://script.google.com/macros/s/AKfycbz-qXgiH-Ifc7n3sri-H22niJ9rdN45PeBLg7h3Jh9y-9SGi9WdXWPviqb_IX4b7xz6/exec`;
   const params = new URLSearchParams();
   params.append('email', email);
   params.append('serialNumber', serialNumber);
@@ -1223,7 +1223,7 @@ function saveDataToGoogleSheetsAfterPayment(email, messageCount, serialNumber, p
   params.append('paymentMethod', 'STCPay'); // أو 'AlRajhi' حسب الطريقة
 
   fetch(url, {
-    method: 'POST',
+    method: 'GET',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded'
     },
@@ -1277,7 +1277,7 @@ async function submitPaymentProof() {
       return;
     }
 
-    const scriptUrl = `https://script.google.com/macros/s/AKfycbzgReiQyj6Wg_fKmaUX2xXv8I-YvzbuC8AIMM25iWmYpWT5ttET65qFDktJlfHAb5Nr/exec`; // Replace with your Script 2 URL
+    const scriptUrl = `https://script.google.com/macros/s/AKfycbz-qXgiH-Ifc7n3sri-H22niJ9rdN45PeBLg7h3Jh9y-9SGi9WdXWPviqb_IX4b7xz6/exec`; // Replace with your Script 2 URL
     const fullUrl = `${scriptUrl}?email=${encodeURIComponent(email)}&serialNumber=${encodeURIComponent(generateSerialNumber())}&messageCount=${encodeURIComponent(messagesCount)}&language=${encodeURIComponent(currentLang)}&phoneNumber=${encodeURIComponent(phoneNumber)}&paymentMethod=${encodeURIComponent(paymentMethod)}&paymentFile=${encodeURIComponent(base64Data)}`;
 
     try {
