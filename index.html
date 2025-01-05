@@ -1212,43 +1212,6 @@ function renderPayPalButton(msgCount) {
     /************************************************
      *        التعامل مع بيانات الدفع الناجح
      ***********************************************/
-function saveDataToGoogleSheetsAfterPayment(email, messageCount, serialNumber, phoneNumber) {
-  const url = `https://script.google.com/macros/s/AKfycbzP2oYFIrnOLxou6qKx0loPJ-vTJ_LfNZkjzENzrP3Ul2V71-uEJT7SY5e-1LCO55eN/exec`;
-  const params = new URLSearchParams();
-  const generatedSN = generateSerialNumber();
-  currentSerialNumber = generatedSN; // تخزين الرقم التسلسلي بشكل عام
-  params.append('email', email);
-  params.append('serialNumber', generatedSN);
-  params.append('messageCount', messageCount);
-  params.append('language', currentLang);
-  params.append('phoneNumber', phoneNumber);
-  params.append('paymentMethod', 'STCPay'); // أو 'AlRajhi' حسب الطريقة
-
-  fetch(url, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    },
-    body: params.toString()
-  })
-  .then(response => response.json())
-  .then(data => {
-    if (data.status === "error") {
-      alert(data.content);
-    } else {
-      // تم إرسال البريد الإلكتروني بنجاح من جانب الخادم
-      console.log(data.content);
-    }
-  })
-  .catch((error) => {
-    console.error("Error:", error);
-    alert("حدث خطأ أثناء معالجة الدفع. حاول مرة أخرى.");
-  });
-}
-
-    /************************************************
-     *   رفع فاتورة الدفع (QR Payment Popup)
-     ***********************************************/
 async function submitPaymentProof() {
   const name = document.getElementById("payment-name").value.trim();
   const email = document.getElementById("payment-email").value.trim();
@@ -1259,37 +1222,54 @@ async function submitPaymentProof() {
   const resultDiv = document.getElementById("qr-payment-result");
 
   if (!name || !email || !phoneNumber || !messagesCount || !file) {
-    alert(language === 'ar' ? "الرجاء تعبئة جميع الحقول وإرفاق الملف!" : "Please fill out all fields and attach the file!");
+    alert(currentLang === 'ar' 
+      ? "الرجاء تعبئة جميع الحقول وإرفاق الملف!" 
+      : "Please fill out all fields and attach the file!"
+    );
     return;
   }
   if (!validateEmail(email)) {
-    alert(language === 'ar' ? "من فضلك أدخل بريدًا إلكترونيًا صالحًا" : "Please enter a valid email address");
+    alert(currentLang === 'ar' 
+      ? "من فضلك أدخل بريدًا إلكترونيًا صالحًا" 
+      : "Please enter a valid email address"
+    );
     return;
   }
 
-  // Convert file to Base64
   const reader = new FileReader();
   reader.readAsDataURL(file);
   reader.onload = async function () {
     const base64Data = reader.result.split(',')[1]; // Extract Base64 part
-
-    // Ensure the Base64 data is within URL length limits (~2000 characters)
-    if (base64Data.length > 15000) { // Approximation
-      alert(currentLang === 'ar' ? "الإيصال كبير جدًا. الرجاء استخدام ملف أصغر." : "The receipt is too large. Please use a smaller file.");
+    // تأكد من الحجم المناسب
+    if (base64Data.length > 15000) { 
+      alert(currentLang === 'ar' 
+        ? "الإيصال كبير جدًا. الرجاء استخدام ملف أصغر." 
+        : "The receipt is too large. Please use a smaller file."
+      );
       return;
     }
 
-    const scriptUrl = `https://script.google.com/macros/s/AKfycbzP2oYFIrnOLxou6qKx0loPJ-vTJ_LfNZkjzENzrP3Ul2V71-uEJT7SY5e-1LCO55eN/exec`; // Replace with your Script 2 URL
-    const fullUrl = `${scriptUrl}?email=${encodeURIComponent(email)}&serialNumber=${encodeURIComponent(generateSerialNumber())}&messageCount=${encodeURIComponent(messagesCount)}&language=${encodeURIComponent(currentLang)}&phoneNumber=${encodeURIComponent(phoneNumber)}&paymentMethod=${encodeURIComponent(paymentMethod)}&paymentFile=${encodeURIComponent(base64Data)}`;
+    // سكربت الدفع الموحّد:
+    const scriptUrl = "https://script.google.com/macros/s/AKfycbyNOAvoKfR-tHWpXayOzmeoFoEx2juknxje4PjbGwmszBlZUlWWJhJB2tYShLAFz1U/exec";
+    // نمرّر action=submit
+    const fullUrl = scriptUrl
+      + "?action=submit"
+      + "&name=" + encodeURIComponent(name)
+      + "&email=" + encodeURIComponent(email)
+      + "&phoneNumber=" + encodeURIComponent(phoneNumber)
+      + "&messageCount=" + encodeURIComponent(messagesCount)
+      + "&language=" + encodeURIComponent(currentLang)
+      + "&paymentMethod=" + encodeURIComponent(paymentMethod)
+      + "&paymentFile=" + encodeURIComponent(base64Data);
 
     try {
-      const res = await fetch(fullUrl, {
-        method: 'GET',
-      });
+      const res = await fetch(fullUrl, { method: 'GET' });
       const data = await res.json();
+
       if (data.status === 'success') {
         resultDiv.style.color = "green";
-        resultDiv.textContent = data.content;
+        resultDiv.textContent = data.content;  // مثلاً "تم إرسال طلب الدفع للإدارة..."
+        // بعد ثوانٍ يمكن إغلاق النافذة المنبثقة:
         setTimeout(() => {
           closeQrPaymentPopup();
           resultDiv.textContent = '';
@@ -1308,6 +1288,7 @@ async function submitPaymentProof() {
     console.error('Error: ', error);
   };
 }
+
 
 
   </script>
