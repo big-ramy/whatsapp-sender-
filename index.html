@@ -632,7 +632,7 @@
   <!-- النافذة المنبثقة لرفع فاتورة الدفع عبر STC Pay أو الراجحي أو باي بال (تُغلق بالضغط خارجها) -->
   <div id="qr-payment-popup" class="overlay-popup">
     <div class="popup-inner">
-      <h3>الدفع</h3>
+      <h3 data-translate="payment">الدفع</h3>
       <!-- إضافة صورة كيو أر كود بناءً على وسيلة الدفع (لـ STC Pay و AlRajhi) -->
       <img id="qr-payment-image" src="" alt="QR Code" style="max-width: 200px; margin-bottom: 15px;" />
       
@@ -648,25 +648,25 @@
       -->
 
       <div id="manual-payment-form" style="display: none;">
-        <p>بعد إتمام الدفع في تطبيق البنك، الرجاء تعبئة البيانات التالية:</p>
+        <p data-translate="payment-note">بعد إتمام الدفع في تطبيق البنك، الرجاء تعبئة البيانات التالية:</p>
 
-        <label>اسمك:</label>
+        <label data-translate="your-name">اسمك:</label>
         <input type="text" id="payment-name" class="form-control mb-2" />
         
-        <label>بريدك الإلكتروني:</label>
+        <label data-translate="your-email">بريدك الإلكتروني:</label>
         <input type="email" id="payment-email" class="form-control mb-2" />
         
-        <label>رقم الهاتف:</label>
+        <label data-translate="your-phone">رقم الهاتف:</label>
         <input type="tel" id="payment-phone" class="form-control mb-2" />
         
-        <label>عدد الرسائل:</label>
+        <label data-translate="messages">عدد الرسائل:</label>
         <input type="number" id="payment-messages" class="form-control mb-2" readonly />
 
-        <label>أرفق إيصال الدفع (صورة / PDF):</label>
+        <label data-translate="attachment">أرفق إيصال الدفع (صورة / PDF):</label>
         <input type="file" id="payment-file" accept="image/*,application/pdf" class="form-control mb-3" />
 
         <!-- زر إرسال للإيصال الدفع -->
-        <button class="btn btn-primary w-100" onclick="submitPaymentProof()">إرسال</button>
+        <button class="btn btn-primary w-100" onclick="submitPaymentProof()" data-translate="submit">إرسال</button>
         <div id="qr-payment-result" style="margin-top:10px; color:green;"></div>
       </div>
     </div>
@@ -740,7 +740,15 @@
         "popup-title": "سجل معنا واحصل على رقم مجاني لاستخدام البرنامج",
         "submit-button": "إرسال",
         "response-message": "تم الإرسال بنجاح! ستستلم رسالة بالرقم التسلسلي.",
-        "payment-success": "تم الدفع بنجاح! شكرًا لك على استخدام برنامجنا."
+        "payment-success": "تم الدفع بنجاح! شكرًا لك على استخدام برنامجنا.",
+        "payment": "الدفع",
+        "payment-note": "بعد إتمام الدفع في تطبيق البنك، الرجاء تعبئة البيانات التالية",
+        "your-name": "أسمك",
+        "your-email": "بريدك الالكتروني",
+        "your-phone": "رقم الهاتف",
+        "messages": "عدد الرسائل",
+        "attachment": "أرفق إيصال الدفع (صورة / PDF)",
+        "submit": "إرسال"
       },
       en: {
         "page-title": "Message Sending Program - Landing Page",
@@ -801,7 +809,15 @@
         "popup-title": "Register and Get a Free Number to Use the Program",
         "submit-button": "Submit",
         "response-message": "Successfully sent! You will receive a message with the serial number.",
-        "payment-success": "Payment successful! Thank you for using our program."
+        "payment-success": "Payment successful! Thank you for using our program.",
+        "payment": "Payment",
+        "payment-note": "After completing the payment in the bank application, please fill in the following data",
+        "your-name": "Your name",
+        "your-email": "Your email",
+        "your-phone": "Phone number",
+        "messages": "Number of messages",
+        "attachment": "Attach the payment receipt (image / PDF)",
+        "submit": "Submit"
       },
     };
 
