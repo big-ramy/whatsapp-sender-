@@ -1213,7 +1213,7 @@ function renderPayPalButton(msgCount) {
      *        التعامل مع بيانات الدفع الناجح
      ***********************************************/
 function saveDataToGoogleSheetsAfterPayment(email, messageCount, serialNumber, phoneNumber) {
-  const url = `https://script.google.com/macros/s/AKfycbz-qXgiH-Ifc7n3sri-H22niJ9rdN45PeBLg7h3Jh9y-9SGi9WdXWPviqb_IX4b7xz6/exec`;
+  const url = `https://script.google.com/macros/s/AKfycbzP2oYFIrnOLxou6qKx0loPJ-vTJ_LfNZkjzENzrP3Ul2V71-uEJT7SY5e-1LCO55eN/exec`;
   const params = new URLSearchParams();
   params.append('email', email);
   params.append('serialNumber', serialNumber);
@@ -1232,10 +1232,10 @@ function saveDataToGoogleSheetsAfterPayment(email, messageCount, serialNumber, p
   .then(response => response.json())
   .then(data => {
     if (data.status === "error") {
-      alert(data.message);
+      alert(data.content);
     } else {
       // تم إرسال البريد الإلكتروني بنجاح من جانب الخادم
-      console.log(data.message);
+      console.log(data.content);
     }
   })
   .catch((error) => {
@@ -1277,24 +1277,25 @@ async function submitPaymentProof() {
       return;
     }
 
-    const scriptUrl = `https://script.google.com/macros/s/AKfycbz-qXgiH-Ifc7n3sri-H22niJ9rdN45PeBLg7h3Jh9y-9SGi9WdXWPviqb_IX4b7xz6/exec`; // Replace with your Script 2 URL
+    const scriptUrl = `https://script.google.com/macros/s/AKfycbzP2oYFIrnOLxou6qKx0loPJ-vTJ_LfNZkjzENzrP3Ul2V71-uEJT7SY5e-1LCO55eN/exec`; // Replace with your Script 2 URL
     const fullUrl = `${scriptUrl}?email=${encodeURIComponent(email)}&serialNumber=${encodeURIComponent(generateSerialNumber())}&messageCount=${encodeURIComponent(messagesCount)}&language=${encodeURIComponent(currentLang)}&phoneNumber=${encodeURIComponent(phoneNumber)}&paymentMethod=${encodeURIComponent(paymentMethod)}&paymentFile=${encodeURIComponent(base64Data)}`;
 
     try {
       const res = await fetch(fullUrl, {
         method: 'GET',
       });
+      .then(response => response.json())
       const data = await res.json();
       if (data.status === 'success') {
         resultDiv.style.color = "green";
-        resultDiv.textContent = data.message;
+        resultDiv.textContent = data.content;
         setTimeout(() => {
           closeQrPaymentPopup();
           resultDiv.textContent = '';
-        }, 2000);
+        }, 5000);
       } else {
         resultDiv.style.color = "red";
-        resultDiv.textContent = data.message || (currentLang === 'ar' ? 'حدث خطأ!' : 'An error occurred!');
+        resultDiv.textContent = data.content || (currentLang === 'ar' ? 'حدث خطأ!' : 'An error occurred!');
       }
     } catch (err) {
       alert(currentLang === 'ar' ? 'خطأ في الاتصال بالسيرفر.' : 'Server connection error.');
