@@ -1272,7 +1272,7 @@ async function submitPaymentProof() {
     const base64Data = reader.result.split(',')[1]; // Extract Base64 part
 
     // Ensure the Base64 data is within URL length limits (~2000 characters)
-    if (base64Data.length > 1500) { // Approximation
+    if (base64Data.length > 15000) { // Approximation
       alert(currentLang === 'ar' ? "الإيصال كبير جدًا. الرجاء استخدام ملف أصغر." : "The receipt is too large. Please use a smaller file.");
       return;
     }
