@@ -930,41 +930,16 @@
     let selectedPrice = 0; // لتخزين السعر المختار
 
     // دالة فتح نافذة الدفع
-let currentLang = "ar"; // اللغة الافتراضية
-let modalMode = "payment"; // لتحديد الوضع (دفع أو عرض صور)
+let modalMode = ""; // تحديد الوضع: عرض الصور أو الدفع
 
-function openPaymentModal(messages, price) {
-  modalMode = "payment"; // تحديد الوضع الحالي للدفع
-  selectedMessages = messages;
-  selectedPrice = price;
-  const paymentModal = document.getElementById("payment-modal");
-  const modalContent = document.querySelector("#payment-modal .popup-box");
-  
-  // إعداد محتوى الدفع
-  modalContent.innerHTML = `
-    <button class="popup-close" onclick="closePaymentModal()">×</button>
-    <h3 class="mb-3">${currentLang === "ar" ? "اختر وسيلة الدفع" : "Choose Payment Method"}</h3>
-    <div class="d-flex justify-content-around flex-wrap">
-      <!-- محتوى الدفع -->
-      <img src="stcpay.png" alt="STC Pay" class="lang-image" style="width: 70px; cursor: pointer;" />
-      <img src="alrajhi.png" alt="Al Rajhi" class="lang-image" style="width: 70px; cursor: pointer;" />
-      <img src="paypal.png" alt="PayPal" class="lang-image" style="width: 70px; cursor: pointer;" />
-    </div>
-  `;
-  
-  paymentModal.style.display = "flex";
-  paymentModal.addEventListener("click", outsideClickPaymentModal);
-  paymentModal.setAttribute("data-messages", messages);
-  paymentModal.setAttribute("data-price", price);
-}
-
+// فتح نافذة عرض الصور
 function openImageModal(element) {
   modalMode = "image"; // تحديد الوضع الحالي للصور
   const paymentModal = document.getElementById("payment-modal");
   const modalContent = document.querySelector("#payment-modal .popup-box");
-  
+
   // الحصول على مصدر الصورة بناءً على اللغة
-  const src = currentLang === "ar" 
+  const src = currentLang === "ar"
     ? element.querySelector("img").getAttribute("data-src-ar")
     : element.querySelector("img").getAttribute("data-src-en");
 
@@ -974,23 +949,48 @@ function openImageModal(element) {
     <img src="${src}" alt="Image" style="max-width: 100%; border-radius: 8px;" />
   `;
 
+  // عرض النافذة المنبثقة
   paymentModal.style.display = "flex";
   paymentModal.addEventListener("click", outsideClickPaymentModal);
 }
 
+// فتح نافذة الدفع
+function openPaymentModal(messages, price) {
+  modalMode = "payment"; // تحديد الوضع الحالي للدفع
+  selectedMessages = messages;
+  selectedPrice = price;
+  const paymentModal = document.getElementById("payment-modal");
+  const modalContent = document.querySelector("#payment-modal .popup-box");
+
+  // إعداد محتوى الدفع
+  modalContent.innerHTML = `
+    <button class="popup-close" onclick="closePaymentModal()">×</button>
+    <h3 class="mb-3">${currentLang === "ar" ? "اختر وسيلة الدفع" : "Choose Payment Method"}</h3>
+    <div class="d-flex justify-content-around flex-wrap">
+      <img src="stcpay.png" alt="STC Pay" class="lang-image" style="width: 70px; cursor: pointer;" onclick="openQrPaymentPopup('STC Pay', ${messages})" />
+      <img src="alrajhi.png" alt="Al Rajhi" class="lang-image" style="width: 70px; cursor: pointer;" onclick="openQrPaymentPopup('Al Rajhi', ${messages})" />
+      <img src="paypal.png" alt="PayPal" class="lang-image" style="width: 70px; cursor: pointer;" onclick="openQrPaymentPopup('PayPal', ${messages})" />
+    </div>
+  `;
+
+  // عرض النافذة المنبثقة
+  paymentModal.style.display = "flex";
+  paymentModal.addEventListener("click", outsideClickPaymentModal);
+}
+
+// إغلاق النافذة المنبثقة
+function closePaymentModal() {
+  const paymentModal = document.getElementById("payment-modal");
+  paymentModal.style.display = "none";
+  paymentModal.removeEventListener("click", outsideClickPaymentModal);
+}
+
+// الإغلاق عند النقر خارج النافذة
 function outsideClickPaymentModal(e) {
   const box = document.querySelector("#payment-modal .popup-box");
   if (!box.contains(e.target)) {
     closePaymentModal();
   }
-}
-
-function closePaymentModal() {
-  const pm = document.getElementById("payment-modal");
-  pm.style.display = "none";
-  pm.removeEventListener("click", outsideClickPaymentModal);
-  pm.removeAttribute("data-messages");
-  pm.removeAttribute("data-price");
 }
 
 
