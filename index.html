@@ -1284,7 +1284,6 @@ async function submitPaymentProof() {
       const res = await fetch(fullUrl, {
         method: 'GET',
       });
-      .then(response => response.json())
       const data = await res.json();
       if (data.status === 'success') {
         resultDiv.style.color = "green";
