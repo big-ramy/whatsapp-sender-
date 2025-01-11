@@ -1055,26 +1055,20 @@ function outsideClickPaymentModal(e) {
 
     // دالة فتح نافذة اختيار وسيلة الدفع
 function openQrPaymentPopup(method, msgCount) {
-  closePaymentModal(); // اغلاق نافذة الدفع الرئيسية إن كانت مفتوحة
-
+  closePaymentModal(); // إغلاق نافذة الدفع الرئيسية إن كانت مفتوحة
   const popup = document.getElementById("qr-payment-popup");
   const qrPaymentImage = document.getElementById("qr-payment-image");
   const paypalContainer = document.getElementById("paypal-button-container");
   const manualPaymentForm = document.getElementById("manual-payment-form");
 
-  // إعادة تعيين جميع العناصر
-  qrPaymentImage.style.display = "none";
+  // إعادة تعيين العناصر
   qrPaymentImage.src = "";
+  qrPaymentImage.style.display = "none";
   paypalContainer.style.display = "none";
-  paypalContainer.innerHTML = ""; // إزالة المحتوى السابق
   manualPaymentForm.style.display = "none";
 
   let selectedPaymentMethod = ""; // لضمان تسجيل طريقة الدفع بشكل صحيح
 
-  // تعبئة عدد الرسائل
-  document.getElementById("payment-messages").value = msgCount || 1000;
-
-  // تعيين صورة الكيو أر كود والنموذج بناءً على وسيلة الدفع
   if (method.toLowerCase() === "stc pay") {
     qrPaymentImage.src = "QRstcpay.png"; // تأكد من وجود الصورة
     qrPaymentImage.alt = "STC Pay QR Code";
@@ -1089,20 +1083,19 @@ function openQrPaymentPopup(method, msgCount) {
     selectedPaymentMethod = "AlRajhi";
   } else if (method.toLowerCase() === "paypal") {
     paypalContainer.style.display = "block"; // عرض زر باي بال
-    renderPayPalButton(msgCount); // إعادة رسم زر باي بال
+    manualPaymentForm.style.display = "none"; // إخفاء النموذج اليدوي
     selectedPaymentMethod = "PayPal";
+    renderPayPalButton(msgCount); // إعادة رسم زر باي بال
   }
 
   // تسجيل طريقة الدفع المختارة
   popup.setAttribute("data-payment-method", selectedPaymentMethod);
 
-  // عرض النافذة المنبثقة
+  // تسجيل الحدث للإغلاق عند الضغط خارج المحتوى
   popup.style.display = "flex";
-
-  // تسجيل حدث الإغلاق عند النقر خارج المحتوى
-  popup.removeEventListener("click", outsideClickQrPayment); // إزالة الأحداث السابقة
   popup.addEventListener("click", outsideClickQrPayment);
 }
+
 
 
 
