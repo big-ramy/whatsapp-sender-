@@ -1058,6 +1058,7 @@ function openQrPaymentPopup(method, msgCount) {
   closePaymentModal(); // اغلاق نافذة الدفع الرئيسية إن كانت مفتوحة
   const popup = document.getElementById("qr-payment-popup");
   popup.style.display = "flex";
+
   // تعبئة عدد الرسائل
   document.getElementById("payment-messages").value = msgCount || 1000;
 
@@ -1066,29 +1067,29 @@ function openQrPaymentPopup(method, msgCount) {
   const paypalContainer = document.getElementById("paypal-button-container");
   const manualPaymentForm = document.getElementById("manual-payment-form");
 
-  let selectedPaymentMethod = '';
+  let selectedPaymentMethod = ''; // لضمان تسجيل طريقة الدفع بشكل صحيح
 
   if (method.toLowerCase() === "stc pay") {
-    qrPaymentImage.src = "QRstcpay.png"; // تأكد من وجود هذه الصورة
+    qrPaymentImage.src = "QRstcpay.png"; // تأكد من وجود الصورة
     qrPaymentImage.alt = "STC Pay QR Code";
     qrPaymentImage.style.display = "block";
     paypalContainer.style.display = "none";
     manualPaymentForm.style.display = "block";
     selectedPaymentMethod = 'STCPay';
   } else if (method.toLowerCase() === "alrajhi") {
-    qrPaymentImage.src = "QRalrajhi.png"; // تأكد من وجود هذه الصورة
+    qrPaymentImage.src = "QRalrajhi.png"; // تأكد من وجود الصورة
     qrPaymentImage.alt = "Al Rajhi QR Code";
-    qrPaymentImage.style.display = "block";
+    qrPaymentImage.style.display = "block"; // عرض الصورة
     paypalContainer.style.display = "none";
-    manualPaymentForm.style.display = "block";
+    manualPaymentForm.style.display = "block"; // عرض نموذج البيانات
     selectedPaymentMethod = 'AlRajhi';
   } else if (method.toLowerCase() === "paypal") {
     qrPaymentImage.src = ""; // إخفاء الصورة
     qrPaymentImage.style.display = "none";
-    paypalContainer.style.display = "block";
-    manualPaymentForm.style.display = "none";
+    paypalContainer.style.display = "block"; // عرض زر باي بال
+    manualPaymentForm.style.display = "none"; // إخفاء النموذج اليدوي
     selectedPaymentMethod = 'PayPal';
-    renderPayPalButton(msgCount);
+    renderPayPalButton(msgCount); // إعادة رسم زر باي بال
   }
 
   // تسجيل طريقة الدفع المختارة
