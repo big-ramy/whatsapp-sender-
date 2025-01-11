@@ -1056,48 +1056,54 @@ function outsideClickPaymentModal(e) {
     // دالة فتح نافذة اختيار وسيلة الدفع
 function openQrPaymentPopup(method, msgCount) {
   closePaymentModal(); // اغلاق نافذة الدفع الرئيسية إن كانت مفتوحة
+
   const popup = document.getElementById("qr-payment-popup");
-  popup.style.display = "flex";
-
-  // تعبئة عدد الرسائل
-  document.getElementById("payment-messages").value = msgCount || 1000;
-
-  // تعيين صورة الكيو أر كود بناءً على وسيلة الدفع
   const qrPaymentImage = document.getElementById("qr-payment-image");
   const paypalContainer = document.getElementById("paypal-button-container");
   const manualPaymentForm = document.getElementById("manual-payment-form");
 
-  let selectedPaymentMethod = ''; // لضمان تسجيل طريقة الدفع بشكل صحيح
+  // إعادة تعيين جميع العناصر
+  qrPaymentImage.style.display = "none";
+  qrPaymentImage.src = "";
+  paypalContainer.style.display = "none";
+  paypalContainer.innerHTML = ""; // إزالة المحتوى السابق
+  manualPaymentForm.style.display = "none";
 
+  let selectedPaymentMethod = ""; // لضمان تسجيل طريقة الدفع بشكل صحيح
+
+  // تعبئة عدد الرسائل
+  document.getElementById("payment-messages").value = msgCount || 1000;
+
+  // تعيين صورة الكيو أر كود والنموذج بناءً على وسيلة الدفع
   if (method.toLowerCase() === "stc pay") {
     qrPaymentImage.src = "QRstcpay.png"; // تأكد من وجود الصورة
     qrPaymentImage.alt = "STC Pay QR Code";
     qrPaymentImage.style.display = "block";
-    paypalContainer.style.display = "none";
     manualPaymentForm.style.display = "block";
-    selectedPaymentMethod = 'STCPay';
+    selectedPaymentMethod = "STCPay";
   } else if (method.toLowerCase() === "alrajhi") {
     qrPaymentImage.src = "QRalrajhi.png"; // تأكد من وجود الصورة
     qrPaymentImage.alt = "Al Rajhi QR Code";
-    qrPaymentImage.style.display = "block"; // عرض الصورة
-    paypalContainer.style.display = "none";
-    manualPaymentForm.style.display = "block"; // عرض نموذج البيانات
-    selectedPaymentMethod = 'AlRajhi';
+    qrPaymentImage.style.display = "block";
+    manualPaymentForm.style.display = "block";
+    selectedPaymentMethod = "AlRajhi";
   } else if (method.toLowerCase() === "paypal") {
-    qrPaymentImage.src = ""; // إخفاء الصورة
-    qrPaymentImage.style.display = "none";
     paypalContainer.style.display = "block"; // عرض زر باي بال
-    manualPaymentForm.style.display = "none"; // إخفاء النموذج اليدوي
-    selectedPaymentMethod = 'PayPal';
     renderPayPalButton(msgCount); // إعادة رسم زر باي بال
+    selectedPaymentMethod = "PayPal";
   }
 
   // تسجيل طريقة الدفع المختارة
   popup.setAttribute("data-payment-method", selectedPaymentMethod);
 
-  // تسجيل الحدث للإغلاق عند الضغط خارج المحتوى
+  // عرض النافذة المنبثقة
+  popup.style.display = "flex";
+
+  // تسجيل حدث الإغلاق عند النقر خارج المحتوى
+  popup.removeEventListener("click", outsideClickQrPayment); // إزالة الأحداث السابقة
   popup.addEventListener("click", outsideClickQrPayment);
 }
+
 
 
     function outsideClickQrPayment(e) {
@@ -1110,18 +1116,23 @@ function openQrPaymentPopup(method, msgCount) {
     function closeQrPaymentPopup() {
       const popup = document.getElementById("qr-payment-popup");
       popup.style.display = "none";
-      popup.removeEventListener("click", outsideClickQrPayment);
-      // تنظيف حاوية باي بال بعد الإغلاق
+    
+      // إعادة تعيين الحقول والصورة
+      const qrPaymentImage = document.getElementById("qr-payment-image");
+      qrPaymentImage.src = "";
+      qrPaymentImage.style.display = "none";
+    
       const paypalContainer = document.getElementById("paypal-button-container");
       paypalContainer.innerHTML = "";
       paypalContainer.style.display = "none";
-      // إخفاء النموذج اليدوي
+    
       const manualPaymentForm = document.getElementById("manual-payment-form");
       manualPaymentForm.style.display = "none";
-      // إخفاء حقل رقم الهاتف (removed)
-      // const paypalPhoneForm = document.getElementById("paypal-phone-form");
-      // paypalPhoneForm.style.display = "none"; // Removed
+    
+      // إزالة الحدث لمنع التكرار
+      popup.removeEventListener("click", outsideClickQrPayment);
     }
+
 
     // نافذة التسجيل بالبريد
     function openEmailRegistration() {
