@@ -637,13 +637,13 @@
           onclick="openQrPaymentPopup('STC Pay', selectedMessages)"
         />
         <img
-          src="stcpay.png"
-          data-src-ar="stcpay.png"
-          data-src-en="stcpay.png"
+          src="alrajhi.png"
+          data-src-ar="alrajhi.png"
+          data-src-en="alrajhi.png"
           alt="الراجحي"
           class="lang-image"
           style="width: 70px; cursor: pointer; margin:5px;"
-          onclick="openQrPaymentPopup('STC Pay', selectedMessages)"
+          onclick="openQrPaymentPopup('Rajhi', selectedMessages)"
         />
         <img
           src="paypal.png"
@@ -1027,7 +1027,7 @@ function openPaymentModal(messages, price) {
     <h3 class="mb-3">${currentLang === "ar" ? "اختر وسيلة الدفع" : "Choose Payment Method"}</h3>
     <div class="d-flex justify-content-around flex-wrap">
       <img src="stcpay.png" alt="STC Pay" class="lang-image" style="width: 70px; cursor: pointer;" onclick="openQrPaymentPopup('STC Pay', ${messages})" />
-      <img src="alrajhi.png" alt="Al Rajhi" class="lang-image" style="width: 70px; cursor: pointer;" onclick="openQrPaymentPopup('Al Rajhi', ${messages})" />
+      <img src="alrajhi.png" alt="Al Rajhi" class="lang-image" style="width: 70px; cursor: pointer;" onclick="openQrPaymentPopup('Rajhi', ${messages})" />
       <img src="paypal.png" alt="PayPal" class="lang-image" style="width: 70px; cursor: pointer;" onclick="openQrPaymentPopup('PayPal', ${messages})" />
     </div>
   `;
@@ -1080,7 +1080,7 @@ function openQrPaymentPopup(method, msgCount) {
     qrPaymentImage.alt = "Al Rajhi QR Code";
     qrPaymentImage.style.display = "block";
     manualPaymentForm.style.display = "block";
-    selectedPaymentMethod = "AlRajhi";
+    selectedPaymentMethod = "Rajhi";
   } else if (method.toLowerCase() === "paypal") {
     paypalContainer.style.display = "block"; // عرض زر باي بال
     manualPaymentForm.style.display = "none"; // إخفاء النموذج اليدوي
