@@ -1055,23 +1055,28 @@
     function applyDiscountCode() {
       const codeInput = document.getElementById("discount-code");
       const code = codeInput.value.trim().toUpperCase();
-
+    
       if (code && discountCodes[code]) {
         discountApplied = discountCodes[code];
+        appliedDiscountCode = code;  // <--- حفظ الكود هنا
         const discounted = getDiscountedPrice();
         updatePriceDisplay(discounted);
         alert(currentLang === 'ar'
           ? `تم تطبيق خصم بنسبة ${discountApplied}%`
-          : `A discount of ${discountApplied}% has been applied`);
+          : `A discount of ${discountApplied}% has been applied`
+        );
       } else if (code) {
         discountApplied = 0;
+        appliedDiscountCode = ""; // إعادة التعيين
         updatePriceDisplay(selectedPrice);
         alert(currentLang === 'ar'
           ? 'كود الخصم غير صالح.'
-          : 'Invalid discount code.');
+          : 'Invalid discount code.'
+        );
       }
       // إن لم يُدخل شيء، نبقى على الوضع الأصلي
     }
+
 
     function closePaymentModal() {
       const paymentModal = document.getElementById("payment-modal");
@@ -1095,7 +1100,7 @@
       const qrPaymentImage = document.getElementById("qr-payment-image");
       const paypalContainer = document.getElementById("paypal-button-container");
       const manualPaymentForm = document.getElementById("manual-payment-form");
-      const popup = document.getElementById("qr-payment-popup");
+      
 
       qrPaymentImage.src = "";
       qrPaymentImage.style.display = "none";
