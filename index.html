@@ -4,15 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title data-translate="page-title">برنامج إرسال رسائل - صفحة الهبوط</title>
-  
+
   <!-- رابط Bootstrap 5 -->
   <link
     href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
     rel="stylesheet"
   />
 
-  <!-- PayPal JavaScript SDK سيتم تحميله ديناميكيًا بناءً على لغة المستخدم -->
-  
   <style>
     /* تنسيقات عامة */
     body {
@@ -29,7 +27,7 @@
     }
 
     .dropdown-menu {
-      right: 0; 
+      right: 0;
       left: auto;
     }
 
@@ -47,7 +45,7 @@
     .hero-overlay {
       position: absolute;
       inset: 0;
-      background-color: rgba(0, 0, 0, 0.6); 
+      background-color: rgba(0, 0, 0, 0.6);
       z-index: 1;
     }
     .hero-content {
@@ -124,13 +122,14 @@
       z-index: 9999;
       overflow-y: auto; /* إضافة اسكرول عند الحاجة */
     }
-    .popup-box, #qr-payment-popup .popup-inner {
+    .popup-box,
+    #qr-payment-popup .popup-inner {
       position: relative;
       background-color: #fff;
       padding: 30px;
       border-radius: 10px;
-      max-width: 600px; /* زيادة العرض */
-      width: 95%; /* زيادة العرض */
+      max-width: 600px;
+      width: 95%;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       animation: popupFade 0.4s ease;
     }
@@ -343,13 +342,14 @@
       <div class="col-md-4 mb-4">
         <div class="card text-center h-100">
           <a href="#" onclick="openImageModal(this); return false;">
-          <img 
-            src="image2.png" 
-            data-src-ar="image2.png" 
-            data-src-en="step1.png" 
-            class="card-img-top lang-image" 
-            alt="الخطوة الأولى" 
-          /></a>    
+            <img 
+              src="image2.png" 
+              data-src-ar="image2.png" 
+              data-src-en="step1.png" 
+              class="card-img-top lang-image" 
+              alt="الخطوة الأولى" 
+            />
+          </a>
           <div class="card-body">
             <h5 class="card-title" data-translate="step1-title">تحميل ملف الأرقام</h5>
             <p class="card-text" data-translate="step1-description">
@@ -360,15 +360,15 @@
       </div>
       <div class="col-md-4 mb-4">
         <div class="card text-center h-100">
-          <!-- إضافة سمات البيانات وتعيين كلاس 'lang-image' -->
           <a href="#" onclick="openImageModal(this); return false;">
-          <img 
-            src="image.png" 
-            data-src-ar="image.png" 
-            data-src-en="step2.png" 
-            class="card-img-top lang-image" 
-            alt="الخطوة الثانية" 
-          /></a>
+            <img 
+              src="image.png" 
+              data-src-ar="image.png" 
+              data-src-en="step2.png" 
+              class="card-img-top lang-image" 
+              alt="الخطوة الثانية" 
+            />
+          </a>
           <div class="card-body">
             <h5 class="card-title" data-translate="step2-title">كتابة الرسالة</h5>
             <p class="card-text" data-translate="step2-description">
@@ -379,36 +379,38 @@
       </div>
       <div class="col-md-4 mb-4">
         <div class="card text-center h-100">
-          <!-- إضافة سمات البيانات وتعيين كلاس 'lang-image' -->
           <a href="#" onclick="openImageModal(this); return false;">
-          <img 
-            src="step3.jpg" 
-            data-src-ar="step3.jpg" 
-            data-src-en="step3-en.jpg" 
-            class="card-img-top lang-image" 
-            alt="الخطوة الثالثة" 
-          /></a>
+            <img 
+              src="step3.jpg" 
+              data-src-ar="step3.jpg" 
+              data-src-en="step3-en.jpg" 
+              class="card-img-top lang-image" 
+              alt="الخطوة الثالثة" 
+            />
+          </a>
           <div class="card-body">
             <h5 class="card-title" data-translate="step3-title">بدء الإرسال</h5>
             <p class="card-text" data-translate="step3-description">
               اضغط على زر الإرسال واستمتع بالسهولة والسرعة.
             </p>
-            
           </div>
         </div>
       </div>
     </div>
-        <div class="row justify-content-center">
+
+    <!-- تكرار القسم كأمثلة إضافية -->
+    <div class="row justify-content-center">
       <div class="col-md-4 mb-4">
         <div class="card text-center h-100">
           <a href="#" onclick="openImageModal(this); return false;">
-          <img 
-            src="image2.png" 
-            data-src-ar="image2.png" 
-            data-src-en="step1.png" 
-            class="card-img-top lang-image" 
-            alt="الخطوة الأولى" 
-          /></a>    
+            <img 
+              src="image2.png" 
+              data-src-ar="image2.png" 
+              data-src-en="step1.png" 
+              class="card-img-top lang-image" 
+              alt="الخطوة الأولى" 
+            />
+          </a>
           <div class="card-body">
             <h5 class="card-title" data-translate="step1-title">تحميل ملف الأرقام</h5>
             <p class="card-text" data-translate="step1-description">
@@ -419,15 +421,15 @@
       </div>
       <div class="col-md-4 mb-4">
         <div class="card text-center h-100">
-          <!-- إضافة سمات البيانات وتعيين كلاس 'lang-image' -->
           <a href="#" onclick="openImageModal(this); return false;">
-          <img 
-            src="image.png" 
-            data-src-ar="image.png" 
-            data-src-en="step2.png" 
-            class="card-img-top lang-image" 
-            alt="الخطوة الثانية" 
-          /></a>
+            <img 
+              src="image.png" 
+              data-src-ar="image.png" 
+              data-src-en="step2.png" 
+              class="card-img-top lang-image" 
+              alt="الخطوة الثانية" 
+            />
+          </a>
           <div class="card-body">
             <h5 class="card-title" data-translate="step2-title">كتابة الرسالة</h5>
             <p class="card-text" data-translate="step2-description">
@@ -438,21 +440,20 @@
       </div>
       <div class="col-md-4 mb-4">
         <div class="card text-center h-100">
-          <!-- إضافة سمات البيانات وتعيين كلاس 'lang-image' -->
           <a href="#" onclick="openImageModal(this); return false;">
-          <img 
-            src="step3.jpg" 
-            data-src-ar="step3.jpg" 
-            data-src-en="step3-en.jpg" 
-            class="card-img-top lang-image" 
-            alt="الخطوة الثالثة" 
-          /></a>
+            <img 
+              src="step3.jpg" 
+              data-src-ar="step3.jpg" 
+              data-src-en="step3-en.jpg" 
+              class="card-img-top lang-image" 
+              alt="الخطوة الثالثة" 
+            />
+          </a>
           <div class="card-body">
             <h5 class="card-title" data-translate="step3-title">بدء الإرسال</h5>
             <p class="card-text" data-translate="step3-description">
               اضغط على زر الإرسال واستمتع بالسهولة والسرعة.
             </p>
-            
           </div>
         </div>
       </div>
@@ -624,37 +625,7 @@
   <div id="payment-modal" class="overlay-popup">
     <div class="popup-box">
       <button class="popup-close" onclick="closePaymentModal()">×</button>
-      <h3 class="mb-3" data-translate="choose-payment">اختر وسيلة الدفع</h3>
-      <div class="d-flex justify-content-around flex-wrap">
-        <!-- نفس أسماء الصور المطلوبة مع سمات البيانات -->
-        <img
-          src="stcpay.png"
-          data-src-ar="stcpay.png"
-          data-src-en="stcpay.png"
-          alt="STC Pay"
-          class="lang-image"
-          style="width: 70px; cursor: pointer; margin:5px;"
-          onclick="openQrPaymentPopup('STC Pay', selectedMessages)"
-        />
-        <img
-          src="alrajhi.png"
-          data-src-ar="alrajhi.png"
-          data-src-en="alrajhi.png"
-          alt="الراجحي"
-          class="lang-image"
-          style="width: 70px; cursor: pointer; margin:5px;"
-          onclick="openQrPaymentPopup('Rajhi', selectedMessages)"
-        />
-        <img
-          src="paypal.png"
-          data-src-ar="paypal.png"
-          data-src-en="paypal.png"
-          alt="PayPal"
-          class="lang-image"
-          style="width: 70px; cursor: pointer; margin:5px;"
-          onclick="openQrPaymentPopup('PayPal', selectedMessages)"
-        />
-      </div>
+      <!-- سيتم حقن المحتوى ديناميكيًا في هذه النافذة عن طريق جافاسكربت -->
     </div>
   </div>
 
@@ -691,43 +662,36 @@
     </div>
   </div>
 
-  <!-- النافذة المنبثقة لرفع فاتورة الدفع عبر STC Pay أو الراجحي أو باي بال (تُغلق بالضغط خارجها) -->
+  <!-- النافذة المنبثقة لرفع فاتورة الدفع عبر STC Pay أو الراجحي أو باي بال -->
   <div id="qr-payment-popup" class="overlay-popup">
     <div class="popup-inner">
+      <button class="popup-close" onclick="closeQrPaymentPopup()">×</button>
       <h3 data-translate="payment">الدفع</h3>
-      <!-- إضافة صورة كيو أر كود بناءً على وسيلة الدفع (لـ STC Pay و AlRajhi) -->
-      <img id="qr-payment-image" src="" alt="QR Code" style="max-width: 200px; margin-bottom: 15px;" />
-      
-      <!-- حاوية باي بال -->
+      <!-- صورة كيو أر كود (تظهر فقط عند الدفع المحلي) -->
+      <img id="qr-payment-image" src="" alt="QR Code" style="max-width: 200px; margin-bottom: 15px; display:none;" />
+
+      <!-- حاوية باي بال (تظهر فقط عند اختيار باي بال) -->
       <div id="paypal-button-container" style="display: none;"></div>
 
-      <!-- إزالة حقل رقم الهاتف -->
-      <!--
-      <div id="paypal-phone-form" style="display: none;">
-        <label>رقم الاتصال:</label>
-        <input type="tel" id="payer-phone" class="form-control mb-2" placeholder="أدخل رقم الاتصال" required />
-      </div>
-      -->
-
+      <!-- نموذج إدخال بيانات الدفع اليدوي (عند الدفع بالتحويل البنكي أو STC) -->
       <div id="manual-payment-form" style="display: none;">
         <p data-translate="payment-note">بعد إتمام الدفع في تطبيق البنك، الرجاء تعبئة البيانات التالية:</p>
-
+        
         <label data-translate="your-name">اسمك:</label>
         <input type="text" id="payment-name" class="form-control mb-2" />
-        
+
         <label data-translate="your-email">بريدك الإلكتروني:</label>
         <input type="email" id="payment-email" class="form-control mb-2" />
-        
+
         <label data-translate="your-phone">رقم الهاتف:</label>
         <input type="tel" id="payment-phone" class="form-control mb-2" />
-        
+
         <label data-translate="messages">عدد الرسائل:</label>
         <input type="number" id="payment-messages" class="form-control mb-2" readonly />
 
         <label data-translate="attachment">أرفق إيصال الدفع (صورة / PDF):</label>
         <input type="file" id="payment-file" accept="image/*,application/pdf" class="form-control mb-3" />
 
-        <!-- زر إرسال للإيصال الدفع -->
         <button class="btn btn-primary w-100" onclick="submitPaymentProof()" data-translate="submit">إرسال</button>
         <div id="qr-payment-result" style="margin-top:10px; color:green;"></div>
       </div>
@@ -806,7 +770,7 @@
         "payment": "الدفع",
         "payment-note": "بعد إتمام الدفع في تطبيق البنك، الرجاء تعبئة البيانات التالية",
         "your-name": "أسمك",
-        "your-email": "بريدك الالكتروني",
+        "your-email": "بريدك الإلكتروني",
         "your-phone": "رقم الهاتف",
         "messages": "عدد الرسائل",
         "attachment": "أرفق إيصال الدفع (صورة / PDF)",
@@ -883,10 +847,22 @@
       },
     };
 
-    let currentLang = "ar"; // افتراضيًا العربي
+    let currentLang = "ar"; // افتراضيًا العربية
     let currentSerialNumber = null; // لتخزين الرقم التسلسلي
-    
-    // دالة تحميل سكربت باي بال ديناميكيًا بناءً على اللغة
+    let selectedMessages = 0; // لتخزين عدد الرسائل
+    let selectedPrice = 0; // لتخزين السعر الأصلي أو المحدث
+
+    // كائن أكواد الخصم وقيمها (نسبة مئوية مثلاً)
+    const discountCodes = {
+      "RAMY10": 50,    // خصم 50%
+      "OFFER20": 20,   // خصم 20%
+      // يمكنك إضافة أو تعديل كما تشاء
+    };
+    let discountApplied = 0; // لتخزين نسبة الخصم (0 يعني لا يوجد خصم)
+
+    /************************************************
+     *   تحميل سكربت باي بال ديناميكيًا بناءً على اللغة
+     ***********************************************/
     function loadPayPalSDK(lang) {
       // إزالة سكربت باي بال الحالي إن وجد
       const existingScript = document.getElementById("paypal-sdk");
@@ -906,11 +882,13 @@
       document.head.appendChild(script);
     }
 
+    /************************************************
+     *   دوال الترجمة وتعيين الاتجاه
+     ***********************************************/
     function applyTranslations(lang) {
       document.querySelectorAll("[data-translate]").forEach((el) => {
         const translateKey = el.getAttribute("data-translate");
         if (translations[lang][translateKey]) {
-          // لو العنصر input نعدل الـplaceholder
           if (el.tagName.toLowerCase() === "input") {
             el.placeholder = translations[lang][translateKey];
           } else {
@@ -929,7 +907,6 @@
         }
       });
 
-      // تحميل سكربت باي بال بناءً على اللغة
       loadPayPalSDK(lang);
     }
 
@@ -948,7 +925,7 @@
     langToggleBtn.addEventListener("click", () => {
       if (currentLang === "ar") {
         currentLang = "en";
-        langToggleBtn.textContent = "عربي"; 
+        langToggleBtn.textContent = "عربي";
       } else {
         currentLang = "ar";
         langToggleBtn.textContent = "English";
@@ -977,7 +954,7 @@
     };
 
     /************************************************
-     *                   النوافذ المنبثقة
+     *            النوافذ المنبثقة العامة
      ***********************************************/
     function closePopup() {
       closePaymentModal();
@@ -985,119 +962,167 @@
       closeQrPaymentPopup();
     }
 
-    let selectedMessages = 0; // لتخزين عدد الرسائل في حالة اختار الباقة
-    let selectedPrice = 0; // لتخزين السعر المختار
+    /************************************************
+     *   نافذة لعرض الصور (عند الضغط على إحدى الخطوات)
+     ***********************************************/
+    let modalMode = ""; // تحديد الوضع: عرض الصور أو الدفع
 
-    // دالة فتح نافذة الدفع
-let modalMode = ""; // تحديد الوضع: عرض الصور أو الدفع
+    function openImageModal(element) {
+      modalMode = "image";
+      const paymentModal = document.getElementById("payment-modal");
+      const modalContent = document.querySelector("#payment-modal .popup-box");
 
-// فتح نافذة عرض الصور
-function openImageModal(element) {
-  modalMode = "image"; // تحديد الوضع الحالي للصور
-  const paymentModal = document.getElementById("payment-modal");
-  const modalContent = document.querySelector("#payment-modal .popup-box");
+      const src = currentLang === "ar"
+        ? element.querySelector("img").getAttribute("data-src-ar")
+        : element.querySelector("img").getAttribute("data-src-en");
 
-  // الحصول على مصدر الصورة بناءً على اللغة
-  const src = currentLang === "ar"
-    ? element.querySelector("img").getAttribute("data-src-ar")
-    : element.querySelector("img").getAttribute("data-src-en");
+      modalContent.innerHTML = `
+        <button class="popup-close" onclick="closePaymentModal()">×</button>
+        <img src="${src}" alt="Image" style="max-width: 100%; border-radius: 8px;" />
+      `;
 
-  // إعداد محتوى عرض الصورة
-  modalContent.innerHTML = `
-    <button class="popup-close" onclick="closePaymentModal()">×</button>
-    <img src="${src}" alt="Image" style="max-width: 100%; border-radius: 8px;" />
-  `;
+      paymentModal.style.display = "flex";
+      paymentModal.addEventListener("click", outsideClickPaymentModal);
+    }
 
-  // عرض النافذة المنبثقة
-  paymentModal.style.display = "flex";
-  paymentModal.addEventListener("click", outsideClickPaymentModal);
-}
+    /************************************************
+     *   نافذة اختيار وسيلة الدفع + إدخال كود الخصم
+     ***********************************************/
+    function openPaymentModal(messages, price) {
+      modalMode = "payment";
+      selectedMessages = messages;
+      selectedPrice = price;
+      discountApplied = 0; // إعادة تعيين نسبة الخصم عند كل فتح
 
-// فتح نافذة الدفع
-function openPaymentModal(messages, price) {
-  modalMode = "payment"; // تحديد الوضع الحالي للدفع
-  selectedMessages = messages;
-  selectedPrice = price;
-  const paymentModal = document.getElementById("payment-modal");
-  const modalContent = document.querySelector("#payment-modal .popup-box");
+      const paymentModal = document.getElementById("payment-modal");
+      const modalContent = document.querySelector("#payment-modal .popup-box");
 
-  // إعداد محتوى الدفع
-  modalContent.innerHTML = `
-    <button class="popup-close" onclick="closePaymentModal()">×</button>
-    <h3 class="mb-3">${currentLang === "ar" ? "اختر وسيلة الدفع" : "Choose Payment Method"}</h3>
-    <div class="d-flex justify-content-around flex-wrap">
-      <img src="stcpay.png" alt="STC Pay" class="lang-image" style="width: 70px; cursor: pointer;" onclick="openQrPaymentPopup('STC Pay', ${messages})" />
-      <img src="alrajhi.png" alt="Al Rajhi" class="lang-image" style="width: 70px; cursor: pointer;" onclick="openQrPaymentPopup('Rajhi', ${messages})" />
-      <img src="paypal.png" alt="PayPal" class="lang-image" style="width: 70px; cursor: pointer;" onclick="openQrPaymentPopup('PayPal', ${messages})" />
-    </div>
-  `;
+      // سنعرض خانة إدخال كود الخصم ونطبّق القيمة فور الضغط على "تطبيق"
+      modalContent.innerHTML = `
+        <button class="popup-close" onclick="closePaymentModal()">×</button>
+        <h3 class="mb-3">${translations[currentLang]["choose-payment"] || "اختر وسيلة الدفع"}</h3>
+        
+        <!-- حقل كود الخصم -->
+        <div class="mb-3">
+          <input type="text" id="discount-code" class="form-control" placeholder="${currentLang === 'ar' ? 'أدخل كود الخصم (إن وجد)' : 'Enter discount code (if any)'}" />
+          <button class="btn btn-secondary w-100 mt-2" onclick="applyDiscountCode()">
+            ${currentLang === 'ar' ? 'تطبيق الخصم' : 'Apply Discount'}
+          </button>
+        </div>
 
-  // عرض النافذة المنبثقة
-  paymentModal.style.display = "flex";
-  paymentModal.addEventListener("click", outsideClickPaymentModal);
-}
+        <!-- عرض السعر بعد الخصم -->
+        <div class="mb-3">
+          <h5 id="final-price-text">${currentLang === 'ar' ? 'السعر: ' : 'Price: '} ${price} ${currentLang === 'ar' ? 'ريال' : 'SAR'}</h5>
+        </div>
 
-// إغلاق النافذة المنبثقة
-function closePaymentModal() {
-  const paymentModal = document.getElementById("payment-modal");
-  paymentModal.style.display = "none";
-  paymentModal.removeEventListener("click", outsideClickPaymentModal);
-}
+        <!-- اختيار وسيلة الدفع -->
+        <div class="d-flex justify-content-around flex-wrap">
+          <img src="stcpay.png" alt="STC Pay" class="lang-image" style="width: 70px; cursor: pointer; margin:5px;"
+               onclick="openQrPaymentPopup('STC Pay', ${messages}, getDiscountedPrice())" />
+          <img src="alrajhi.png" alt="Al Rajhi" class="lang-image" style="width: 70px; cursor: pointer; margin:5px;"
+               onclick="openQrPaymentPopup('Rajhi', ${messages}, getDiscountedPrice())" />
+          <img src="paypal.png" alt="PayPal" class="lang-image" style="width: 70px; cursor: pointer; margin:5px;"
+               onclick="openQrPaymentPopup('PayPal', ${messages}, getDiscountedPrice())" />
+        </div>
+      `;
 
-// الإغلاق عند النقر خارج النافذة
-function outsideClickPaymentModal(e) {
-  const box = document.querySelector("#payment-modal .popup-box");
-  if (!box.contains(e.target)) {
-    closePaymentModal();
-  }
-}
+      paymentModal.style.display = "flex";
+      paymentModal.addEventListener("click", outsideClickPaymentModal);
+    }
 
+    // تحديث السعر في واجهة المستخدم بعد تطبيق الخصم
+    function updatePriceDisplay(discountedPrice) {
+      const finalPriceText = document.getElementById("final-price-text");
+      if (finalPriceText) {
+        finalPriceText.textContent = (currentLang === 'ar' ? 'السعر: ' : 'Price: ')
+          + discountedPrice
+          + (currentLang === 'ar' ? ' ريال' : ' SAR');
+      }
+    }
 
-    // دالة فتح نافذة اختيار وسيلة الدفع
-function openQrPaymentPopup(method, msgCount) {
-  closePaymentModal(); // إغلاق نافذة الدفع الرئيسية إن كانت مفتوحة
-  const popup = document.getElementById("qr-payment-popup");
-  const qrPaymentImage = document.getElementById("qr-payment-image");
-  const paypalContainer = document.getElementById("paypal-button-container");
-  const manualPaymentForm = document.getElementById("manual-payment-form");
+    // دالة حساب السعر بعد الخصم
+    function getDiscountedPrice() {
+      if (discountApplied > 0) {
+        const discounted = Math.round(selectedPrice * (1 - discountApplied / 100));
+        return discounted;
+      }
+      return selectedPrice;
+    }
 
-  // إعادة تعيين العناصر
-  qrPaymentImage.src = "";
-  qrPaymentImage.style.display = "none";
-  paypalContainer.style.display = "none";
-  manualPaymentForm.style.display = "none";
+    // تطبيق كود الخصم
+    function applyDiscountCode() {
+      const codeInput = document.getElementById("discount-code");
+      const code = codeInput.value.trim().toUpperCase();
 
-  let selectedPaymentMethod = ""; // لضمان تسجيل طريقة الدفع بشكل صحيح
+      if (code && discountCodes[code]) {
+        discountApplied = discountCodes[code];
+        const discounted = getDiscountedPrice();
+        updatePriceDisplay(discounted);
+        alert(currentLang === 'ar'
+          ? `تم تطبيق خصم بنسبة ${discountApplied}%`
+          : `A discount of ${discountApplied}% has been applied`);
+      } else if (code) {
+        discountApplied = 0;
+        updatePriceDisplay(selectedPrice);
+        alert(currentLang === 'ar'
+          ? 'كود الخصم غير صالح.'
+          : 'Invalid discount code.');
+      }
+      // إن لم يُدخل شيء، نبقى على الوضع الأصلي
+    }
 
-  if (method.toLowerCase() === "stc pay") {
-    qrPaymentImage.src = "QRstcpay.png"; // تأكد من وجود الصورة
-    qrPaymentImage.alt = "STC Pay QR Code";
-    qrPaymentImage.style.display = "block";
-    manualPaymentForm.style.display = "block";
-    selectedPaymentMethod = "STCPay";
-  } else if (method.toLowerCase() === "alrajhi") {
-    qrPaymentImage.src = "QRalrajhi.png"; // تأكد من وجود الصورة
-    qrPaymentImage.alt = "Al Rajhi QR Code";
-    qrPaymentImage.style.display = "block";
-    manualPaymentForm.style.display = "block";
-    selectedPaymentMethod = "Rajhi";
-  } else if (method.toLowerCase() === "paypal") {
-    paypalContainer.style.display = "block"; // عرض زر باي بال
-    manualPaymentForm.style.display = "none"; // إخفاء النموذج اليدوي
-    selectedPaymentMethod = "PayPal";
-    renderPayPalButton(msgCount); // إعادة رسم زر باي بال
-  }
+    function closePaymentModal() {
+      const paymentModal = document.getElementById("payment-modal");
+      paymentModal.style.display = "none";
+      paymentModal.removeEventListener("click", outsideClickPaymentModal);
+    }
 
-  // تسجيل طريقة الدفع المختارة
-  popup.setAttribute("data-payment-method", selectedPaymentMethod);
+    function outsideClickPaymentModal(e) {
+      const box = document.querySelector("#payment-modal .popup-box");
+      if (!box.contains(e.target)) {
+        closePaymentModal();
+      }
+    }
 
-  // تسجيل الحدث للإغلاق عند الضغط خارج المحتوى
-  popup.style.display = "flex";
-  popup.addEventListener("click", outsideClickQrPayment);
-}
+    /************************************************
+     *    نافذة اختيار وسيلة الدفع (QR أو PayPal)
+     ***********************************************/
+    function openQrPaymentPopup(method, msgCount, priceAfterDiscount) {
+      closePaymentModal();
+      const popup = document.getElementById("qr-payment-popup");
+      const qrPaymentImage = document.getElementById("qr-payment-image");
+      const paypalContainer = document.getElementById("paypal-button-container");
+      const manualPaymentForm = document.getElementById("manual-payment-form");
 
+      qrPaymentImage.src = "";
+      qrPaymentImage.style.display = "none";
+      paypalContainer.style.display = "none";
+      manualPaymentForm.style.display = "none";
 
+      popup.setAttribute("data-payment-method", method);
 
+      // تعبئة حقل عدد الرسائل في الفورم اليدوي
+      document.getElementById("payment-messages").value = msgCount;
+
+      if (method.toLowerCase() === "stc pay") {
+        qrPaymentImage.src = "QRstcpay.png";
+        qrPaymentImage.alt = "STC Pay QR Code";
+        qrPaymentImage.style.display = "block";
+        manualPaymentForm.style.display = "block";
+      } else if (method.toLowerCase() === "rajhi") {
+        qrPaymentImage.src = "QRalrajhi.png";
+        qrPaymentImage.alt = "Al Rajhi QR Code";
+        qrPaymentImage.style.display = "block";
+        manualPaymentForm.style.display = "block";
+      } else if (method.toLowerCase() === "paypal") {
+        paypalContainer.style.display = "block";
+        // لاحظ أننا سنعيد رسم زر باي بال مع تمرير الرسائل والسعر بعد الخصم
+        renderPayPalButton(msgCount, priceAfterDiscount);
+      }
+
+      popup.style.display = "flex";
+      popup.addEventListener("click", outsideClickQrPayment);
+    }
 
     function outsideClickQrPayment(e) {
       const box = document.querySelector("#qr-payment-popup .popup-inner");
@@ -1109,25 +1134,25 @@ function openQrPaymentPopup(method, msgCount) {
     function closeQrPaymentPopup() {
       const popup = document.getElementById("qr-payment-popup");
       popup.style.display = "none";
-    
-      // إعادة تعيين الحقول والصورة
+
+      // إعادة تعيين
       const qrPaymentImage = document.getElementById("qr-payment-image");
       qrPaymentImage.src = "";
       qrPaymentImage.style.display = "none";
-    
+
       const paypalContainer = document.getElementById("paypal-button-container");
       paypalContainer.innerHTML = "";
       paypalContainer.style.display = "none";
-    
+
       const manualPaymentForm = document.getElementById("manual-payment-form");
       manualPaymentForm.style.display = "none";
-    
-      // إزالة الحدث لمنع التكرار
+
       popup.removeEventListener("click", outsideClickQrPayment);
     }
 
-
-    // نافذة التسجيل بالبريد
+    /************************************************
+     *   نافذة التسجيل بالبريد (التجربة المجانية)
+     ***********************************************/
     function openEmailRegistration() {
       openEmailPopup();
     }
@@ -1151,267 +1176,262 @@ function openQrPaymentPopup(method, msgCount) {
       popup.removeEventListener("click", outsideClickEmailPopup);
     }
 
+    /************************************************
+     *  توليد رقم تسلسلي عشوائي (مثال)
+     ***********************************************/
+    function generateSerialNumber() {
+      return "SN" + Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
+    }
 
-function generateSerialNumber() {
-  return "SN" + Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
-}
+    function validateEmail(email) {
+      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return regex.test(email);
+    }
 
-function validateEmail(email) {
-  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return regex.test(email);
-}
+    function submitEmail() {
+      const email = document.getElementById("email").value.trim();
+      const responseMessage = document.getElementById("response-message");
 
-function submitEmail() {
-  const email = document.getElementById("email").value.trim();
-  const responseMessage = document.getElementById("response-message");
-  
-  if (validateEmail(email)) {
-    const serialNumber = generateSerialNumber();
-    currentSerialNumber = serialNumber; // تخزين الرقم التسلسلي
-    const messageCount = 30; 
-    const language = currentLang;
+      if (validateEmail(email)) {
+        const serialNumber = generateSerialNumber();
+        currentSerialNumber = serialNumber;
+        const messageCount = 30;
+        const language = currentLang;
 
-    responseMessage.style.display = "none";
-    responseMessage.textContent = "";
+        responseMessage.style.display = "none";
+        responseMessage.textContent = "";
 
-    saveFreeRegistration(email, serialNumber, messageCount, language);
-  } else {
-    alert(currentLang === 'ar' ? "من فضلك أدخل بريدًا إلكترونيًا صالحًا" : "Please enter a valid email address");
-  }
-}
+        saveFreeRegistration(email, serialNumber, messageCount, language);
+      } else {
+        alert(currentLang === 'ar'
+          ? "من فضلك أدخل بريدًا إلكترونيًا صالحًا"
+          : "Please enter a valid email address"
+        );
+      }
+    }
 
-function saveFreeRegistration(email, serialNumber, messageCount, language) {
-  const scriptUrl = `https://script.google.com/macros/s/AKfycbyDIYnHte-Lxk633Kep3ybPczWi3FsZBajZKr2_JonOj4uz1INTlEgvLUcAYAi7eghE/exec`; // استبدل بـ FreeRegistration.gs URL
+    function saveFreeRegistration(email, serialNumber, messageCount, language) {
+      // استبدل الرابط في الأسفل برابط سكربت Google الفعلي لديك
+      const scriptUrl = `https://script.google.com/macros/s/AKfycbyDIYnHte-Lxk633Kep3ybPczWi3FsZBajZKr2_JonOj4uz1INTlEgvLUcAYAi7eghE/exec`;
 
-  // بناء الرابط مع معلمة callback
-  const callbackName = `handleFreeRegistrationResponse_${Date.now()}`;
-  const fullUrl = `${scriptUrl}?email=${encodeURIComponent(email)}&serialNumber=${encodeURIComponent(serialNumber)}&messageCount=${encodeURIComponent(messageCount)}&language=${encodeURIComponent(language)}&callback=${callbackName}`;
+      const callbackName = `handleFreeRegistrationResponse_${Date.now()}`;
+      const fullUrl = `${scriptUrl}?email=${encodeURIComponent(email)}&serialNumber=${encodeURIComponent(serialNumber)}&messageCount=${encodeURIComponent(messageCount)}&language=${encodeURIComponent(language)}&callback=${callbackName}`;
 
-  // تعريف الدالة الخاصة بالرد
-  window[callbackName] = function(data) {
-    handleFreeRegistrationResponse(data);
-    // إزالة السكربت بعد التنفيذ
-    document.body.removeChild(script);
-    delete window[callbackName];
-  };
+      window[callbackName] = function(data) {
+        handleFreeRegistrationResponse(data);
+        document.body.removeChild(script);
+        delete window[callbackName];
+      };
 
-  // إنشاء عنصر سكربت جديد
-  const script = document.createElement('script');
-  script.src = fullUrl;
-  script.onerror = function() {
-    const responseMessage = document.getElementById("response-message");
-    responseMessage.style.display = "block";
-    responseMessage.style.color = "red";
-    responseMessage.textContent = currentLang === 'ar' ? "حدث خطأ في الاتصال بالخادم. حاول مرة أخرى لاحقًا." : "An error occurred while connecting to the server. Please try again later.";
-    document.body.removeChild(script);
-    delete window[callbackName];
-  };
+      const script = document.createElement('script');
+      script.src = fullUrl;
+      script.onerror = function() {
+        const responseMessage = document.getElementById("response-message");
+        responseMessage.style.display = "block";
+        responseMessage.style.color = "red";
+        responseMessage.textContent = currentLang === 'ar'
+          ? "حدث خطأ في الاتصال بالخادم. حاول مرة أخرى لاحقًا."
+          : "An error occurred while connecting to the server. Please try again later.";
+        document.body.removeChild(script);
+        delete window[callbackName];
+      };
 
-  // إضافة السكربت إلى الصفحة
-  document.body.appendChild(script);
-}
+      document.body.appendChild(script);
+    }
 
-/**
- * الدالة التي ستستقبل البيانات من JSONP
- * @param {Object} data - البيانات المستقبلة من السكربت
- */
-function handleFreeRegistrationResponse(data) {
-  const responseMessage = document.getElementById("response-message");
-  responseMessage.style.display = "block";
-  
-  if (data.content.includes('مسجل مسبقاً') || data.content.includes('already registered')) {
-    // إذا كانت الرسالة تشير إلى تكرار البريد الإلكتروني
-    responseMessage.style.color = "red";
-  } else if (data.content.includes('تم التسجيل بنجاح') || data.content.includes('Registration successful')) {
-    // الرسالة تشير إلى نجاح التسجيل
-    responseMessage.style.color = "green";
-  } else if (data.content.includes('تمت الموافقة على الدفع') || data.content.includes('Payment approved')) {
-    // الرسالة تشير إلى موافقة الدفع
-    responseMessage.style.color = "green";
-  } else if (data.content.includes('تم رفض الدفع') || data.content.includes('Payment rejected')) {
-    // الرسالة تشير إلى رفض الدفع
-    responseMessage.style.color = "red";
-  } else {
-    // أي رسالة أخرى
-    responseMessage.style.color = "black";
-  }
-  
-  responseMessage.textContent = data.content;
-  
-  if (data.content.includes('تم التسجيل بنجاح') || data.content.includes('Registration successful') ||
-      data.content.includes('تمت الموافقة على الدفع') || data.content.includes('Payment approved')) {
-    setTimeout(() => {
-      closeEmailPopup();
-      responseMessage.textContent = "";
-    }, 3000);
-  }
-}
+    function handleFreeRegistrationResponse(data) {
+      const responseMessage = document.getElementById("response-message");
+      responseMessage.style.display = "block";
 
+      if (data.content.includes('مسجل مسبقاً') || data.content.includes('already registered')) {
+        responseMessage.style.color = "red";
+      } else if (data.content.includes('تم التسجيل بنجاح') || data.content.includes('Registration successful')) {
+        responseMessage.style.color = "green";
+      } else if (data.content.includes('تمت الموافقة على الدفع') || data.content.includes('Payment approved')) {
+        responseMessage.style.color = "green";
+      } else if (data.content.includes('تم رفض الدفع') || data.content.includes('Payment rejected')) {
+        responseMessage.style.color = "red";
+      } else {
+        responseMessage.style.color = "black";
+      }
+
+      responseMessage.textContent = data.content;
+
+      if (
+        data.content.includes('تم التسجيل بنجاح') || data.content.includes('Registration successful') ||
+        data.content.includes('تمت الموافقة على الدفع') || data.content.includes('Payment approved')
+      ) {
+        setTimeout(() => {
+          closeEmailPopup();
+          responseMessage.textContent = "";
+        }, 3000);
+      }
+    }
 
     /************************************************
      *   دمج باي بال مع باقات الدفع
      ***********************************************/
-function renderPayPalButton(msgCount) {
-  // تنظيف الحاوية قبل إعادة العرض
-  const paypalContainer = document.getElementById("paypal-button-container");
-  paypalContainer.innerHTML = '';
-  
-  paypal.Buttons({
-    createOrder: function(data, actions) {
-      // تحديد المبلغ بناءً على الباقة
-      let amount = 0;
-      let packageName = '';
-      if (msgCount === 500) {
-        amount = 24.99; // السعر الأساسي بالدولار
-        packageName = 'الباقة الأساسية';
-      } else if (msgCount === 1000) {
-        amount = 39.99; // السعر المتقدم بالدولار
-        packageName = 'الباقة المتقدمة';
-      } else if (msgCount === 2000) {
-        amount = 65.99; // السعر الاحترافي بالدولار
-        packageName = 'الباقة الاحترافية';
-      } else {
-        amount = 100; // سعر افتراضي بالدولار
-        packageName = 'باقة غير محددة';
-      }
-      
-      return actions.order.create({
-        purchase_units: [{
-          amount: {
-            value: amount.toString(), // المبلغ كـ string
-            currency_code: 'USD' // تأكد من استخدام عملة مدعومة مثل USD
-          },
-          description: `شراء ${packageName} - ${msgCount} رسالة`
-        }]
-      });
-    },
-    onApprove: function(data, actions) {
-      return actions.order.capture().then(function(details) {
-        alert(translations[currentLang]["payment-success"]);
-        // استخراج البريد الإلكتروني
-        const payerEmail = details.payer.email_address;
-        const serialNumber = generateSerialNumber();
-        const selectedMessages = msgCount; // تأكد من أن msgCount معرف بشكل صحيح
-        // إرسال بيانات الدفع بباي بال إلى سكربت جوجل
-        const url = `https://script.google.com/macros/s/AKfycbxL-urnnmQq1DsCxJn6WUmkxSqz_pKBsFmselFrPhhIOx35RVYvosYNckT1mFmPkpjW/exec`;
-        const params = new URLSearchParams();
-        params.append('email', payerEmail);
-        params.append('serialNumber', serialNumber);
-        params.append('messageCount', selectedMessages);
-        params.append('language', currentLang);
-        params.append('paymentMethod', 'PayPal');
-        
-        fetch(url, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          },
-          body: params.toString()
-        })
-        .then(response => response.json())
-        .then(data => {
-          if(data.status === 'success') {
-            console.log('Payment processed successfully.');
-          } else {
-            console.error('Error processing payment:', data.message);
-          }
-        })
-        .catch(error => {
-          console.error('Error:', error);
-        });
+    function renderPayPalButton(msgCount, discountedPrice) {
+      const paypalContainer = document.getElementById("paypal-button-container");
+      paypalContainer.innerHTML = '';
 
-        closeQrPaymentPopup();
-      });
-    },
-    onError: function(err) {
-      console.error('PayPal Checkout Error:', err);
-      alert(translations[currentLang]["faq-a2"]); // يمكن تغيير الرسالة حسب الحاجة
+      paypal.Buttons({
+        createOrder: function(data, actions) {
+          let amount = 0;
+          let packageName = '';
+          if (msgCount === 500) {
+            amount = 24.99; 
+            packageName = 'الباقة الأساسية';
+          } else if (msgCount === 1000) {
+            amount = 39.99;
+            packageName = 'الباقة المتقدمة';
+          } else if (msgCount === 2000) {
+            amount = 65.99;
+            packageName = 'الباقة الاحترافية';
+          } else {
+            amount = 100;
+            packageName = 'باقة غير محددة';
+          }
+
+          // إذا كان هناك خصم محلي (من شاشة الخصم) يمكن حسابه هنا أيضًا
+          // وللتبسيط نفترض أن السعر عند الدفع بالدولار يظل ثابتًا أو تحوله بنفس النسبة
+          // في حالة أردت تطبيق نسبة الخصم نفسها في باي بال بالدولار:
+          if (discountedPrice && discountedPrice < selectedPrice) {
+            // احسب نسبة تخفيض بناء على السعر الريالي
+            // أو فقط قلل المبلغ الأمريكي بنفس النسبة. (مثال تقريبي)
+            const ratio = discountedPrice / selectedPrice;
+            amount = (amount * ratio).toFixed(2);
+          }
+
+          return actions.order.create({
+            purchase_units: [{
+              amount: {
+                value: amount.toString(),
+                currency_code: 'USD'
+              },
+              description: `شراء ${packageName} - ${msgCount} رسالة`
+            }]
+          });
+        },
+        onApprove: function(data, actions) {
+          return actions.order.capture().then(function(details) {
+            alert(translations[currentLang]["payment-success"]);
+
+            const payerEmail = details.payer.email_address;
+            const serialNumber = generateSerialNumber();
+            const url = `https://script.google.com/macros/s/AKfycbxL-urnnmQq1DsCxJn6WUmkxSqz_pKBsFmselFrPhhIOx35RVYvosYNckT1mFmPkpjW/exec`;
+            const params = new URLSearchParams();
+            params.append('email', payerEmail);
+            params.append('serialNumber', serialNumber);
+            params.append('messageCount', msgCount);
+            params.append('language', currentLang);
+            params.append('paymentMethod', 'PayPal');
+
+            fetch(url, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+              },
+              body: params.toString()
+            })
+            .then(response => response.json())
+            .then(data => {
+              if(data.status === 'success') {
+                console.log('Payment processed successfully.');
+              } else {
+                console.error('Error processing payment:', data.message);
+              }
+            })
+            .catch(error => {
+              console.error('Error:', error);
+            });
+
+            closeQrPaymentPopup();
+          });
+        },
+        onError: function(err) {
+          console.error('PayPal Checkout Error:', err);
+          alert(translations[currentLang]["faq-a2"]); 
+        }
+      }).render('#paypal-button-container');
     }
-  }).render('#paypal-button-container');
-}
 
     /************************************************
-     *        التعامل مع بيانات الدفع الناجح
+     *        التعامل مع بيانات الدفع اليدوي
      ***********************************************/
-async function submitPaymentProof() {
-  const name = document.getElementById("payment-name").value.trim();
-  const email = document.getElementById("payment-email").value.trim();
-  const phoneNumber = document.getElementById("payment-phone").value.trim();
-  const messagesCount = document.getElementById("payment-messages").value.trim();
-  const file = document.getElementById("payment-file").files[0];
-  const paymentMethod = document.getElementById("qr-payment-popup").getAttribute("data-payment-method");
-  const resultDiv = document.getElementById("qr-payment-result");
+    async function submitPaymentProof() {
+      const name = document.getElementById("payment-name").value.trim();
+      const email = document.getElementById("payment-email").value.trim();
+      const phoneNumber = document.getElementById("payment-phone").value.trim();
+      const messagesCount = document.getElementById("payment-messages").value.trim();
+      const file = document.getElementById("payment-file").files[0];
+      const paymentMethod = document.getElementById("qr-payment-popup").getAttribute("data-payment-method");
+      const resultDiv = document.getElementById("qr-payment-result");
 
-  if (!name || !email || !phoneNumber || !messagesCount || !file) {
-    alert(currentLang === 'ar' 
-      ? "الرجاء تعبئة جميع الحقول وإرفاق الملف!" 
-      : "Please fill out all fields and attach the file!"
-    );
-    return;
-  }
-  if (!validateEmail(email)) {
-    alert(currentLang === 'ar' 
-      ? "من فضلك أدخل بريدًا إلكترونيًا صالحًا" 
-      : "Please enter a valid email address"
-    );
-    return;
-  }
-
-  const reader = new FileReader();
-  reader.readAsDataURL(file);
-  reader.onload = async function () {
-    const base64Data = reader.result.split(',')[1]; // Extract Base64 part
-    // تأكد من الحجم المناسب
-    if (base64Data.length > 15000) { 
-      alert(currentLang === 'ar' 
-        ? "الإيصال كبير جدًا. الرجاء استخدام ملف أصغر." 
-        : "The receipt is too large. Please use a smaller file."
-      );
-      return;
-    }
-
-    // سكربت الدفع الموحّد:
-    const scriptUrl = "https://script.google.com/macros/s/AKfycbxb8Wt6dy_R_7ntOJ6tu0uhV5UtQjJ3MamyiZ1VNIUbUslbDulTJr7FpxFQdC5Nv3Nc/exec";
-    // نمرّر action=submit
-    const fullUrl = scriptUrl
-      + "?action=submit"
-      + "&name=" + encodeURIComponent(name)
-      + "&email=" + encodeURIComponent(email)
-      + "&phoneNumber=" + encodeURIComponent(phoneNumber)
-      + "&messageCount=" + encodeURIComponent(messagesCount)
-      + "&language=" + encodeURIComponent(currentLang)
-      + "&paymentMethod=" + encodeURIComponent(paymentMethod)
-      + "&paymentFile=" + encodeURIComponent(base64Data);
-
-    try {
-      const res = await fetch(fullUrl, { method: 'GET' });
-      const data = await res.json();
-
-      if (data.status === 'success') {
-        resultDiv.style.color = "green";
-        resultDiv.textContent = data.content;  // مثلاً "تم إرسال طلب الدفع للإدارة..."
-        // بعد ثوانٍ يمكن إغلاق النافذة المنبثقة:
-        setTimeout(() => {
-          closeQrPaymentPopup();
-          resultDiv.textContent = '';
-        }, 5000);
-      } else {
-        resultDiv.style.color = "red";
-        resultDiv.textContent = data.content || (currentLang === 'ar' ? 'حدث خطأ!' : 'An error occurred!');
+      if (!name || !email || !phoneNumber || !messagesCount || !file) {
+        alert(currentLang === 'ar' 
+          ? "الرجاء تعبئة جميع الحقول وإرفاق الملف!" 
+          : "Please fill out all fields and attach the file!"
+        );
+        return;
       }
-    } catch (err) {
-      alert(currentLang === 'ar' ? 'خطأ في الاتصال بالسيرفر.' : 'Server connection error.');
-      console.error(err);
+      if (!validateEmail(email)) {
+        alert(currentLang === 'ar' 
+          ? "من فضلك أدخل بريدًا إلكترونيًا صالحًا" 
+          : "Please enter a valid email address"
+        );
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = async function () {
+        const base64Data = reader.result.split(',')[1]; 
+        if (base64Data.length > 1500000) { 
+          alert(currentLang === 'ar' 
+            ? "الإيصال كبير جدًا. الرجاء استخدام ملف أصغر." 
+            : "The receipt is too large. Please use a smaller file."
+          );
+          return;
+        }
+
+        // استبدل الرابط في الأسفل برابط سكربت Google الفعلي لديك
+        const scriptUrl = "https://script.google.com/macros/s/AKfycbxb8Wt6dy_R_7ntOJ6tu0uhV5UtQjJ3MamyiZ1VNIUbUslbDulTJr7FpxFQdC5Nv3Nc/exec";
+        const fullUrl = scriptUrl
+          + "?action=submit"
+          + "&name=" + encodeURIComponent(name)
+          + "&email=" + encodeURIComponent(email)
+          + "&phoneNumber=" + encodeURIComponent(phoneNumber)
+          + "&messageCount=" + encodeURIComponent(messagesCount)
+          + "&language=" + encodeURIComponent(currentLang)
+          + "&paymentMethod=" + encodeURIComponent(paymentMethod)
+          + "&paymentFile=" + encodeURIComponent(base64Data);
+
+        try {
+          const res = await fetch(fullUrl, { method: 'GET' });
+          const data = await res.json();
+
+          if (data.status === 'success') {
+            resultDiv.style.color = "green";
+            resultDiv.textContent = data.content;
+            setTimeout(() => {
+              closeQrPaymentPopup();
+              resultDiv.textContent = '';
+            }, 5000);
+          } else {
+            resultDiv.style.color = "red";
+            resultDiv.textContent = data.content || (currentLang === 'ar' ? 'حدث خطأ!' : 'An error occurred!');
+          }
+        } catch (err) {
+          alert(currentLang === 'ar' ? 'خطأ في الاتصال بالسيرفر.' : 'Server connection error.');
+          console.error(err);
+        }
+      };
+      reader.onerror = function (error) {
+        alert(currentLang === 'ar' ? 'حدث خطأ أثناء قراءة الملف.' : 'An error occurred while reading the file.');
+        console.error('Error: ', error);
+      };
     }
-  };
-  reader.onerror = function (error) {
-    alert(currentLang === 'ar' ? 'حدث خطأ أثناء قراءة الملف.' : 'An error occurred while reading the file.');
-    console.error('Error: ', error);
-  };
-}
-
-
-
   </script>
 </body>
 </html>
