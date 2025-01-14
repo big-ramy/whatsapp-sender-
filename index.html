@@ -851,8 +851,6 @@
     let currentSerialNumber = null; // لتخزين الرقم التسلسلي
     let selectedMessages = 0; // لتخزين عدد الرسائل
     let selectedPrice = 0; // لتخزين السعر الأصلي أو المحدث
-    let appliedDiscountCode = ""; // متغير للاحتفاظ بكود الخصم المُطبَّق
-
 
     // كائن أكواد الخصم وقيمها (نسبة مئوية مثلاً)
     const discountCodes = {
@@ -1055,28 +1053,23 @@
     function applyDiscountCode() {
       const codeInput = document.getElementById("discount-code");
       const code = codeInput.value.trim().toUpperCase();
-    
+
       if (code && discountCodes[code]) {
         discountApplied = discountCodes[code];
-        appliedDiscountCode = code;  // <--- حفظ الكود هنا
         const discounted = getDiscountedPrice();
         updatePriceDisplay(discounted);
         alert(currentLang === 'ar'
           ? `تم تطبيق خصم بنسبة ${discountApplied}%`
-          : `A discount of ${discountApplied}% has been applied`
-        );
+          : `A discount of ${discountApplied}% has been applied`);
       } else if (code) {
         discountApplied = 0;
-        appliedDiscountCode = ""; // إعادة التعيين
         updatePriceDisplay(selectedPrice);
         alert(currentLang === 'ar'
           ? 'كود الخصم غير صالح.'
-          : 'Invalid discount code.'
-        );
+          : 'Invalid discount code.');
       }
       // إن لم يُدخل شيء، نبقى على الوضع الأصلي
     }
-
 
     function closePaymentModal() {
       const paymentModal = document.getElementById("payment-modal");
@@ -1100,7 +1093,6 @@
       const qrPaymentImage = document.getElementById("qr-payment-image");
       const paypalContainer = document.getElementById("paypal-button-container");
       const manualPaymentForm = document.getElementById("manual-payment-form");
-      
 
       qrPaymentImage.src = "";
       qrPaymentImage.style.display = "none";
@@ -1108,7 +1100,8 @@
       manualPaymentForm.style.display = "none";
 
       popup.setAttribute("data-payment-method", method);
-      popup.setAttribute("data-discount-code", appliedDiscountCode || "");
+        // خزن كود الخصم أيضًا في الـ data-attribute
+      popup.setAttribute("data-discount-code", discountApplied || "");
 
       // تعبئة حقل عدد الرسائل في الفورم اليدوي
       document.getElementById("payment-messages").value = msgCount;
@@ -1375,8 +1368,9 @@
       const messagesCount = document.getElementById("payment-messages").value.trim();
       const file = document.getElementById("payment-file").files[0];
       const paymentMethod = document.getElementById("qr-payment-popup").getAttribute("data-payment-method");
+        // جلب كود الخصم من الخاصية
+      const discountCode = document.getElementById("qr-payment-popup").getAttribute("data-discount-code");
       const resultDiv = document.getElementById("qr-payment-result");
-      const discountCode = popup.getAttribute("data-discount-code");
 
       if (!name || !email || !phoneNumber || !messagesCount || !file) {
         alert(currentLang === 'ar' 
@@ -1415,7 +1409,7 @@
           + "&messageCount=" + encodeURIComponent(messagesCount)
           + "&language=" + encodeURIComponent(currentLang)
           + "&paymentMethod=" + encodeURIComponent(paymentMethod)
-          + "&discountCode=" + encodeURIComponent(discountCode) // <--- أرسل كود الخصم للسكربت
+          + "&discountCode=" + encodeURIComponent(discountCode)
           + "&paymentFile=" + encodeURIComponent(base64Data);
 
         try {
