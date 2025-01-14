@@ -851,10 +851,12 @@
     let currentSerialNumber = null; // لتخزين الرقم التسلسلي
     let selectedMessages = 0; // لتخزين عدد الرسائل
     let selectedPrice = 0; // لتخزين السعر الأصلي أو المحدث
+    let appliedDiscountCode = ""; // متغير للاحتفاظ بكود الخصم المُطبَّق
+
 
     // كائن أكواد الخصم وقيمها (نسبة مئوية مثلاً)
     const discountCodes = {
-      "RAMY10": 50,    // خصم 50%
+      "RAMY50": 50,    // خصم 50%
       "OFFER20": 20,   // خصم 20%
       // يمكنك إضافة أو تعديل كما تشاء
     };
@@ -1093,6 +1095,7 @@
       const qrPaymentImage = document.getElementById("qr-payment-image");
       const paypalContainer = document.getElementById("paypal-button-container");
       const manualPaymentForm = document.getElementById("manual-payment-form");
+      const popup = document.getElementById("qr-payment-popup");
 
       qrPaymentImage.src = "";
       qrPaymentImage.style.display = "none";
@@ -1100,6 +1103,7 @@
       manualPaymentForm.style.display = "none";
 
       popup.setAttribute("data-payment-method", method);
+      popup.setAttribute("data-discount-code", appliedDiscountCode || "");
 
       // تعبئة حقل عدد الرسائل في الفورم اليدوي
       document.getElementById("payment-messages").value = msgCount;
@@ -1367,6 +1371,7 @@
       const file = document.getElementById("payment-file").files[0];
       const paymentMethod = document.getElementById("qr-payment-popup").getAttribute("data-payment-method");
       const resultDiv = document.getElementById("qr-payment-result");
+      const discountCode = popup.getAttribute("data-discount-code");
 
       if (!name || !email || !phoneNumber || !messagesCount || !file) {
         alert(currentLang === 'ar' 
@@ -1405,6 +1410,7 @@
           + "&messageCount=" + encodeURIComponent(messagesCount)
           + "&language=" + encodeURIComponent(currentLang)
           + "&paymentMethod=" + encodeURIComponent(paymentMethod)
+          + "&discountCode=" + encodeURIComponent(discountCode) // <--- أرسل كود الخصم للسكربت
           + "&paymentFile=" + encodeURIComponent(base64Data);
 
         try {
