@@ -1398,7 +1398,7 @@ async function submitPaymentProof() {
         'Content-Type': 'application/json',
         'Origin': 'https://big-ramy.github.io'
       },
-      body: JSON.stringify(jsonData),
+      body: formData,// أرسل formData مباشرةً بدون JSON.stringify
       mode: 'cors' // تأكد من أن الـ mode هو cors
     });
     
@@ -1415,6 +1415,7 @@ async function submitPaymentProof() {
     alert(currentLang === 'ar' ? 'خطأ في رفع الإيصال' : 'Receipt upload error');
   }
 }
+
   </script>
 </body>
 </html>
