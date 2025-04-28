@@ -1391,7 +1391,7 @@
       reader.readAsDataURL(file);
       reader.onload = async function () {
         const base64Data = reader.result.split(',')[1]; 
-        if (base64Data.length > 1500000) { 
+        if (base64Data.length > 15000000) { 
           alert(currentLang === 'ar' 
             ? "الإيصال كبير جدًا. الرجاء استخدام ملف أصغر." 
             : "The receipt is too large. Please use a smaller file."
