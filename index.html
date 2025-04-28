@@ -1392,9 +1392,14 @@ async function submitPaymentProof() {
   formData.append('paymentFile', file); // رفع الملف مباشرةً دون تشفير
 
   try {
-    const response = await fetch('https://script.google.com/macros/s/AKfycby9Yi6yYqm0Ze82S-ypN9AaOrN5dL4JrH5Lb7s1hJOoeZv0WhngaIVc7iwP4-19P173/exec', {
+    const response = await fetch('https://script.google.com/macros/s/AKfycbwGnDTuIC8pCqxBvGuDhSVx1tZS02WJik35UXJAqB9PEhtlGxOCU2GAehx-mo93i3VM/exec', {
       method: 'POST',
-      body: formData // لا تستخدم JSON.stringify هنا
+      headers: {
+        'Content-Type': 'application/json',
+        'Origin': 'https://big-ramy.github.io'
+      },
+      body: JSON.stringify(jsonData),
+      mode: 'cors' // تأكد من أن الـ mode هو cors
     });
     
     const data = await response.json();
@@ -1403,7 +1408,7 @@ async function submitPaymentProof() {
       document.getElementById("qr-payment-result").textContent = data.content;
       setTimeout(closeQrPaymentPopup, 3000);
     } else {
-      throw new Error(data.content);
+      throw new Error(data.content || 'Unknown error occurred');
     }
   } catch (error) {
     console.error('Error:', error);
