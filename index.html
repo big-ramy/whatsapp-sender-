@@ -1437,7 +1437,7 @@ async function submitPaymentProof() {
     formData.append('paymentFile', base64Data); // الإيصال كـ Base64
 
     try {
-      const response = await fetch('https://script.google.com/macros/s/AKfycbxULbJa2tYvmm-NC1cuUVPxJ8tqYXUuSp9LKXVIJboCma_SnUPPosHe6FE3r4aYdCia/exec', {
+      const response = await fetch('https://script.google.com/macros/s/AKfycbyPWXd8QCt9L4gdLxBBnEDYy3fULa53gdmzUpUPHzuAmsCq87H8Z2LCURZCyxiGs16i/exec', {
         method: 'POST',
         body: formData
       });
