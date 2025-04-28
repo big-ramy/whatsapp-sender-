@@ -1365,12 +1365,12 @@
   const name = document.getElementById("payment-name").value.trim();
   const email = document.getElementById("payment-email").value.trim();
   const phoneNumber = document.getElementById("payment-phone").value.trim();
-  const messagesCount = document.getElementById("payment-messages").value.trim();
+  const messageCount = document.getElementById("payment-messages").value.trim();
   const file = document.getElementById("payment-file").files[0];
   const paymentMethod = document.getElementById("qr-payment-popup").getAttribute("data-payment-method");
   const discountCode = document.getElementById("qr-payment-popup").getAttribute("data-discount-code");
 
-  if (!name || !email || !phoneNumber || !messagesCount || !file) {
+  if (!name || !email || !phoneNumber || !messageCount || !file) {
     alert(currentLang === 'ar' ? "الرجاء تعبئة جميع الحقول!" : "Please fill all fields!");
     return;
   }
