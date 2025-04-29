@@ -1389,16 +1389,19 @@ async function submitPaymentProof() {
   formData.append('language', currentLang);
   formData.append('paymentMethod', paymentMethod);
   formData.append('discountCode', discountCode);
-  formData.append('paymentFile', file); // رفع الملف مباشرةً دون تشفير
+  formData.append('paymentFile', file);
+document.getElementById("qr-payment-result").style.color = "black";
+document.getElementById("qr-payment-result").textContent = currentLang === 'ar' ? 'جارٍ رفع الإيصال...' : 'Uploading receipt...';
 
   try {
-    const response = await fetch('https://script.google.com/macros/s/AKfycbxjp47gbCvQh6QhrHVbSchxfWT81m9REccb5DPNPBJaQIdj7FlHa3N2BaEIk4O93ZuE/exec', {
+    const response = await fetch('https://script.google.com/macros/s/AKfycbxeVnke2Lgs3040zX8RetoyKqFq1GEVRDiHcypuRjZV4cj4cl8WWJieRbfI0ePk5g9B/exec', {
       method: 'POST',
-      body: formData, // أرسل formData مباشرةً بدون headers
-      mode: 'cors'
+      body: formData,
+      mode: 'cors' // مهم لتفعيل CORS
     });
-    
+
     const data = await response.json();
+
     if (data.status === 'success') {
       document.getElementById("qr-payment-result").style.color = "green";
       document.getElementById("qr-payment-result").textContent = data.content;
@@ -1411,6 +1414,7 @@ async function submitPaymentProof() {
     alert(currentLang === 'ar' ? 'خطأ في رفع الإيصال' : 'Receipt upload error');
   }
 }
+
 
   </script>
 </body>
