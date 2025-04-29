@@ -1403,7 +1403,7 @@ async function submitPaymentProof() {
     }));
     formData.append("file", file);
 
-    const response = await fetch("https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec", {
+    const response = await fetch("https://script.google.com/macros/s/AKfycbyIgkWBSyhTYffKZbFfivf1nSS2hlgxgMY9k88Db1fVFVpy1ftZzXNySG4N0zEyq3Sd/exec", {
       method: 'POST',
       body: file, // فقط الملف
       mode: 'cors',
