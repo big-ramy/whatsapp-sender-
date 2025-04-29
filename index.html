@@ -1361,6 +1361,7 @@
     /************************************************
      *        التعامل مع بيانات الدفع اليدوي
      ***********************************************/
+
 async function submitPaymentProof() {
   const name = document.getElementById("payment-name").value.trim();
   const email = document.getElementById("payment-email").value.trim();
@@ -1380,28 +1381,39 @@ async function submitPaymentProof() {
     return;
   }
 
-  const formData = new FormData();
-  formData.append('action', 'upload_receipt');
-  formData.append('name', name);
-  formData.append('email', email);
-  formData.append('phoneNumber', phoneNumber);
-  formData.append('messageCount', messageCount);
-  formData.append('language', currentLang);
-  formData.append('paymentMethod', paymentMethod);
-  formData.append('discountCode', discountCode);
-  formData.append('paymentFile', file);
-document.getElementById("qr-payment-result").style.color = "black";
-document.getElementById("qr-payment-result").textContent = currentLang === 'ar' ? 'جارٍ رفع الإيصال...' : 'Uploading receipt...';
-
+    document.getElementById("qr-payment-result").style.color = "black";
+    document.getElementById("qr-payment-result").textContent = currentLang === 'ar' ? 'جارٍ رفع الإيصال...' : 'Uploading receipt...';
+  
   try {
-    const response = await fetch('https://script.google.com/macros/s/AKfycbxeVnke2Lgs3040zX8RetoyKqFq1GEVRDiHcypuRjZV4cj4cl8WWJieRbfI0ePk5g9B/exec', {
+    // طلب GET لتجاوز الـ CORS Preflight
+    await fetch('https://script.google.com/macros/s/AKfycbyIgkWBSyhTYffKZbFfivf1nSS2hlgxgMY9k88Db1fVFVpy1ftZzXNySG4N0zEyq3Sd/exec?_cors=true', {
+      method: 'GET',
+      mode: 'cors'
+    });
+
+    const formData = new FormData();
+    formData.append("payload", JSON.stringify({
+      name,
+      email,
+      phoneNumber,
+      messageCount,
+      paymentMethod,
+      discountCode,
+      language: currentLang
+    }));
+    formData.append("file", file);
+
+    const response = await fetch("https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec", {
       method: 'POST',
-      body: formData,
-      mode: 'cors' // مهم لتفعيل CORS
+      body: file, // فقط الملف
+      mode: 'cors',
+      headers: {
+        // البيانات ترسل كسلسلة في الرابط (parameter)
+        // لا تضف Content-Type، المتصفح سيحددها تلقائيًا
+      },
     });
 
     const data = await response.json();
-
     if (data.status === 'success') {
       document.getElementById("qr-payment-result").style.color = "green";
       document.getElementById("qr-payment-result").textContent = data.content;
@@ -1410,10 +1422,11 @@ document.getElementById("qr-payment-result").textContent = currentLang === 'ar' 
       throw new Error(data.content || 'Unknown error occurred');
     }
   } catch (error) {
-    console.error('Error:', error);
+    console.error("Error:", error);
     alert(currentLang === 'ar' ? 'خطأ في رفع الإيصال' : 'Receipt upload error');
   }
 }
+
 
 
   </script>
