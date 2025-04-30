@@ -693,7 +693,9 @@
         <label data-translate="attachment">أرفق إيصال الدفع (صورة / PDF):</label>
         <input type="file" id="payment-file" accept="image/*,application/pdf" class="form-control mb-3" />
 
-        <button class="btn btn-primary w-100" onclick="submitPaymentProof()" data-translate="submit">إرسال</button>
+            <button class="btn btn-primary w-100" id="submit-payment-proof">
+        <span data-translate="qr-payment-submit">إرسال</span>
+    </button>
         <div id="qr-payment-result" style="margin-top:10px; color:green;"></div>
       </div>
     </div>
@@ -1363,99 +1365,118 @@
     /************************************************
      *        التعامل مع بيانات الدفع اليدوي
      ***********************************************/
-async function submitPaymentProof() {
-    const name = document.getElementById("payment-name").value.trim();
-    const email = document.getElementById("payment-email").value.trim();
-    const phoneNumber = document.getElementById("payment-phone").value.trim();
-    const messagesCount = document.getElementById("payment-messages").value.trim();
-    const file = document.getElementById("payment-file").files[0];
-    const paymentMethod = document.getElementById("qr-payment-popup").getAttribute("data-payment-method");
-    const discountCode = document.getElementById("qr-payment-popup").getAttribute("data-discount-code");
-    const resultDiv = document.getElementById("qr-payment-result");
 
-    if (!name || !email || !phoneNumber || !messagesCount || !file) {
-        alert(currentLang === 'ar'
-            ? "الرجاء تعبئة جميع الحقول وإرفاق الملف!"
-            : "Please fill out all fields and attach the file!"
-        );
-        return;
-    }
-    if (!validateEmail(email)) {
-        alert(currentLang === 'ar'
-            ? "من فضلك أدخل بريدًا إلكترونيًا صالحًا"
-            : "Please enter a valid email address"
-        );
-        return;
-    }
+        // قم بتخزين عناصر DOM في متغيرات للوصول بشكل أسرع
+        const paymentNameInput = document.getElementById("payment-name");
+        const paymentEmailInput = document.getElementById("payment-email");
+        const paymentPhoneInput = document.getElementById("payment-phone");
+        const paymentMessagesInput = document.getElementById("payment-messages");
+        const paymentFileInput = document.getElementById("payment-file");
+        const qrPaymentPopup = document.getElementById("qr-payment-popup");
+        const qrPaymentResultDiv = document.getElementById("qr-payment-result");
+        const submitPaymentProofButton = document.getElementById("submit-payment-proof");
 
-    if (file.size > 15000000) { // فحص حجم الملف مباشرة
-        alert(currentLang === 'ar'
-            ? "الإيصال كبير جدًا. الرجاء استخدام ملف أصغر."
-            : "The receipt is too large. Please use a smaller file."
-        );
-        return;
-    }
-
-    const scriptUrl = "https://script.google.com/macros/s/AKfycbyyo3ofBWEAq0JQPbxkjwQzq-1Y2Gh13Vf5PhIMqJMh2_2Y_T3rE5V8ZDqYLtuFQs4k/exec"; // استخدم رابط تطبيق الويب الخاص بك
-
-    const formData = new FormData();
-    formData.append("action", "submit");
-    formData.append("name", name);
-    formData.append("email", email);
-    formData.append("phoneNumber", phoneNumber);
-    formData.append("messageCount", messagesCount);
-    formData.append("language", currentLang);
-    formData.append("paymentMethod", paymentMethod);
-    formData.append("discountCode", discountCode);
-
-    console.log("File object:", file);
-    console.log("File name:", file ? file.name : null);
-    console.log("File type:", file ? file.type : null);
-    console.log("File size:", file ? file.size : 0);
-
-    if (file) {
-        try {
-            const buffer = await file.arrayBuffer();
-            const blob = new Blob([buffer], { type: file.type });
-            formData.append("paymentFile", blob, file.name);
-            console.log("File added to FormData as Blob:", blob);
-        } catch (error) {
-            console.error("Error reading file:", error);
-            alert(currentLang === 'ar' ? "حدث خطأ أثناء قراءة الملف." : "An error occurred while reading the file.");
-            return;
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
         }
-    } else {
-        console.log("No file selected.");
-    }
 
-    // إضافة تسجيل للتحقق من محتويات formData قبل الإرسال
-    for (const pair of formData.entries()) {
-        console.log("FormData Entry:", pair[0] + ', ' + pair[1]);
-    }
+        async function submitPaymentProof(event) {
+            event.preventDefault(); // منع الإرسال التقليدي للنموذج
 
-    try {
-        const res = await fetch(scriptUrl, {
-            method: 'POST',
-            body: formData, // إرسال FormData في نص الطلب
-        });
-        const data = await res.json();
+            const name = paymentNameInput.value.trim();
+            const email = paymentEmailInput.value.trim();
+            const phoneNumber = paymentPhoneInput.value.trim();
+            const messagesCount = paymentMessagesInput.value.trim();
+            const file = paymentFileInput.files[0];
+            const paymentMethod = qrPaymentPopup.getAttribute("data-payment-method");
+            const discountCode = qrPaymentPopup.getAttribute("data-discount-code");
 
-        if (data.status === 'success') {
-            resultDiv.style.color = "green";
-            resultDiv.textContent = data.content;
-            setTimeout(() => {
-                closeQrPaymentPopup();
-                resultDiv.textContent = '';
-            }, 5000);
-        } else {
-            resultDiv.style.color = "red";
-            resultDiv.textContent = data.content || (currentLang === 'ar' ? 'حدث خطأ!' : 'An error occurred!');
+            console.log("Starting submitPaymentProof function");
+            console.log("Name:", name);
+            console.log("Email:", email);
+            console.log("Phone Number:", phoneNumber);
+            console.log("Messages Count:", messagesCount);
+            console.log("File:", file);
+            console.log("Payment Method:", paymentMethod);
+            console.log("Discount Code:", discountCode);
+
+            if (!name || !email || !phoneNumber || !messagesCount || !file) {
+                alert(currentLang === 'ar'
+                    ? "الرجاء تعبئة جميع الحقول وإرفاق الملف!"
+                    : "Please fill out all fields and attach the file!"
+                );
+                return;
+            }
+            if (!validateEmail(email)) {
+                alert(currentLang === 'ar'
+                    ? "من فضلك أدخل بريدًا إلكترونيًا صالحًا"
+                    : "Please enter a valid email address"
+                );
+                return;
+            }
+
+            if (file.size > 15000000) { // فحص حجم الملف مباشرة
+                alert(currentLang === 'ar'
+                    ? "الإيصال كبير جدًا. الرجاء استخدام ملف أصغر."
+                    : "The receipt is too large. Please use a smaller file."
+                );
+                return;
+            }
+
+            const scriptUrl = "https://script.google.com/macros/s/AKfycbzXYZb6rcGp6pXjlH9wOpi3KpsTyV8Ld-Vpgmu63Ozw1BvKElYhIKke2OON15m9L21V/exec";
+
+            try {
+                const formData = new FormData();
+                formData.append("action", "submit");
+                formData.append("name", name);
+                formData.append("email", email);
+                formData.append("phoneNumber", phoneNumber);
+                formData.append("messageCount", messagesCount);
+                formData.append("language", currentLang);
+                formData.append("paymentMethod", paymentMethod);
+                formData.append("discountCode", discountCode);
+
+                const buffer = await file.arrayBuffer();
+                const blob = new Blob([buffer], { type: file.type });
+                formData.append("paymentFile", blob, file.name);
+                console.log("File added to FormData as Blob:", blob);
+
+                for (const pair of formData.entries()) {
+                    console.log("FormData Entry:", pair[0] + ', ' + pair[1]);
+                }
+
+                const res = await fetch(scriptUrl, {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if (!res.ok) {
+                    throw new Error(`HTTP error! status: ${res.status}`);
+                }
+
+                const data = await res.json();
+
+                if (data.status === 'success') {
+                    qrPaymentResultDiv.style.color = "green";
+                    qrPaymentResultDiv.textContent = data.content;
+                    setTimeout(() => {
+                        closeQrPaymentPopup();
+                        qrPaymentResultDiv.textContent = '';
+                    }, 5000);
+                } else {
+                    qrPaymentResultDiv.style.color = "red";
+                    qrPaymentResultDiv.textContent = data.content || (currentLang === 'ar' ? 'حدث خطأ!' : 'An error occurred!');
+                }
+            } catch (err) {
+                console.error("Fetch error:", err);
+                alert(currentLang === 'ar' ? 'خطأ في الاتصال بالسيرفر.' : 'Server connection error.');
+            }
         }
-    } catch (err) {
-        alert(currentLang === 'ar' ? 'خطأ في الاتصال بالسيرفر.' : 'Server connection error.');
-        console.error(err);
-    }
-}
+
+        // قم بتعيين معالج الأحداث لزر الإرسال
+        submitPaymentProofButton.addEventListener('click', submitPaymentProof);
+
   </script>
 </body>
 </html>
