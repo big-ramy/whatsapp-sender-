@@ -1362,27 +1362,30 @@
      *        التعامل مع بيانات الدفع اليدوي
      ***********************************************/
 async function uploadFileToDrive(file) {
+  const apiKey = "AIzaSyDwgNwxiNyWtcvVgs5HCCVHJwh6PZizCLc"; // استبدل بمفتاح API الخاص بك
+  const folderId = "1VOMZ8LWlYOWqIZKOsCPp9Q2pvxcTO6cr"; // استبدل بمعرّف المجلد في Google Drive
+
+  const formData = new FormData();
+  formData.append("metadata", new Blob([JSON.stringify({
+    name: file.name,
+    parents: [folderId]
+  })], { type: "application/json" }));
+  formData.append("file", file);
+
   try {
-    const folderId = "1VOMZ8LWlYOWqIZKOsCPp9Q2pvxcTO6cr"; // معرّف المجلد
-    const metadata = {
-      name: file.name,
-      parents: [folderId],
-    };
-
-    const formData = new FormData();
-    formData.append("metadata", new Blob([JSON.stringify(metadata)], { type: "application/json" }));
-    formData.append("file", file);
-
-    const response = await fetch(`https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&key=AIzaSyDwgNwxiNyWtcvVgs5HCCVHJwh6PZizCLc`, {
+    const response = await fetch(`https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&key=${apiKey}`, {
       method: "POST",
-      body: formData,
+      headers: {
+        Authorization: "Bearer YOUR_ACCESS_TOKEN" // استبدل برمز الوصول الخاص بك
+      },
+      body: formData
     });
 
     const data = await response.json();
-    if (response.ok) {
-      return data.webContentLink; // رابط الملف المرفوع
+    if (data.id) {
+      return `https://drive.google.com/file/d/${data.id}/view?usp=sharing`;
     } else {
-      throw new Error(data.error.message);
+      throw new Error("Failed to upload file.");
     }
   } catch (error) {
     console.error("Error uploading file:", error);
@@ -1394,59 +1397,66 @@ async function submitPaymentProof() {
   const name = document.getElementById("payment-name").value.trim();
   const email = document.getElementById("payment-email").value.trim();
   const phoneNumber = document.getElementById("payment-phone").value.trim();
-  const messageCount = document.getElementById("payment-messages").value.trim();
+  const messagesCount = document.getElementById("payment-messages").value.trim();
   const file = document.getElementById("payment-file").files[0];
   const paymentMethod = document.getElementById("qr-payment-popup").getAttribute("data-payment-method");
   const discountCode = document.getElementById("qr-payment-popup").getAttribute("data-discount-code");
+  const resultDiv = document.getElementById("qr-payment-result");
 
-  if (!name || !email || !phoneNumber || !messageCount || !file) {
-    alert(currentLang === 'ar' ? "الرجاء تعبئة جميع الحقول!" : "Please fill all fields!");
+  if (!name || !email || !phoneNumber || !messagesCount || !file) {
+    alert(currentLang === 'ar' 
+      ? "الرجاء تعبئة جميع الحقول وإرفاق الملف!" 
+      : "Please fill out all fields and attach the file!"
+    );
     return;
   }
 
   if (!validateEmail(email)) {
-    alert(currentLang === 'ar' ? "البريد الإلكتروني غير صالح!" : "Invalid email!");
+    alert(currentLang === 'ar' 
+      ? "من فضلك أدخل بريدًا إلكترونيًا صالحًا" 
+      : "Please enter a valid email address"
+    );
     return;
   }
-
-  document.getElementById("qr-payment-result").style.color = "black";
-  document.getElementById("qr-payment-result").textContent = currentLang === 'ar' ? 'جارٍ رفع الإيصال...' : 'Uploading receipt...';
 
   try {
     // رفع الملف إلى Google Drive
     const fileUrl = await uploadFileToDrive(file);
 
-    // إرسال البيانات إلى السكربت الخلفي
-    const response = await fetch("https://script.google.com/macros/s/AKfycbw5GehB9OaUugVu7SZkMC5OM1tcjic66z5cg7b1o5fHkbXrM7UzdI8dvlItgPtNqK4/exec", {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        payload: {
-          name,
-          email,
-          phoneNumber,
-          messageCount,
-          paymentMethod,
-          discountCode,
-          language: currentLang,
-          fileUrl: fileUrl // إرسال الرابط فقط
-        }
-      })
+    // إرسال الرابط إلى السكربت
+    const scriptUrl = "https://script.google.com/macros/s/AKfycbwn4mjlL0h_bT-E6JmahRyfYTflxduxq6yab66nUN5eLCQyVLg2M2UkVNfQzbrTTzI/exec";
+    const formData = new FormData();
+    formData.append("action", "submit");
+    formData.append("name", name);
+    formData.append("email", email);
+    formData.append("phoneNumber", phoneNumber);
+    formData.append("messageCount", messagesCount);
+    formData.append("language", currentLang);
+    formData.append("paymentMethod", paymentMethod);
+    formData.append("discountCode", discountCode);
+    formData.append("fileUrl", fileUrl);
+
+    const res = await fetch(scriptUrl, {
+      method: "POST",
+      body: formData
     });
 
-    const data = await response.json();
-    if (data.status === 'success') {
-      document.getElementById("qr-payment-result").style.color = "green";
-      document.getElementById("qr-payment-result").textContent = data.content;
-      setTimeout(closeQrPaymentPopup, 3000);
+    const data = await res.json();
+
+    if (data.status === "success") {
+      resultDiv.style.color = "green";
+      resultDiv.textContent = data.content;
+      setTimeout(() => {
+        closeQrPaymentPopup();
+        resultDiv.textContent = "";
+      }, 5000);
     } else {
-      throw new Error(data.content || 'Unknown error occurred');
+      resultDiv.style.color = "red";
+      resultDiv.textContent = data.content || (currentLang === 'ar' ? 'حدث خطأ!' : 'An error occurred!');
     }
-  } catch (error) {
-    console.error("Error:", error);
-    alert(currentLang === 'ar' ? 'خطأ في رفع الإيصال' : 'Receipt upload error');
+  } catch (err) {
+    alert(currentLang === 'ar' ? 'خطأ في الاتصال بالسيرفر.' : 'Server connection error.');
+    console.error(err);
   }
 }
 
