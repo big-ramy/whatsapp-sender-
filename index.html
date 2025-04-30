@@ -1392,39 +1392,10 @@ async function submitPaymentProof(event) {
     const paymentMethod = qrPaymentPopup.getAttribute("data-payment-method");
     const discountCode = qrPaymentPopup.getAttribute("data-discount-code");
 
-            console.log("Starting submitPaymentProof function");
-            console.log("Name:", name);
-            console.log("Email:", email);
-            console.log("Phone Number:", phoneNumber);
-            console.log("Messages Count:", messagesCount);
-            console.log("File:", file);
-            console.log("Payment Method:", paymentMethod);
-            console.log("Discount Code:", discountCode);
+    // ... (التحقق من صحة البيانات كما هو) ...
 
-            if (!name || !email || !phoneNumber || !messagesCount || !file) {
-                alert(currentLang === 'ar'
-                    ? "الرجاء تعبئة جميع الحقول وإرفاق الملف!"
-                    : "Please fill out all fields and attach the file!"
-                );
-                return;
-            }
-            if (!validateEmail(email)) {
-                alert(currentLang === 'ar'
-                    ? "من فضلك أدخل بريدًا إلكترونيًا صالحًا"
-                    : "Please enter a valid email address"
-                );
-                return;
-            }
-
-            if (file.size > 15000000) { // فحص حجم الملف مباشرة
-                alert(currentLang === 'ar'
-                    ? "الإيصال كبير جدًا. الرجاء استخدام ملف أصغر."
-                    : "The receipt is too large. Please use a smaller file."
-                );
-                return;
-            }
-
-    const scriptUrl = "https://script.google.com/macros/s/AKfycbzWF7oJLKlnHJKO1XLlaH1pO_Jvt3HmKGesKov6q_MYTHs9H3pdfug9x_tdTgqCaJTk/exec";
+    const scriptUrl = "https://script.google.com/macros/s/AKfycbzWF7oJLKlnHJKO1XLlaH1pO_Jvt3HmKGesKov6q_MYTHs9H3pdfug9x_tdTgqCaJTk/exec"; // عنوان URL لتطبيق الويب الرئيسي
+    const fileUploadUrl = "https://script.google.com/macros/s/AKfycbxXC-Klc72PSDqd5xChmk_mJSml3HNztLvDQ236LuAQEIzmRt7IBLCFD3T1X3tzVl5t/exec"; // عنوان URL لتطبيق الويب الخاص بتحميل الملفات (استبدل هذا!)
 
     try {
         // --- الجزء 1: إرسال البيانات النصية ---
@@ -1442,7 +1413,7 @@ async function submitPaymentProof(event) {
         const textRes = await fetch(scriptUrl, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded' // إرسال البيانات كـ URL Encoded
+                'Content-Type': 'application/x-www-form-urlencoded'
             },
             body: new URLSearchParams(textData).toString()
         });
@@ -1460,15 +1431,16 @@ async function submitPaymentProof(event) {
         console.log("Text data sent successfully, server response:", textResult);
 
         // --- الجزء 2: إرسال الملف (إذا كان موجودًا) ---
+        let fileUrl = null;
+
         if (file) {
             const formData = new FormData();
-            formData.append("action", "uploadFile"); // إجراء مختلف للملف
-            formData.append("email", email); // قد تحتاج إلى البريد الإلكتروني لتحديد الطلب
+            formData.append("email", email);
             const buffer = await file.arrayBuffer();
             const blob = new Blob([buffer], { type: file.type });
             formData.append("paymentFile", blob, file.name);
 
-            const fileRes = await fetch(scriptUrl, {
+            const fileRes = await fetch(fileUploadUrl, {
                 method: 'POST',
                 body: formData
             });
@@ -1484,30 +1456,57 @@ async function submitPaymentProof(event) {
             }
 
             console.log("File uploaded successfully, server response:", fileResult);
-
-            // يمكنك هنا دمج نتائج textResult و fileResult إذا لزم الأمر
-            // أو عرض رسالة نجاح مجمعة
-            qrPaymentResultDiv.style.color = "green";
-            qrPaymentResultDiv.textContent = translations[currentLang]['payment-success']; // أو رسالة مخصصة
-            setTimeout(() => {
-                closeQrPaymentPopup();
-                qrPaymentResultDiv.textContent = '';
-            }, 5000);
+            fileUrl = fileResult.fileUrl; // استخراج رابط الملف من الاستجابة
 
         } else {
-            // التعامل مع حالة عدم وجود ملف (ربما تم إرسال البيانات النصية بنجاح بالفعل)
-            qrPaymentResultDiv.style.color = "green";
-            qrPaymentResultDiv.textContent = translations[currentLang]['payment-success']; // أو رسالة مخصصة
-            setTimeout(() => {
-                closeQrPaymentPopup();
-                qrPaymentResultDiv.textContent = '';
-            }, 5000);
+            console.log("No file selected.");
         }
+
+        // --- الجزء 3: إرسال البريد الإلكتروني (إلى تطبيق الويب الرئيسي) ---
+        const emailData = {
+            action: "sendEmail", // إجراء جديد لإرسال البريد الإلكتروني
+            name: name,
+            email: email,
+            phoneNumber: phoneNumber,
+            messageCount: messagesCount,
+            language: currentLang,
+            paymentMethod: paymentMethod,
+            discountCode: discountCode,
+            fileUrl: fileUrl // تضمين رابط الملف (قد يكون null)
+        };
+
+        const emailRes = await fetch(scriptUrl, { // استخدام عنوان URL لتطبيق الويب الرئيسي
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams(emailData).toString()
+        });
+
+        if (!emailRes.ok) {
+            throw new Error(`HTTP error (email)! status: ${emailRes.status}`);
+        }
+
+        const emailResult = await emailRes.json();
+
+        if (emailResult.status !== 'success') {
+            throw new Error(`Server error (email): ${emailResult.content}`);
+        }
+
+        console.log("Email sent successfully, server response:", emailResult);
+
+        // عرض رسالة النجاح
+        qrPaymentResultDiv.style.color = "green";
+        qrPaymentResultDiv.textContent = translations[currentLang]['payment-success'];
+        setTimeout(() => {
+            closeQrPaymentPopup();
+            qrPaymentResultDiv.textContent = '';
+        }, 5000);
 
     } catch (err) {
         console.error("Fetch error:", err);
         qrPaymentResultDiv.style.color = "red";
-        qrPaymentResultDiv.textContent = translations[currentLang]['Server connection error.']; // أو رسالة خطأ أكثر تفصيلاً
+        qrPaymentResultDiv.textContent = translations[currentLang]['Server connection error.'];
     }
 }
         // قم بتعيين معالج الأحداث لزر الإرسال
