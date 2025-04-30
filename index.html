@@ -1362,29 +1362,52 @@
     /************************************************
      *        التعامل مع بيانات الدفع اليدوي
      ***********************************************/
+// Step 1: Initialize the Google API client library
+function initClient() {
+  return gapi.client.init({
+    apiKey: "AIzaSyDwgNwxiNyWtcvVgs5HCCVHJwh6PZizCLc", // استبدل بمفتاح API الخاص بك
+    clientId: "221988524703-i1slvrtfrj7qh78ljo33ck0bq7obs9m9.apps.googleusercontent.com", // استبدل بمعرّف العميل الخاص بك
+    discoveryDocs: ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"],
+    scope: "https://www.googleapis.com/auth/drive.file" // نطاق الكتابة في Google Drive
+  });
+}
+
+// Step 2: Authenticate the user
+function authenticate() {
+  return gapi.auth2.getAuthInstance()
+    .signIn()
+    .then(() => console.log("Authentication successful"))
+    .catch((err) => console.error("Error authenticating:", err));
+}
+
 async function uploadFileToDrive(file) {
-  const apiKey = "AIzaSyDwgNwxiNyWtcvVgs5HCCVHJwh6PZizCLc"; // استبدل بمفتاح API الخاص بك
-  const folderId = "1VOMZ8LWlYOWqIZKOsCPp9Q2pvxcTO6cr"; // استبدل بمعرّف المجلد في Google Drive
-
-  const formData = new FormData();
-  formData.append("metadata", new Blob([JSON.stringify({
-    name: file.name,
-    parents: [folderId]
-  })], { type: "application/json" }));
-  formData.append("file", file);
-
   try {
-    const response = await fetch(`https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&key=${apiKey}`, {
+    // Step 1: Initialize the Google API client library
+    await initClient();
+
+    // Step 2: Authenticate the user
+    await authenticate();
+
+    // Step 3: Upload the file to Google Drive
+    const folderId = "1VOMZ8LWlYOWqIZKOsCPp9Q2pvxcTO6cr"; // استبدل بمعرّف المجلد في Google Drive
+    const metadata = {
+      name: file.name,
+      parents: [folderId]
+    };
+
+    const formData = new FormData();
+    formData.append("metadata", new Blob([JSON.stringify(metadata)], { type: "application/json" }));
+    formData.append("file", file);
+
+    const response = await gapi.client.request({
+      path: "/upload/drive/v3/files",
       method: "POST",
-      headers: {
-        Authorization: "221988524703-bpjb4ub68pgp5aq4p6rf7agssfednd72.apps.googleusercontent.com" // استبدل برمز الوصول الخاص بك
-      },
+      params: { uploadType: "multipart" },
       body: formData
     });
 
-    const data = await response.json();
-    if (data.id) {
-      return `https://drive.google.com/file/d/${data.id}/view?usp=sharing`;
+    if (response.result.id) {
+      return `https://drive.google.com/file/d/${response.result.id}/view?usp=sharing`;
     } else {
       throw new Error("Failed to upload file.");
     }
