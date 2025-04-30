@@ -1381,16 +1381,16 @@
             return re.test(email);
         }
 
-        async function submitPaymentProof(event) {
-            event.preventDefault(); // منع الإرسال التقليدي للنموذج
+async function submitPaymentProof(event) {
+    event.preventDefault();
 
-            const name = paymentNameInput.value.trim();
-            const email = paymentEmailInput.value.trim();
-            const phoneNumber = paymentPhoneInput.value.trim();
-            const messagesCount = paymentMessagesInput.value.trim();
-            const file = paymentFileInput.files[0];
-            const paymentMethod = qrPaymentPopup.getAttribute("data-payment-method");
-            const discountCode = qrPaymentPopup.getAttribute("data-discount-code");
+    const name = paymentNameInput.value.trim();
+    const email = paymentEmailInput.value.trim();
+    const phoneNumber = paymentPhoneInput.value.trim();
+    const messagesCount = paymentMessagesInput.value.trim();
+    const file = paymentFileInput.files[0];
+    const paymentMethod = qrPaymentPopup.getAttribute("data-payment-method");
+    const discountCode = qrPaymentPopup.getAttribute("data-discount-code");
 
             console.log("Starting submitPaymentProof function");
             console.log("Name:", name);
@@ -1424,56 +1424,92 @@
                 return;
             }
 
-            const scriptUrl = "https://script.google.com/macros/s/AKfycbyyo3ofBWEAq0JQPbxkjwQzq-1Y2Gh13Vf5PhIMqJMh2_2Y_T3rE5V8ZDqYLtuFQs4k/exec";
+    const scriptUrl = "https://script.google.com/macros/s/AKfycbzWF7oJLKlnHJKO1XLlaH1pO_Jvt3HmKGesKov6q_MYTHs9H3pdfug9x_tdTgqCaJTk/exec";
 
-            try {
-                const formData = new FormData();
-                formData.append("action", "submit");
-                formData.append("name", name);
-                formData.append("email", email);
-                formData.append("phoneNumber", phoneNumber);
-                formData.append("messageCount", messagesCount);
-                formData.append("language", currentLang);
-                formData.append("paymentMethod", paymentMethod);
-                formData.append("discountCode", discountCode);
+    try {
+        // --- الجزء 1: إرسال البيانات النصية ---
+        const textData = {
+            action: "submit",
+            name: name,
+            email: email,
+            phoneNumber: phoneNumber,
+            messageCount: messagesCount,
+            language: currentLang,
+            paymentMethod: paymentMethod,
+            discountCode: discountCode
+        };
 
-                const buffer = await file.arrayBuffer();
-                const blob = new Blob([buffer], { type: file.type });
-                formData.append("paymentFile", blob, file.name);
-                console.log("File added to FormData as Blob:", blob);
+        const textRes = await fetch(scriptUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded' // إرسال البيانات كـ URL Encoded
+            },
+            body: new URLSearchParams(textData).toString()
+        });
 
-                for (const pair of formData.entries()) {
-                    console.log("FormData Entry:", pair[0] + ', ' + pair[1]);
-                }
-
-                const res = await fetch(scriptUrl, {
-                    method: 'POST',
-                    body: formData,
-                });
-
-                if (!res.ok) {
-                    throw new Error(`HTTP error! status: ${res.status}`);
-                }
-
-                const data = await res.json();
-
-                if (data.status === 'success') {
-                    qrPaymentResultDiv.style.color = "green";
-                    qrPaymentResultDiv.textContent = data.content;
-                    setTimeout(() => {
-                        closeQrPaymentPopup();
-                        qrPaymentResultDiv.textContent = '';
-                    }, 5000);
-                } else {
-                    qrPaymentResultDiv.style.color = "red";
-                    qrPaymentResultDiv.textContent = data.content || (currentLang === 'ar' ? 'حدث خطأ!' : 'An error occurred!');
-                }
-            } catch (err) {
-                console.error("Fetch error:", err);
-                alert(currentLang === 'ar' ? 'خطأ في الاتصال بالسيرفر.' : 'Server connection error.');
-            }
+        if (!textRes.ok) {
+            throw new Error(`HTTP error (text data)! status: ${textRes.status}`);
         }
 
+        const textResult = await textRes.json();
+
+        if (textResult.status !== 'success') {
+            throw new Error(`Server error (text data): ${textResult.content}`);
+        }
+
+        console.log("Text data sent successfully, server response:", textResult);
+
+        // --- الجزء 2: إرسال الملف (إذا كان موجودًا) ---
+        if (file) {
+            const formData = new FormData();
+            formData.append("action", "uploadFile"); // إجراء مختلف للملف
+            formData.append("email", email); // قد تحتاج إلى البريد الإلكتروني لتحديد الطلب
+            const buffer = await file.arrayBuffer();
+            const blob = new Blob([buffer], { type: file.type });
+            formData.append("paymentFile", blob, file.name);
+
+            const fileRes = await fetch(scriptUrl, {
+                method: 'POST',
+                body: formData
+            });
+
+            if (!fileRes.ok) {
+                throw new Error(`HTTP error (file)! status: ${fileRes.status}`);
+            }
+
+            const fileResult = await fileRes.json();
+
+            if (fileResult.status !== 'success') {
+                throw new Error(`Server error (file): ${fileResult.content}`);
+            }
+
+            console.log("File uploaded successfully, server response:", fileResult);
+
+            // يمكنك هنا دمج نتائج textResult و fileResult إذا لزم الأمر
+            // أو عرض رسالة نجاح مجمعة
+            qrPaymentResultDiv.style.color = "green";
+            qrPaymentResultDiv.textContent = translations[currentLang]['payment-success']; // أو رسالة مخصصة
+            setTimeout(() => {
+                closeQrPaymentPopup();
+                qrPaymentResultDiv.textContent = '';
+            }, 5000);
+
+        } else {
+            // التعامل مع حالة عدم وجود ملف (ربما تم إرسال البيانات النصية بنجاح بالفعل)
+            qrPaymentResultDiv.style.color = "green";
+            qrPaymentResultDiv.textContent = translations[currentLang]['payment-success']; // أو رسالة مخصصة
+            setTimeout(() => {
+                closeQrPaymentPopup();
+                qrPaymentResultDiv.textContent = '';
+            }, 5000);
+        }
+
+    } catch (err) {
+        console.error("Fetch error:", err);
+        qrPaymentResultDiv.style.color = "red";
+        qrPaymentResultDiv.textContent = translations[currentLang]['Server connection error.']; // أو رسالة خطأ أكثر تفصيلاً
+    }
+}
         // قم بتعيين معالج الأحداث لزر الإرسال
         submitPaymentProofButton.addEventListener('click', submitPaymentProof);
 
