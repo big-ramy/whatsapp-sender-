@@ -1363,84 +1363,75 @@
     /************************************************
      *        التعامل مع بيانات الدفع اليدوي
      ***********************************************/
-    async function submitPaymentProof() {
-      const name = document.getElementById("payment-name").value.trim();
-      const email = document.getElementById("payment-email").value.trim();
-      const phoneNumber = document.getElementById("payment-phone").value.trim();
-      const messagesCount = document.getElementById("payment-messages").value.trim();
-      const file = document.getElementById("payment-file").files[0];
-      const paymentMethod = document.getElementById("qr-payment-popup").getAttribute("data-payment-method");
-        // جلب كود الخصم من الخاصية
-      const discountCode = document.getElementById("qr-payment-popup").getAttribute("data-discount-code");
-      const resultDiv = document.getElementById("qr-payment-result");
+async function submitPaymentProof() {
+    const name = document.getElementById("payment-name").value.trim();
+    const email = document.getElementById("payment-email").value.trim();
+    const phoneNumber = document.getElementById("payment-phone").value.trim();
+    const messagesCount = document.getElementById("payment-messages").value.trim();
+    const file = document.getElementById("payment-file").files[0];
+    const paymentMethod = document.getElementById("qr-payment-popup").getAttribute("data-payment-method");
+    const discountCode = document.getElementById("qr-payment-popup").getAttribute("data-discount-code");
+    const resultDiv = document.getElementById("qr-payment-result");
 
-      if (!name || !email || !phoneNumber || !messagesCount || !file) {
-        alert(currentLang === 'ar' 
-          ? "الرجاء تعبئة جميع الحقول وإرفاق الملف!" 
-          : "Please fill out all fields and attach the file!"
+    if (!name || !email || !phoneNumber || !messagesCount || !file) {
+        alert(currentLang === 'ar'
+            ? "الرجاء تعبئة جميع الحقول وإرفاق الملف!"
+            : "Please fill out all fields and attach the file!"
         );
         return;
-      }
-      if (!validateEmail(email)) {
-        alert(currentLang === 'ar' 
-          ? "من فضلك أدخل بريدًا إلكترونيًا صالحًا" 
-          : "Please enter a valid email address"
+    }
+    if (!validateEmail(email)) {
+        alert(currentLang === 'ar'
+            ? "من فضلك أدخل بريدًا إلكترونيًا صالحًا"
+            : "Please enter a valid email address"
         );
         return;
-      }
+    }
 
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = async function () {
-        const base64Data = reader.result.split(',')[1]; 
-        if (base64Data.length > 15000000) { 
-          alert(currentLang === 'ar' 
-            ? "الإيصال كبير جدًا. الرجاء استخدام ملف أصغر." 
+    if (file.size > 15000000) { // فحص حجم الملف مباشرة
+        alert(currentLang === 'ar'
+            ? "الإيصال كبير جدًا. الرجاء استخدام ملف أصغر."
             : "The receipt is too large. Please use a smaller file."
-          );
-          return;
-        }
+        );
+        return;
+    }
 
-        // استبدل الرابط في الأسفل برابط سكربت Google الفعلي لديك
-        const scriptUrl = "https://script.google.com/macros/s/AKfycbxmI_gLKsBActqZsq68noIQJiOS2sJpllA1qSgy6hJvnP42gr860Ibf9EYiUdMqrBYt/exec";
-        const fullUrl = scriptUrl
-          + "?action=submit"
-          + "&name=" + encodeURIComponent(name)
-          + "&email=" + encodeURIComponent(email)
-          + "&phoneNumber=" + encodeURIComponent(phoneNumber)
-          + "&messageCount=" + encodeURIComponent(messagesCount)
-          + "&language=" + encodeURIComponent(currentLang)
-          + "&paymentMethod=" + encodeURIComponent(paymentMethod)
-          + "&discountCode=" + encodeURIComponent(discountCode)
-          + "&paymentFile=" + encodeURIComponent(base64Data);
+    const scriptUrl = "https://script.google.com/macros/s/AKfycbz0Nudcir3NBxrpJ8DE4qdzMzYstihbkTWHjoW21Sjie3_pby87LOwLQlqAwmEKH8M4/exec"; // استخدم رابط تطبيق الويب الخاص بك
 
-        try {
-          const res = await fetch(fullUrl, { method: 'GET' });
-          const data = await res.json();
+    const formData = new FormData();
+    formData.append("action", "submit");
+    formData.append("name", name);
+    formData.append("email", email);
+    formData.append("phoneNumber", phoneNumber);
+    formData.append("messageCount", messagesCount);
+    formData.append("language", currentLang);
+    formData.append("paymentMethod", paymentMethod);
+    formData.append("discountCode", discountCode);
+    formData.append("paymentFile", file, file.name); // إضافة الملف إلى FormData
 
-          if (data.status === 'success') {
+    try {
+        const res = await fetch(scriptUrl, {
+            method: 'POST',
+            body: formData, // إرسال FormData في نص الطلب
+        });
+        const data = await res.json();
+
+        if (data.status === 'success') {
             resultDiv.style.color = "green";
             resultDiv.textContent = data.content;
             setTimeout(() => {
-              closeQrPaymentPopup();
-              resultDiv.textContent = '';
+                closeQrPaymentPopup();
+                resultDiv.textContent = '';
             }, 5000);
-          } else {
+        } else {
             resultDiv.style.color = "red";
             resultDiv.textContent = data.content || (currentLang === 'ar' ? 'حدث خطأ!' : 'An error occurred!');
-          }
-        } catch (err) {
-          alert(currentLang === 'ar' ? 'خطأ في الاتصال بالسيرفر.' : 'Server connection error.');
-          console.error(err);
         }
-      };
-      reader.onerror = function (error) {
-        alert(currentLang === 'ar' ? 'حدث خطأ أثناء قراءة الملف.' : 'An error occurred while reading the file.');
-        console.error('Error: ', error);
-      };
+    } catch (err) {
+        alert(currentLang === 'ar' ? 'خطأ في الاتصال بالسيرفر.' : 'Server connection error.');
+        console.error(err);
     }
-
-
+}
   </script>
 </body>
 </html>
