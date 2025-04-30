@@ -1408,9 +1408,29 @@ async function submitPaymentProof() {
     formData.append("paymentMethod", paymentMethod);
     formData.append("discountCode", discountCode);
 
+    console.log("File object:", file);
+    console.log("File name:", file ? file.name : null);
+    console.log("File type:", file ? file.type : null);
+    console.log("File size:", file ? file.size : 0);
+
+    if (file) {
+        try {
+            const buffer = await file.arrayBuffer();
+            const blob = new Blob([buffer], { type: file.type });
+            formData.append("paymentFile", blob, file.name);
+            console.log("File added to FormData as Blob:", blob);
+        } catch (error) {
+            console.error("Error reading file:", error);
+            alert(currentLang === 'ar' ? "حدث خطأ أثناء قراءة الملف." : "An error occurred while reading the file.");
+            return;
+        }
+    } else {
+        console.log("No file selected.");
+    }
+
     // إضافة تسجيل للتحقق من محتويات formData قبل الإرسال
     for (const pair of formData.entries()) {
-        console.log(pair[0] + ', ' + pair[1]);
+        console.log("FormData Entry:", pair[0] + ', ' + pair[1]);
     }
 
     try {
