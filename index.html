@@ -213,6 +213,7 @@
       width: 100%;
     }
   </style>
+    <script src="https://apis.google.com/js/api.js"></script>
 </head>
 <body>
   <!-- نافبار (شريط التنقل) -->
@@ -702,7 +703,7 @@
   <script
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
   ></script>
-  <script src="https://apis.google.com/js/api.js"></script>
+
   <script>
     /************************************************
      *   كائن الترجمة (Arabic / English)
@@ -1394,9 +1395,11 @@ function authenticate() {
 async function uploadFileToDrive(file) {
   try {
     // Step 1: Initialize the Google API client library
+    console.log("Initializing client...");
     await initClient();
 
     // Step 2: Authenticate the user
+    console.log("Authenticating user...");
     await authenticate();
 
     // Step 3: Upload the file to Google Drive
