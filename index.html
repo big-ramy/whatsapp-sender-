@@ -702,6 +702,7 @@
   <script
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
   ></script>
+  <script src="https://apis.google.com/js/api.js"></script>
   <script>
     /************************************************
      *   كائن الترجمة (Arabic / English)
@@ -1376,7 +1377,7 @@ async function uploadFileToDrive(file) {
     const response = await fetch(`https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&key=${apiKey}`, {
       method: "POST",
       headers: {
-        Authorization: "Bearer YOUR_ACCESS_TOKEN" // استبدل برمز الوصول الخاص بك
+        Authorization: "221988524703-bpjb4ub68pgp5aq4p6rf7agssfednd72.apps.googleusercontent.com" // استبدل برمز الوصول الخاص بك
       },
       body: formData
     });
