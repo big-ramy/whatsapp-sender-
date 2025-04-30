@@ -1367,19 +1367,31 @@
      ***********************************************/
 
         // قم بتخزين عناصر DOM في متغيرات للوصول بشكل أسرع
-        const paymentNameInput = document.getElementById("payment-name");
-        const paymentEmailInput = document.getElementById("payment-email");
-        const paymentPhoneInput = document.getElementById("payment-phone");
-        const paymentMessagesInput = document.getElementById("payment-messages");
-        const paymentFileInput = document.getElementById("payment-file");
-        const qrPaymentPopup = document.getElementById("qr-payment-popup");
-        const qrPaymentResultDiv = document.getElementById("qr-payment-result");
-        const submitPaymentProofButton = document.getElementById("submit-payment-proof");
+const paymentNameInput = document.getElementById("payment-name");
+const paymentEmailInput = document.getElementById("payment-email");
+const paymentPhoneInput = document.getElementById("payment-phone");
+const paymentMessagesInput = document.getElementById("payment-messages");
+const paymentFileInput = document.getElementById("payment-file");
+const qrPaymentPopup = document.getElementById("qr-payment-popup");
+const qrPaymentResultDiv = document.getElementById("qr-payment-result");
+const submitPaymentProofButton = document.getElementById("submit-payment-proof");
 
-        function validateEmail(email) {
-            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return re.test(email);
-        }
+const MAX_FILE_SIZE = 3 * 1024 * 1024; // 3MB
+const ALLOWED_FILE_TYPES = ['image/jpeg', 'image/png', 'application/pdf'];
+
+function validateEmail(email) {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+}
+
+function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result.split(',')[1]);
+        reader.onerror = error => reject(error);
+    });
+}
 
 async function submitPaymentProof(event) {
     event.preventDefault();
@@ -1392,12 +1404,33 @@ async function submitPaymentProof(event) {
     const paymentMethod = qrPaymentPopup.getAttribute("data-payment-method");
     const discountCode = qrPaymentPopup.getAttribute("data-discount-code");
 
-    // ... (التحقق من صحة البيانات كما هو) ...
+    // التحقق من صحة البيانات
+    if (!name || !email || !phoneNumber || !messagesCount) {
+        alert(currentLang === 'ar' ? "يرجى ملء جميع الحقول." : "Please fill in all fields.");
+        return;
+    }
 
-    const scriptUrl = "https://script.google.com/macros/s/AKfycbyeI6sujqZdFqj-5IbSjMtCLGoZ07pS-P8Sn0JEw9fceCoqeWExVCLoOOI0KODl5r0R/exec"; // عنوان URL لتطبيق الويب الرئيسي
+    if (!validateEmail(email)) {
+        alert(currentLang === 'ar' ? "يرجى إدخال بريد إلكتروني صالح." : "Please enter a valid email.");
+        return;
+    }
+
+    if (file) {
+        if (file.size > MAX_FILE_SIZE) {
+            alert(currentLang === 'ar' ? "حجم الملف يتجاوز الحد المسموح به (3MB)." : "File size exceeds the limit (3MB).");
+            return;
+        }
+
+        if (!ALLOWED_FILE_TYPES.includes(file.type)) {
+            alert(currentLang === 'ar' ? "يرجى إرفاق صورة أو ملف PDF فقط." : "Please attach only image or PDF files.");
+            return;
+        }
+    }
+
+    const scriptUrl = "https://script.google.com/macros/s/AKfycbwnY3nfOYIVENY1HsUpmM2JkY2HjY0KY0HVss_V8MFkAHJBCfrWuQNnHRW-wr7XLOkU/exec";
 
     const formData = new FormData();
-    formData.append("action", "submit"); // إجراء لسكربت Google Apps الرئيسي
+    formData.append("action", "submit");
     formData.append("name", name);
     formData.append("email", email);
     formData.append("phoneNumber", phoneNumber);
@@ -1406,33 +1439,25 @@ async function submitPaymentProof(event) {
     formData.append("paymentMethod", paymentMethod);
     formData.append("discountCode", discountCode);
 
+    let fileBase64 = "";
+    let fileType = "";
     if (file) {
         try {
-            const buffer = await file.arrayBuffer();
-            const blob = new Blob([buffer], { type: file.type });
-            formData.append("paymentFile", blob, file.name); // تأكد من أن اسم الحقل صحيح
-            console.log("File added to FormData as Blob:", blob);
-            console.log("File name:", file.name);
-            console.log("File type:", file.type);
-            console.log("File size:", file.size);
+            fileBase64 = await fileToBase64(file);
+            fileType = file.type;
+            formData.append("paymentFileBase64", fileBase64);
+            formData.append("paymentFileType", fileType);
         } catch (error) {
-            console.error("Error reading file:", error);
-            alert(currentLang === 'ar' ? "حدث خطأ أثناء قراءة الملف." : "An error occurred while reading the file.");
+            console.error("Error converting file:", error);
+            alert(currentLang === 'ar' ? "حدث خطأ أثناء معالجة الملف." : "Error processing file.");
             return;
         }
-    } else {
-        console.log("No file selected.");
-    }
-
-    // إضافة تسجيل للتحقق من محتويات formData قبل الإرسال
-    for (const pair of formData.entries()) {
-        console.log("FormData Entry:", pair[0] + ', ' + pair[1]);
     }
 
     try {
         const res = await fetch(scriptUrl, {
             method: 'POST',
-            body: formData, // إرسال FormData في نص الطلب
+            body: formData,
         });
 
         if (!res.ok) {
@@ -1451,16 +1476,14 @@ async function submitPaymentProof(event) {
         } else {
             qrPaymentResultDiv.style.color = "red";
             qrPaymentResultDiv.textContent = data.content || (currentLang === 'ar' ? 'حدث خطأ!' : 'An error occurred!');
-            // عرض رسالة خطأ أكثر تفصيلاً
-            alert(currentLang === 'ar' ? 'حدث خطأ أثناء إرسال الطلب: ' + data.content : 'Error submitting request: ' + data.content);
         }
     } catch (err) {
         console.error("Fetch error:", err);
-        alert(currentLang === 'ar' ? 'خطأ في الاتصال بالسيرفر.' : 'Server connection error.');
+        alert(currentLang === 'ar' ? 'خطأ في الاتصال بالخادم.' : 'Server connection error.');
     }
 }
-        // قم بتعيين معالج الأحداث لزر الإرسال
-        submitPaymentProofButton.addEventListener('click', submitPaymentProof);
+
+submitPaymentProofButton.addEventListener('click', submitPaymentProof);
 
   </script>
 </body>
