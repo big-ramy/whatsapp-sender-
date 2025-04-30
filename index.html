@@ -1409,6 +1409,11 @@ async function submitPaymentProof() {
     formData.append("discountCode", discountCode);
     formData.append("paymentFile", file, file.name); // إضافة الملف إلى FormData
 
+    // إضافة تسجيل للتحقق من محتويات formData قبل الإرسال
+    for (const pair of formData.entries()) {
+        console.log(pair[0] + ', ' + pair[1]);
+    }
+
     try {
         const res = await fetch(scriptUrl, {
             method: 'POST',
