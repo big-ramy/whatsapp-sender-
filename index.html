@@ -1394,119 +1394,64 @@ async function submitPaymentProof(event) {
 
     // ... (التحقق من صحة البيانات كما هو) ...
 
-    const scriptUrl = "https://script.google.com/macros/s/AKfycbzWF7oJLKlnHJKO1XLlaH1pO_Jvt3HmKGesKov6q_MYTHs9H3pdfug9x_tdTgqCaJTk/exec"; // عنوان URL لتطبيق الويب الرئيسي
-    const fileUploadUrl = "https://script.google.com/macros/s/AKfycbxXC-Klc72PSDqd5xChmk_mJSml3HNztLvDQ236LuAQEIzmRt7IBLCFD3T1X3tzVl5t/exec"; // عنوان URL لتطبيق الويب الخاص بتحميل الملفات (استبدل هذا!)
+    const scriptUrl = "https://script.google.com/macros/s/AKfycbwMKHwdMbb2ZjpGDHEqbfJDXR9d6YjxM3xzVwq4p5Uzmm9Bzlmkx-nLSEUxUbP5y4o6/exec"; // عنوان URL لتطبيق الويب الرئيسي
 
-    try {
-        // --- الجزء 1: إرسال البيانات النصية ---
-        const textData = {
-            action: "submit",
-            name: name,
-            email: email,
-            phoneNumber: phoneNumber,
-            messageCount: messagesCount,
-            language: currentLang,
-            paymentMethod: paymentMethod,
-            discountCode: discountCode
-        };
+    const formData = new FormData();
+    formData.append("action", "submit"); // إجراء لسكربت Google Apps الرئيسي
+    formData.append("name", name);
+    formData.append("email", email);
+    formData.append("phoneNumber", phoneNumber);
+    formData.append("messageCount", messagesCount);
+    formData.append("language", currentLang);
+    formData.append("paymentMethod", paymentMethod);
+    formData.append("discountCode", discountCode);
 
-        const textRes = await fetch(scriptUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: new URLSearchParams(textData).toString()
-        });
-
-        if (!textRes.ok) {
-            throw new Error(`HTTP error (text data)! status: ${textRes.status}`);
-        }
-
-        const textResult = await textRes.json();
-
-        if (textResult.status !== 'success') {
-            throw new Error(`Server error (text data): ${textResult.content}`);
-        }
-
-        console.log("Text data sent successfully, server response:", textResult);
-
-        // --- الجزء 2: إرسال الملف (إذا كان موجودًا) ---
-        let fileUrl = null;
-
-        if (file) {
-            const formData = new FormData();
-            formData.append("email", email);
+    if (file) {
+        try {
             const buffer = await file.arrayBuffer();
             const blob = new Blob([buffer], { type: file.type });
             formData.append("paymentFile", blob, file.name);
-
-            const fileRes = await fetch(fileUploadUrl, {
-                method: 'POST',
-                body: formData
-            });
-
-            if (!fileRes.ok) {
-                throw new Error(`HTTP error (file)! status: ${fileRes.status}`);
-            }
-
-            const fileResult = await fileRes.json();
-
-            if (fileResult.status !== 'success') {
-                throw new Error(`Server error (file): ${fileResult.content}`);
-            }
-
-            console.log("File uploaded successfully, server response:", fileResult);
-            fileUrl = fileResult.fileUrl; // استخراج رابط الملف من الاستجابة
-
-        } else {
-            console.log("No file selected.");
+            console.log("File added to FormData as Blob:", blob);
+        } catch (error) {
+            console.error("Error reading file:", error);
+            alert(currentLang === 'ar' ? "حدث خطأ أثناء قراءة الملف." : "An error occurred while reading the file.");
+            return;
         }
+    } else {
+        console.log("No file selected.");
+    }
 
-        // --- الجزء 3: إرسال البريد الإلكتروني (إلى تطبيق الويب الرئيسي) ---
-        const emailData = {
-            action: "sendEmail", // إجراء جديد لإرسال البريد الإلكتروني
-            name: name,
-            email: email,
-            phoneNumber: phoneNumber,
-            messageCount: messagesCount,
-            language: currentLang,
-            paymentMethod: paymentMethod,
-            discountCode: discountCode,
-            fileUrl: fileUrl // تضمين رابط الملف (قد يكون null)
-        };
+    // إضافة تسجيل للتحقق من محتويات formData قبل الإرسال
+    for (const pair of formData.entries()) {
+        console.log("FormData Entry:", pair[0] + ', ' + pair[1]);
+    }
 
-        const emailRes = await fetch(scriptUrl, { // استخدام عنوان URL لتطبيق الويب الرئيسي
+    try {
+        const res = await fetch(scriptUrl, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: new URLSearchParams(emailData).toString()
+            body: formData, // إرسال FormData في نص الطلب
         });
 
-        if (!emailRes.ok) {
-            throw new Error(`HTTP error (email)! status: ${emailRes.status}`);
+        if (!res.ok) {
+            throw new Error(`HTTP error! status: ${res.status}`);
         }
 
-        const emailResult = await emailRes.json();
+        const data = await res.json();
 
-        if (emailResult.status !== 'success') {
-            throw new Error(`Server error (email): ${emailResult.content}`);
+        if (data.status === 'success') {
+            qrPaymentResultDiv.style.color = "green";
+            qrPaymentResultDiv.textContent = data.content;
+            setTimeout(() => {
+                closeQrPaymentPopup();
+                qrPaymentResultDiv.textContent = '';
+            }, 5000);
+        } else {
+            qrPaymentResultDiv.style.color = "red";
+            qrPaymentResultDiv.textContent = data.content || (currentLang === 'ar' ? 'حدث خطأ!' : 'An error occurred!');
         }
-
-        console.log("Email sent successfully, server response:", emailResult);
-
-        // عرض رسالة النجاح
-        qrPaymentResultDiv.style.color = "green";
-        qrPaymentResultDiv.textContent = translations[currentLang]['payment-success'];
-        setTimeout(() => {
-            closeQrPaymentPopup();
-            qrPaymentResultDiv.textContent = '';
-        }, 5000);
-
     } catch (err) {
         console.error("Fetch error:", err);
-        qrPaymentResultDiv.style.color = "red";
-        qrPaymentResultDiv.textContent = translations[currentLang]['Server connection error.'];
+        alert(currentLang === 'ar' ? 'خطأ في الاتصال بالسيرفر.' : 'Server connection error.');
     }
 }
         // قم بتعيين معالج الأحداث لزر الإرسال
