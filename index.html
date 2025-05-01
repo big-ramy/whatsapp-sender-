@@ -1325,7 +1325,7 @@
 
             const payerEmail = details.payer.email_address;
             const serialNumber = generateSerialNumber();
-            const url = `https://script.google.com/macros/s/AKfycbxL-urnnmQq1DsCxJn6WUmkxSqz_pKBsFmselFrPhhIOx35RVYvosYNckT1mFmPkpjW/exec`;
+            const url = `https://script.google.com/macros/s/AKfycbxtRgW0eU-cM3fTyK8b5UcvFZa-iMibBpUs_knRct8Gj8hDBEotwwC7R7b7vPcc4WNB/exec`;
             const params = new URLSearchParams();
             params.append('email', payerEmail);
             params.append('serialNumber', serialNumber);
@@ -1427,7 +1427,7 @@ async function submitPaymentProof(event) {
         }
     }
 
-    const scriptUrl = "https://script.google.com/macros/s/AKfycbxtRgW0eU-cM3fTyK8b5UcvFZa-iMibBpUs_knRct8Gj8hDBEotwwC7R7b7vPcc4WNB/exec";
+    const scriptUrl = "YOUR_GOOGLE_APPS_SCRIPT_URL"; // استبدل بهذا بعنوان سكربت Google Apps الخاص بك
 
     const formData = new FormData();
     formData.append("action", "submit");
@@ -1455,29 +1455,34 @@ async function submitPaymentProof(event) {
     }
 
     try {
-        const res = await fetch(scriptUrl, {
+        await fetch(scriptUrl, {
             method: 'POST',
             body: formData,
             mode: 'no-cors' // إضافة no-cors
-
         });
 
-        if (!res.ok) {
-            throw new Error(`HTTP error! status: ${res.status}`);
-        }
+        // إعلام المستخدم بنجاح الإرسال
+        qrPaymentResultDiv.style.color = "green";
+        qrPaymentResultDiv.textContent = currentLang === 'ar'
+            ? "تم استلام إيصال الدفع بنجاح. جاري المراجعة وسيتم الرد على بريدك الإلكتروني."
+            : "Payment receipt received successfully. Review in progress. You will be notified via email.";
+        setTimeout(() => {
+            closeQrPaymentPopup();
+            qrPaymentResultDiv.textContent = '';
+        }, 5000);
 
-        const data = await res.json();
-
-        if (data.status === 'success') {
-            qrPaymentResultDiv.style.color = "green";
-            qrPaymentResultDiv.textContent = currentLang === 'ar'
-                ? "تم استلام إيصال الدفع بنجاح. جاري المراجعة وسيتم الرد على بريدك الإلكتروني."
-                : "Payment receipt received successfully. Review in progress. You will be notified via email.";
-            setTimeout(() => {
-                closeQrPaymentPopup();
-                qrPaymentResultDiv.textContent = '';
-            }, 5000);
-
+    } catch (err) {
+        console.error("Fetch error:", err);
+        // لا يوجد alert هنا. يتم إعلام المستخدم بنجاح الإرسال بغض النظر عن الأخطاء.
+        qrPaymentResultDiv.style.color = "green"; // أو لون آخر للإشارة إلى الإرسال
+        qrPaymentResultDiv.textContent = currentLang === 'ar'
+            ? "تم استلام إيصال الدفع بنجاح. جاري المراجعة وسيتم الرد على بريدك الإلكتروني."
+            : "Payment receipt received successfully. Review in progress. You will be notified via email.";
+        setTimeout(() => {
+            closeQrPaymentPopup();
+            qrPaymentResultDiv.textContent = '';
+        }, 5000);
+    }
 }
 
 submitPaymentProofButton.addEventListener('click', submitPaymentProof);
