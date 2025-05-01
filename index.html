@@ -1458,6 +1458,8 @@ async function submitPaymentProof(event) {
         const res = await fetch(scriptUrl, {
             method: 'POST',
             body: formData,
+            mode: 'no-cors' // إضافة no-cors
+
         });
 
         if (!res.ok) {
@@ -1468,7 +1470,9 @@ async function submitPaymentProof(event) {
 
         if (data.status === 'success') {
             qrPaymentResultDiv.style.color = "green";
-            qrPaymentResultDiv.textContent = data.content;
+            qrPaymentResultDiv.textContent = currentLang === 'ar'
+                ? "تم استلام إيصال الدفع بنجاح. جاري المراجعة وسيتم الرد على بريدك الإلكتروني."
+                : "Payment receipt received successfully. Review in progress. You will be notified via email.";
             setTimeout(() => {
                 closeQrPaymentPopup();
                 qrPaymentResultDiv.textContent = '';
