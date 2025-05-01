@@ -1477,14 +1477,7 @@ async function submitPaymentProof(event) {
                 closeQrPaymentPopup();
                 qrPaymentResultDiv.textContent = '';
             }, 5000);
-        } else {
-            qrPaymentResultDiv.style.color = "red";
-            qrPaymentResultDiv.textContent = data.content || (currentLang === 'ar' ? 'حدث خطأ!' : 'An error occurred!');
-        }
-    } catch (err) {
-        console.error("Fetch error:", err);
-        alert(currentLang === 'ar' ? 'خطأ في الاتصال بالخادم.' : 'Server connection error.');
-    }
+
 }
 
 submitPaymentProofButton.addEventListener('click', submitPaymentProof);
