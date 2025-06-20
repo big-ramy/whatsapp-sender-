@@ -538,11 +538,13 @@
 
     /* Images within popups (QR codes, etc.) */
     #qr-payment-image {
-        max-width: 250px !important; /* Slightly larger QR */
-        margin-bottom: 20px !important;
-        border-radius: 8px;
-        box-shadow: var(--shadow-light);
-        transition: transform 0.3s ease;
+    max-width: 200px !important;
+    margin-bottom: 20px !important;
+    border-radius: 8px;
+    box-shadow: var(--shadow-light);
+    transition: transform 0.3s ease;
+    position: relative;
+    left: 150px;
     }
     #qr-payment-image:hover {
         transform: scale(1.03);
@@ -784,15 +786,15 @@
           <li class="nav-item">
             <a 
               class="nav-link" 
-              href="index.html#home" data-translate="home-link"
+              href="#home" data-translate="home-link"
             >
               الصفحة الرئيسية
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="index.html#about" data-translate="about-link">عن الشركة</a> </li>
+            <a class="nav-link" href="#about" data-translate="about-link">عن الشركة</a> </li>
           <li class="nav-item">
-            <a class="nav-link" href="index.html#contact" data-translate="contact-link">التواصل</a> </li>
+            <a class="nav-link" href="#contact" data-translate="contact-link">التواصل</a> </li>
           <li class="nav-item dropdown">
             <a
               class="nav-link dropdown-toggle"
@@ -806,8 +808,8 @@
               المنتجات
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li><a class="dropdown-item active" aria-current="page" href="#" data-translate="product-basic">مرسل واتس اب</a>
-              </li> <li><a class="dropdown-item" href="index.html" data-translate="product-cv">إنشاء سيرة ذاتية</a></li> </ul>
+              <li><a class="dropdown-item active" aria-current="page" href="#home" data-translate="product-basic">مرسل واتس اب</a>
+              </li> <li><a class="dropdown-item" href="https://big-ramy.github.io/resail/" data-translate="product-cv">إنشاء سيرة ذاتية</a></li> </ul>
           </li>
         </ul>
         <button 
